@@ -2,13 +2,13 @@
 
 Website komunitas React/TypeScript dengan login OAuth Discord, profil tim dari Discord, dan Vercel Functions. Versi 1.1 menggantikan profil tim contoh dengan akun Discord nyata yang dipilih pemilik website.
 
-**Sudah dibuat:** login/logout, halaman akun, session cookie, proteksi tampilan alat komunitas, direktori tim berdasarkan User ID, pencarian/filter/peran tim, serta fitur komunitas versi awal. Tiga User ID yang kamu berikan sudah dimasukkan dengan peran sementara `Team`; Application ID sudah diisi di `.env.example`. Domain produksi `https://website-komunitas-zeta.vercel.app` sudah diisi di `.env.example`. **Perlu diisi di Vercel:** nilai environment variables, termasuk credential baru aplikasi Discord. Tidak ada secret akunmu dalam ZIP ini.
+**Sudah dibuat:** login/logout, halaman akun, session cookie, proteksi tampilan alat komunitas, direktori tim berdasarkan User ID, pencarian/filter/peran tim, serta fitur komunitas versi awal. Tiga User ID yang kamu berikan sudah dimasukkan dengan peran sementara `Team`; Application ID sudah diisi di `.env.example`. Domain produksi `https://website-komunitasi.vercel.app` sudah diisi di `.env.example`. **Perlu diisi di Vercel:** nilai environment variables, termasuk credential baru aplikasi Discord. Tidak ada secret akunmu dalam ZIP ini.
 
 ## Deploy singkat
 
 1. Upload seluruh isi proyek ke repository GitHub. `package.json`, `api/`, `server/`, `src/`, `public/`, dan `vercel.json` berada di root repository.
 2. Import repository ke Vercel. Preset **Vite**, install `npm ci`, build `npm run build`, output `dist`.
-3. Deploy untuk mendapatkan domain, misalnya `https://website-komunitas-zeta.vercel.app`.
+3. Deploy untuk mendapatkan domain, misalnya `https://website-komunitasi.vercel.app`.
 4. Ikuti **[panduan setup Discord](docs/discord-setup.md)**: buat aplikasi Discord, atur redirect URL, masukkan environment variables di Vercel, dan isi `server/team.json`.
 5. Redeploy setelah mengisi environment variables. Pakai domain produksi yang sama dengan `SITE_URL` saat menguji login.
 
@@ -20,7 +20,7 @@ Salin nama variabel dari `.env.example` ke **Vercel → Settings → Environment
 
 | Variabel | Fungsi |
 | --- | --- |
-| `SITE_URL` | Origin produksi lengkap, misalnya `https://website-komunitas-zeta.vercel.app`, tanpa subpath |
+| `SITE_URL` | Origin produksi lengkap, misalnya `https://website-komunitasi.vercel.app`, tanpa subpath |
 | `DISCORD_CLIENT_ID` | Application ID dari Discord Developer Portal |
 | `DISCORD_CLIENT_SECRET` | Client secret aplikasi, hanya di server |
 | `SESSION_SECRET` | Secret acak minimal 32 karakter untuk cookie sesi |

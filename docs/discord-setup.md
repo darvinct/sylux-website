@@ -6,11 +6,13 @@ Application ID `1179801331821711441` dan tiga User ID tim sudah dimasukkan ke fi
 
 ## Status deployment yang diperiksa
 
-Pemeriksaan pada 26 Oktober 2026 terhadap https://website-komunitas-zeta.vercel.app/ menunjukkan website aktif dengan bundle versi awal. Bundle belum memuat login Discord atau API tim. `/api/auth/session` dan `/api/team` saat itu mengembalikan HTML, sehingga backend baru belum ter-deploy. Unggah isi ZIP terbaru, termasuk `api/`, `server/`, dan `vercel.json`, sebelum mengisi environment variables dan redeploy.
+Domain produksi saat ini adalah https://website-komunitasi.vercel.app/. Versi terbaru dan endpoint `/api/auth/session` serta `/api/team` sudah ter-deploy. Pada 26 Oktober 2026, login belum dikonfigurasi lengkap dan profil tim belum tersedia karena credential Discord belum terpasang.
+
+`SITE_URL`, `DISCORD_CLIENT_ID`, dan `SESSION_SECRET` sudah dibuat untuk Production di proyek Vercel `website-komunitasi`. Kunci sesi dibuat acak dan disimpan sebagai Secret di Vercel. Kamu cukup menambahkan `DISCORD_CLIENT_SECRET` serta `DISCORD_BOT_TOKEN` yang baru, memasang redirect Discord di bawah, lalu redeploy.
 
 ## 1. Dapatkan domain Vercel
 
-Domain produksi milikmu: `https://website-komunitas-zeta.vercel.app`. Konfigurasi contoh sudah memakai domain ini.
+Domain produksi milikmu: `https://website-komunitasi.vercel.app`. Konfigurasi contoh sudah memakai domain ini.
 
 ## 2. Buat aplikasi Discord
 
@@ -21,23 +23,23 @@ Domain produksi milikmu: `https://website-komunitas-zeta.vercel.app`. Konfiguras
 5. Pada daftar **Redirects**, tambahkan tepat:
 
    ```text
-   https://website-komunitas-zeta.vercel.app/api/auth/callback
+   https://website-komunitasi.vercel.app/api/auth/callback
    ```
 
 6. Simpan perubahan. URL harus sama persis, termasuk HTTPS, domain, dan path. Tidak perlu membuat URL OAuth manual untuk pengunjung: tombol website sudah membentuknya dengan scope `identify`, PKCE, dan state.
 
 ## 3. Isi environment variables Vercel
 
-Buka proyek → **Settings → Environment Variables**. Isi untuk **Production**:
+Buka proyek **website-komunitasi** → **Settings → Environment Variables**. `SITE_URL`, `DISCORD_CLIENT_ID`, dan `SESSION_SECRET` sudah diatur untuk **Production**; daftar berikut menjelaskan konfigurasi yang diperlukan:
 
 ```text
-SITE_URL=https://website-komunitas-zeta.vercel.app
+SITE_URL=https://website-komunitasi.vercel.app
 DISCORD_CLIENT_ID=1179801331821711441
 DISCORD_CLIENT_SECRET=Client Secret milikmu
 SESSION_SECRET=secret acak milikmu dengan panjang minimal 32 karakter
 ```
 
-Gunakan secret acak baru untuk `SESSION_SECRET`, bukan password Discord. Jika memakai Termux dan Node.js sudah tersedia, buat nilainya dengan:
+`SESSION_SECRET` sudah dibuat otomatis untuk deployment ini. Tidak perlu menggantinya. Untuk pemasangan ulang pada proyek lain, buat secret acak baru, bukan password Discord. Jika memakai Termux dan Node.js sudah tersedia, buat nilainya dengan:
 
 ```sh
 node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
