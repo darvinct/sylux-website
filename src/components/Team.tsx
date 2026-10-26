@@ -2,13 +2,12 @@ import { useEffect, useState } from "react";
 import {
   ArrowClockwise,
   ArrowUpRight,
-  Bird,
   DiscordLogo,
   MagnifyingGlass,
 } from "@phosphor-icons/react";
-import { copy, site, type Language } from "../data/site";
+import { copy, type Language } from "../data/site";
 import { filterMembers } from "../lib/utils";
-import { Modal } from "./Shell";
+import { BrandLogo, Modal } from "./Shell";
 import type { DiscordUser } from "./Auth";
 
 type Member = DiscordUser & {
@@ -198,8 +197,7 @@ export function Team({ lang }: { lang: Language }) {
           onClose={() => setSelected(null)}
         >
           <div className="member-profile-header">
-            <Bird size={22} weight="fill" />
-            <span>{site.name}</span>
+            <BrandLogo />
           </div>
           <div
             className="member-profile-banner"

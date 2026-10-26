@@ -1,4 +1,4 @@
-# Nocturne Community + Discord
+# SYLUX Community + Discord
 
 Website komunitas React/TypeScript dengan login OAuth Discord, profil tim dari Discord, dan Vercel Functions. Versi 1.1 menggantikan profil tim contoh dengan akun Discord nyata yang dipilih pemilik website.
 
@@ -57,7 +57,7 @@ Login pengunjung **tidak otomatis menjadikan mereka anggota tim**. Bot token ber
 
 ## Identitas dan konten
 
-Edit `src/data/site.ts` untuk nama komunitas, tagline, undangan, Instagram, email kontak opsional, copy ID/EN, dan kegiatan. Identitas Nocturne dan kegiatan awal masih contoh; ubah sebelum mematikan `isDemo`. Tim diatur terpisah di `server/team.json`.
+Identitas SYLUX menggunakan logo yang diberikan pengelola dan gradasi violet, ungu, serta biru berdasarkan poster referensi. Edit `src/data/site.ts` untuk tagline, undangan, Instagram, email kontak opsional, copy ID/EN, dan kegiatan. Kegiatan awal masih contoh; ubah sebelum mematikan `isDemo`. Tim diatur terpisah di `server/team.json`.
 
 Ubah metadata SEO dan Open Graph di `index.html`. Setelah mendapat domain, gunakan URL absolut gambar Open Graph. Gambar berada di `public/images/`, font di `public/fonts/`, dan token warna di `src/styles.css`. Sumber aset ada di `docs/assets.md`.
 

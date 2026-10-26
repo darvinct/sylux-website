@@ -24,18 +24,19 @@
 }
 :root {
   font-family: Outfit, Arial, sans-serif;
-  color: #edece8;
-  background: #101112;
+  color: #f4f0ff;
+  background: #090617;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  --bg: #101112;
-  --surface: #181a1c;
-  --raised: #202325;
-  --text: #edece8;
-  --muted: #a7abad;
-  --accent: #c7cebf;
-  --border: #303335;
+  --bg: #090617;
+  --surface: #130d26;
+  --raised: #211638;
+  --text: #f4f0ff;
+  --muted: #b4abc8;
+  --accent: #c4adff;
+  --brand-gradient: linear-gradient(115deg, #bf8fff, #9588ff 58%, #8cddff);
+  --border: #35294d;
   --radius: 12px;
   --button-radius: 8px;
   color-scheme: dark;
@@ -49,6 +50,10 @@ html {
 }
 body {
   margin: 0;
+  background:
+    radial-gradient(ellipse at 95% 29%, #5526a51c, transparent 36%),
+    radial-gradient(ellipse at 0% 63%, #4944f019, transparent 32%),
+    var(--bg);
 }
 button,
 input,
@@ -126,8 +131,8 @@ textarea:focus-visible {
   outline-offset: 2px;
 }
 ::selection {
-  background: #c7cebf;
-  color: #101112;
+  background: #c4adff;
+  color: #090617;
 }
 .wrap {
   max-width: 1280px;
@@ -189,11 +194,11 @@ textarea:focus-visible {
   transform: scale(0.98);
 }
 .primary {
-  background: var(--accent);
-  color: #161a14;
+  background: var(--brand-gradient);
+  color: #170b2c;
 }
 .primary:hover:not(:disabled) {
-  background: #e1e5db;
+  background: linear-gradient(115deg, #d2b0ff, #afa6ff 58%, #b2e9ff);
 }
 .secondary {
   background: var(--surface);
@@ -232,19 +237,19 @@ textarea:focus-visible {
 }
 .notice {
   padding: 18px 20px;
-  background: #202325;
+  background: #211638;
   border: 1px solid var(--border);
   border-radius: 8px;
   font-size: 14px;
   line-height: 1.65;
-  color: #b9bdc0;
+  color: #c3b9d5;
 }
 .sample-label {
   display: inline-flex;
   width: fit-content;
   font-size: 12px;
-  color: #b2b8b0;
-  border: 1px solid #424840;
+  color: #c0aedb;
+  border: 1px solid #49375f;
   border-radius: 5px;
   padding: 4px 8px;
   line-height: 1.5;
@@ -263,7 +268,7 @@ textarea:focus-visible {
   justify-content: space-between;
   gap: 24px;
   border: 1px solid #ffffff1f;
-  background: #151718dc;
+  background: #100b24e8;
   backdrop-filter: blur(20px);
   border-radius: 12px;
   padding: 0 26px;
@@ -276,6 +281,21 @@ textarea:focus-visible {
   letter-spacing: -0.8px;
   font-size: 24px;
   white-space: nowrap;
+}
+.brand-logo {
+  width: 124px;
+  height: 32px;
+  object-fit: cover;
+  object-position: center;
+  flex-shrink: 0;
+}
+.member-profile-header .brand-logo {
+  width: 96px;
+  height: 26px;
+}
+.bot-avatar .brand-logo {
+  width: 34px;
+  height: 14px;
 }
 .brand-period {
   color: var(--accent);
@@ -305,7 +325,7 @@ textarea:focus-visible {
 .language {
   display: flex;
   align-items: center;
-  background: #222527;
+  background: #201534;
   border: 1px solid #ffffff0d;
   border-radius: 6px;
   padding: 3px;
@@ -321,7 +341,7 @@ textarea:focus-visible {
   min-width: 30px;
 }
 .language button[aria-pressed="true"] {
-  background: #424747;
+  background: #493466;
   color: #fff;
 }
 .nav-discord {
@@ -353,13 +373,74 @@ textarea:focus-visible {
   z-index: -2;
 }
 .hero-background {
-  object-position: center 40%;
+  background:
+    radial-gradient(ellipse at 76% 42%, #ad6dffb8, transparent 25%),
+    radial-gradient(ellipse at 94% 11%, #4744d6b3, transparent 38%),
+    radial-gradient(ellipse at 55% 100%, #6231cf99, transparent 47%),
+    linear-gradient(120deg, #0a061c 12%, #28104b 65%, #15103c);
 }
 .hero-shade {
   z-index: -1;
   background:
-    linear-gradient(90deg, rgba(13, 15, 16, 0.7), rgba(13, 15, 16, 0.08) 75%),
-    linear-gradient(0deg, #101112, transparent 38%);
+    linear-gradient(90deg, #090617b3, transparent 75%),
+    linear-gradient(0deg, var(--bg), transparent 40%);
+  pointer-events: none;
+}
+.hero-orbit {
+  position: absolute;
+  z-index: -1;
+  width: min(41vw, 560px);
+  aspect-ratio: 1;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-43%);
+  color: #e6dcff;
+}
+.orbit-core {
+  position: absolute;
+  inset: 23%;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid #d5baff4d;
+  background:
+    radial-gradient(circle at 30% 25%, #d4b2ff4d, transparent 70%),
+    linear-gradient(140deg, #6a3bc64d, #12102c99);
+  box-shadow: inset 0 0 55px #b68aff33, 0 0 75px #a85cff40;
+}
+.orbit-core .brand-logo {
+  width: 70%;
+  height: 25%;
+  filter: drop-shadow(0 0 16px #dfbdff80);
+}
+.orbit-ring {
+  position: absolute;
+  inset: 8% -5%;
+  border: 1px solid #b7c5ffb3;
+  border-radius: 50%;
+  transform: rotate(-32deg) scaleY(.48);
+  box-shadow: 0 0 18px #ab83ff4d, inset 0 0 16px #9883ff33;
+}
+.orbit-ring-two {
+  inset: 0 12%;
+  transform: rotate(36deg) scaleX(.66);
+  border-color: #cd9bff70;
+}
+.orbit-star {
+  position: absolute;
+  filter: drop-shadow(0 0 10px #a5bdff);
+}
+.orbit-star-one {
+  top: 17%;
+  right: 18%;
+}
+.orbit-star-two {
+  bottom: 23%;
+  left: 7%;
+}
+.orbit-star-three {
+  bottom: 15%;
+  right: 22%;
 }
 .hero-content {
   padding-top: 96px;
@@ -387,7 +468,10 @@ textarea:focus-visible {
   font-weight: 500;
 }
 .hero h1 > span {
-  color: var(--accent);
+  color: #c4adff;
+  background: linear-gradient(100deg, #d2abff, #a7adff 60%, #b1e7ff);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .hero-intro {
   font-size: 16px;
@@ -443,7 +527,7 @@ textarea:focus-visible {
 .small-brand {
   font-size: 10px;
   letter-spacing: 1.6px;
-  color: #9fa69c;
+  color: #b9a2de;
   display: block;
   margin-bottom: 24px;
 }
@@ -491,7 +575,7 @@ textarea:focus-visible {
   align-items: center;
   gap: 7px;
   margin-top: 24px;
-  color: #a5aba0;
+  color: #b9a7d7;
   font-size: 12px;
 }
 .stats-data {
@@ -507,7 +591,7 @@ textarea:focus-visible {
   gap: 10px;
 }
 .stat > svg {
-  color: #9da49a;
+  color: #bfa8eb;
 }
 .stat > strong {
   font-size: 54px;
@@ -558,7 +642,7 @@ textarea:focus-visible {
   transition: background 0.2s;
 }
 .filter-row button[aria-pressed="true"] {
-  color: #121511;
+  color: #170b2c;
   border-color: var(--accent);
   background: var(--accent);
 }
@@ -576,7 +660,7 @@ textarea:focus-visible {
   display: flex;
   flex-direction: column;
   text-align: left;
-  background: #181a1b;
+  background: #130d26;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
@@ -584,12 +668,13 @@ textarea:focus-visible {
   transition: border-color 0.2s;
 }
 .event-card:hover {
-  border-color: #6a7167;
+  border-color: #9273cd;
 }
 .event-0 {
   grid-row: span 2;
 }
 .event-image {
+  background: #31145b;
   overflow: hidden;
   aspect-ratio: 1.9;
 }
@@ -597,7 +682,8 @@ textarea:focus-visible {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(1);
+  filter: grayscale(.6);
+  mix-blend-mode: luminosity;
   transition:
     filter 0.4s,
     transform 0.6s;
@@ -613,7 +699,7 @@ textarea:focus-visible {
 }
 .category {
   font-size: 11px;
-  color: #adb5a6;
+  color: #c9b4ee;
   display: block;
   margin-bottom: 10px;
 }
@@ -680,7 +766,7 @@ textarea:focus-visible {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0 14px;
-  background: #17191a;
+  background: #100b21;
   color: #969c9f;
 }
 .search input {
@@ -711,7 +797,7 @@ textarea:focus-visible {
   display: flex;
   align-items: center;
   gap: 13px;
-  background: #191b1d;
+  background: #130d26;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 22px 16px;
@@ -722,8 +808,8 @@ textarea:focus-visible {
     border-color 0.2s;
 }
 .member:hover {
-  background: #242729;
-  border-color: #626a5c;
+  background: #24183e;
+  border-color: #9273cd;
 }
 .avatar {
   height: 48px;
@@ -734,7 +820,7 @@ textarea:focus-visible {
   justify-content: center;
   border: 1px solid #ffffff17;
   border-radius: 50%;
-  background: #363b35;
+  background: #302044;
   color: #d4d9ce;
   font-size: 15px;
   font-weight: 500;
@@ -763,7 +849,7 @@ textarea:focus-visible {
 }
 .member-info > span {
   font-size: 11px;
-  color: #c1c7bb;
+  color: #cebbf4;
 }
 .member-info > small {
   font-size: 10px;
@@ -772,7 +858,7 @@ textarea:focus-visible {
 .member-arrow {
   margin-left: auto;
   align-self: flex-start;
-  color: #a2a99c;
+  color: #c2a9ee;
   flex-shrink: 0;
 }
 .empty-state {
@@ -807,7 +893,7 @@ textarea:focus-visible {
   height: 56px;
   border-radius: 12px;
   border: 1px solid var(--border);
-  background: #1b1e1e;
+  background: #18102d;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -874,6 +960,7 @@ textarea:focus-visible {
   padding-block: 70px;
   margin-top: 10px;
   overflow: hidden;
+  background: radial-gradient(ellipse at 70% 50%, #813fe52b, transparent 70%);
 }
 .closing h2 {
   font-size: clamp(44px, 5vw, 66px);
@@ -887,12 +974,13 @@ textarea:focus-visible {
   position: absolute;
   z-index: -1;
   right: 25%;
-  font-size: 300px;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -20px;
-  top: 0;
-  color: #ffffff04;
+  width: 320px;
+  top: 36%;
+  opacity: .05;
+}
+.closing-mark .brand-logo {
+  width: 100%;
+  height: 90px;
 }
 .footer {
   padding-top: 64px;
@@ -937,8 +1025,8 @@ textarea:focus-visible {
   line-height: 1.65;
 }
 .modal {
-  border: 1px solid #555b55;
-  background: #191b1d;
+  border: 1px solid #675084;
+  background: #130d26;
   color: var(--text);
   border-radius: 16px;
   width: min(620px, calc(100% - 32px));
@@ -979,8 +1067,8 @@ textarea:focus-visible {
 .member-profile-modal {
   width: min(460px, calc(100% - 32px));
   max-height: calc(100dvh - 32px);
-  background: #171719;
-  border-color: #353537;
+  background: #130d26;
+  border-color: #49375f;
   border-radius: 20px;
   box-shadow: 0 24px 90px #0008;
 }
@@ -1021,7 +1109,7 @@ textarea:focus-visible {
 }
 .member-profile-banner {
   aspect-ratio: 2.8;
-  background: #080809;
+  background: #0b061b;
   overflow: hidden;
 }
 .member-profile-banner img {
@@ -1047,20 +1135,20 @@ textarea:focus-visible {
   inset: 0;
   width: 100%;
   height: 100%;
-  border: 6px solid #171719;
+  border: 6px solid #130d26;
   border-radius: 50%;
   object-fit: cover;
-  background: #171719;
+  background: #130d26;
 }
 .member-profile-initials {
   display: grid;
   place-items: center;
   width: 100%;
   height: 100%;
-  border: 6px solid #171719;
+  border: 6px solid #130d26;
   border-radius: 50%;
-  background: #303034;
-  color: #eeeef2;
+  background: #35294d;
+  color: #f4f0ff;
   font-size: 40px;
   font-weight: 650;
   text-transform: uppercase;
@@ -1088,27 +1176,27 @@ textarea:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  border: 1px solid #424246;
+  border: 1px solid #49375f;
   border-radius: 7px;
   padding: 3px 6px;
   font-size: 12px;
   font-weight: 650;
-  color: #d6d6dc;
+  color: #e0d3f6;
 }
 .member-profile-modal .member-profile-handle {
   margin: 6px 0 0;
-  color: #a9a9b1;
+  color: #b7a9ce;
   font-size: 16px;
   overflow-wrap: anywhere;
 }
 .member-profile-modal .member-profile-bio {
-  color: #c4c4cc;
+  color: #c9bddb;
   font-size: 14px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 .member-profile-details {
-  border-top: 1px solid #303034;
+  border-top: 1px solid #35294d;
   margin: 24px 0;
   padding-top: 22px;
   display: grid;
@@ -1119,13 +1207,13 @@ textarea:focus-visible {
   letter-spacing: .8px;
   font-size: 11px;
   font-weight: 650;
-  color: #a9a9b1;
+  color: #b7a9ce;
   margin-bottom: 5px;
 }
 .member-profile-details dd {
   margin: 0;
   font-size: 17px;
-  color: #eeeef2;
+  color: #f4f0ff;
   overflow-wrap: anywhere;
 }
 .member-profile-open {
@@ -1165,7 +1253,7 @@ textarea:focus-visible {
   align-items: start;
 }
 .tool-panel {
-  background: #191b1d;
+  background: #130d26;
   border: 1px solid var(--border);
   padding: 32px;
   border-radius: var(--radius);
@@ -1182,7 +1270,7 @@ textarea:focus-visible {
   font-size: 14px;
 }
 .canvas-panel {
-  background: #191b1d;
+  background: #130d26;
   padding: 18px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -1212,7 +1300,7 @@ textarea:focus-visible {
   position: relative;
   border: 1px dashed #777f72;
   border-radius: 8px;
-  background: #242a22;
+  background: #261b3c;
   padding: 24px;
   cursor: pointer;
   color: #d6dfce;
@@ -1220,7 +1308,7 @@ textarea:focus-visible {
   min-height: 76px;
 }
 .upload-button:hover {
-  background: #2c3229;
+  background: #302044;
 }
 .upload-button input {
   position: absolute;
@@ -1250,7 +1338,7 @@ input:not([type="range"], [type="checkbox"], [type="color"], [type="file"]),
 select,
 textarea {
   border: 1px solid #4c5154;
-  background: #111415;
+  background: #0e091d;
   color: var(--text);
   padding: 12px 14px;
   border-radius: 8px;
@@ -1334,7 +1422,7 @@ textarea {
 }
 .form-status {
   font-size: 13px;
-  color: #c7d0c1;
+  color: #d2bffc;
   min-height: 20px;
   display: flex;
   gap: 8px;
@@ -1389,7 +1477,7 @@ textarea {
   width: 40px;
   height: 40px;
   min-width: 40px;
-  background: #16191a;
+  background: #100b21;
   border-radius: 50%;
   color: #d8e1d1;
 }
@@ -1451,7 +1539,7 @@ textarea {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 18px;
-  background: #151718;
+  background: #100b21;
 }
 .json-details summary {
   cursor: pointer;
@@ -1476,7 +1564,7 @@ textarea {
 .loading-block {
   height: 240px;
   border-radius: 12px;
-  background: #202325;
+  background: #211638;
   animation: loading 1.5s ease-in-out infinite alternate;
 }
 .skeleton-text {
@@ -1598,7 +1686,7 @@ textarea {
     left: 0;
     right: 0;
     top: 74px;
-    background: #1a1c1e;
+    background: #130d26;
     border: 1px solid #454b4e;
     border-radius: 12px;
     padding: 12px 20px;
@@ -1621,13 +1709,18 @@ textarea {
     align-items: center;
   }
   .hero-background {
-    object-position: 63% center;
-    opacity: 0.65;
+    opacity: 1;
+  }
+  .hero-orbit {
+    width: 85vw;
+    right: -28%;
+    top: 42%;
+    opacity: .38;
   }
   .hero-shade {
     background:
-      linear-gradient(90deg, #10111299, #10111222),
-      linear-gradient(0deg, #101112, transparent 80%);
+      linear-gradient(90deg, #090617b3, #09061733),
+      linear-gradient(0deg, #090617, transparent 80%);
   }
   .hero-content {
     padding-top: 144px;
@@ -2000,6 +2093,10 @@ textarea {
   .header .wordmark {
     font-size: 20px;
   }
+  .header .brand-logo {
+    width: 96px;
+    height: 28px;
+  }
   .header .wordmark > svg {
     display: none;
   }
@@ -2053,7 +2150,7 @@ textarea {
 }
 @media (prefers-reduced-transparency: reduce) {
   .header {
-    background: #17191b;
+    background: #100b21;
     backdrop-filter: none;
   }
   .modal::backdrop {
@@ -2072,7 +2169,7 @@ textarea {
   min-height: 40px;
   padding: 7px 12px;
   border-radius: 8px;
-  background: #30372d;
+  background: #302044;
   color: #e1e9db;
   font-size: 12px;
   white-space: nowrap;
@@ -2080,7 +2177,7 @@ textarea {
   max-width: 150px;
 }
 .account-control {
-  background: #23272a;
+  background: #211638;
   border-color: var(--border);
   padding: 4px 10px 4px 5px;
 }
@@ -2094,10 +2191,10 @@ textarea {
   text-overflow: ellipsis;
 }
 .login-control:hover {
-  background: #414c3b;
+  background: #493466;
 }
 .account-control:hover {
-  background: #343a3d;
+  background: #302044;
 }
 .login-page .tool-heading {
   max-width: 780px;
@@ -2136,7 +2233,7 @@ textarea {
 .account-avatar {
   border-radius: 50%;
   object-fit: cover;
-  background: #303335;
+  background: #35294d;
   flex-shrink: 0;
 }
 .account-card h2 {
@@ -2272,7 +2369,7 @@ textarea {
     left: 0;
     right: 0;
     top: 82px;
-    background: #1a1c1e;
+    background: #130d26;
     border: 1px solid #454b4e;
     border-radius: 12px;
     padding: 12px 20px;

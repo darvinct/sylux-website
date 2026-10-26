@@ -10,9 +10,10 @@ import {
   Waveform,
   FileText,
   Code,
+  StarFour,
 } from "@phosphor-icons/react";
 import { copy, site, type Language } from "../data/site";
-import { JoinButton } from "./Shell";
+import { BrandLogo, JoinButton } from "./Shell";
 import { Portfolio } from "./Portfolio";
 import { Stats } from "./Stats";
 import { Team } from "./Team";
@@ -24,14 +25,15 @@ export default function Home({ lang }: { lang: Language }) {
   return (
     <main>
       <section className="hero" id="home">
-        <img
-          className="hero-background"
-          src="/images/hero.webp"
-          alt=""
-          fetchPriority="high"
-          width="1672"
-          height="941"
-        />
+        <div className="hero-background" aria-hidden="true" />
+        <div className="hero-orbit" aria-hidden="true">
+          <div className="orbit-ring orbit-ring-one" />
+          <div className="orbit-ring orbit-ring-two" />
+          <div className="orbit-core"><BrandLogo /></div>
+          <StarFour className="orbit-star orbit-star-one" size={48} weight="fill" />
+          <StarFour className="orbit-star orbit-star-two" size={28} weight="fill" />
+          <StarFour className="orbit-star orbit-star-three" size={20} weight="fill" />
+        </div>
         <div className="hero-shade" />
         <div className="hero-content wrap">
           <p className="eyebrow">
@@ -132,7 +134,7 @@ export default function Home({ lang }: { lang: Language }) {
         </div>
       </section>
       <section className="closing wrap">
-        <BirdMark />
+        <div className="closing-mark" aria-hidden="true"><BrandLogo /></div>
         <div>
           <h2 className="line-break">{t.closing}</h2>
           <p>{t.closingBody}</p>
@@ -140,13 +142,5 @@ export default function Home({ lang }: { lang: Language }) {
         <JoinButton lang={lang} />
       </section>
     </main>
-  );
-}
-
-function BirdMark() {
-  return (
-    <div className="closing-mark" aria-hidden="true">
-      n.
-    </div>
   );
 }

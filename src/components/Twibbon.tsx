@@ -13,6 +13,7 @@ export default function Twibbon({ lang }: { lang: Language }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const [photo, setPhoto] = useState<HTMLImageElement | null>(null);
+  const [logo, setLogo] = useState<HTMLImageElement | null>(null);
   const [zoom, setZoom] = useState(1);
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
@@ -20,6 +21,13 @@ export default function Twibbon({ lang }: { lang: Language }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const activeUrl = useRef<string | null>(null);
+  useEffect(() => {
+    let active = true;
+    const image = new Image();
+    image.onload = () => { if (active) setLogo(image); };
+    image.src = "/images/sylux-logo.png";
+    return () => { active = false; };
+  }, []);
   useEffect(
     () => () => {
       if (activeUrl.current) URL.revokeObjectURL(activeUrl.current);
@@ -29,7 +37,7 @@ export default function Twibbon({ lang }: { lang: Language }) {
   useEffect(() => {
     const ctx = canvas.current?.getContext("2d");
     if (!ctx) return;
-    ctx.fillStyle = "#191b1d";
+    ctx.fillStyle = "#130d26";
     ctx.fillRect(0, 0, 1080, 1080);
     if (photo) {
       const size = Math.min(photo.naturalWidth, photo.naturalHeight) / zoom;
@@ -46,10 +54,14 @@ export default function Twibbon({ lang }: { lang: Language }) {
         480,
       );
     }
-    ctx.strokeStyle = "#dddcd7";
+    const gradient = ctx.createLinearGradient(0, 0, 1080, 1080);
+    gradient.addColorStop(0, "#bf8fff");
+    gradient.addColorStop(.6, "#9588ff");
+    gradient.addColorStop(1, "#8cddff");
+    ctx.strokeStyle = gradient;
     ctx.lineWidth = 14;
     ctx.strokeRect(24, 24, 1032, 1032);
-    ctx.fillStyle = "#101112";
+    ctx.fillStyle = "#130d26";
     ctx.fillRect(0, 860, 1080, 220);
     ctx.fillStyle = "#eeeDE8";
     ctx.textAlign = "left";
@@ -62,11 +74,12 @@ export default function Twibbon({ lang }: { lang: Language }) {
       fontSize -= 2;
       ctx.font = `700 ${fontSize}px Outfit, sans-serif`;
     }
-    ctx.fillText(site.name.toLowerCase() + ".", 60, 966);
-    ctx.fillStyle = "#b7bdc2";
+    if (logo) ctx.drawImage(logo, 0, 48, 128, 36, 60, 880, 360, 102);
+    else ctx.fillText(site.name, 60, 966);
+    ctx.fillStyle = "#cbb9ed";
     ctx.font = "28px Outfit, sans-serif";
     ctx.fillText(name.trim() || site.tagline, 65, 1020, 940);
-  }, [photo, zoom, x, y, name, id]);
+  }, [photo, logo, zoom, x, y, name, id]);
 
   const upload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

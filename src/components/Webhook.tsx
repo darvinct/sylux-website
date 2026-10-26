@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Bird, Check, Copy, DownloadSimple } from "@phosphor-icons/react";
+import { Check, Copy, DownloadSimple } from "@phosphor-icons/react";
 import { site, type Language } from "../data/site";
 import { downloadFile, webhookPayload } from "../lib/utils";
-import { ToolHeading } from "./Shell";
+import { BrandLogo, ToolHeading } from "./Shell";
 
 export default function Webhook({ lang }: { lang: Language }) {
   const id = lang === "id";
@@ -10,7 +10,7 @@ export default function Webhook({ lang }: { lang: Language }) {
   const [description, setDescription] = useState(
     "Music, stories, and good company.\nBring yourself. We will bring the playlist.",
   );
-  const [color, setColor] = useState("#c7cebf");
+  const [color, setColor] = useState("#a78bfa");
   const [status, setStatus] = useState("");
   const payload = JSON.stringify(
     webhookPayload(title, description, color),
@@ -121,7 +121,7 @@ export default function Webhook({ lang }: { lang: Language }) {
           </span>
           <div className="discord-preview">
             <span className="bot-avatar">
-              <Bird size={24} weight="fill" />
+              <BrandLogo />
             </span>
             <div className="discord-message">
               <div className="discord-author">

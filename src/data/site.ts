@@ -1,9 +1,9 @@
-// Ganti identitas dan data contoh di file ini sebelum peluncuran.
+// Identitas SYLUX; kegiatan contoh bisa diganti dengan agenda komunitas.
 // Jangan taruh bot token, webhook URL, atau secret di frontend.
 export const site = {
-  name: "Nocturne",
+  name: "SYLUX",
   tagline: "Find your people.",
-  discordInvite: import.meta.env.VITE_DISCORD_INVITE || "", // Contoh: https://discord.gg/kode-komunitasmu
+  discordInvite: import.meta.env.VITE_DISCORD_INVITE || "https://discord.gg/sylux",
   instagram: "",
   contactEmail: "", // Opsional, untuk membuka draft pendaftaran di aplikasi email.
   isDemo: true,
@@ -119,7 +119,7 @@ export const copy = {
       "Tidak. Ikut ngobrol saat kamu ingin. Mendengarkan dan menikmati suasana juga boleh.",
       "Setelah bergabung, cek kanal pengumuman dan event. Tim akan membagikan jadwal serta cara ikut di sana.",
     ],
-    demo: "Identitas dan kegiatan di halaman ini adalah contoh. Profil tim diambil dari Discord. Statistik hanya ditampilkan jika server Discord terhubung.",
+    demo: "Kegiatan di halaman ini adalah contoh. Profil tim diambil dari Discord. Statistik hanya ditampilkan jika server Discord terhubung.",
     rights: "Dibuat untuk percakapan yang berarti.",
     close: "Tutup",
     sample: "Contoh kegiatan",
@@ -187,7 +187,7 @@ export const copy = {
       "No. Join a conversation when you feel like it. You can also listen and enjoy the company.",
       "After joining, check the announcements and events channels for schedules and details.",
     ],
-    demo: "The identity and activities on this page are examples. Team profiles come from Discord. Statistics are shown only when a Discord server is connected.",
+    demo: "Activities on this page are examples. Team profiles come from Discord. Statistics are shown only when a Discord server is connected.",
     rights: "Made for meaningful conversations.",
     close: "Close",
     sample: "Example activity",

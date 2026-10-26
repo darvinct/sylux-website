@@ -37,7 +37,7 @@ Keberadaan domain dalam Content Security Policy tidak membuktikan bagaimana back
 
 ## Penerapan pada versi baru
 
-Nocturne menggunakan identitas baru dengan tema gothic/monokrom dan gambar hero yang dibuat khusus. Tidak memakai nama tim, poster, teks panjang, atau identitas milik Ravenville sebagai konten komunitas baru. Struktur fitur publik dijadikan referensi, lalu diimplementasikan menggunakan React/TypeScript/Vite agar ringan dan mudah di-deploy ke Vercel.
+Website menggunakan identitas SYLUX, logo milik komunitas yang diberikan pengelola, serta warna gradasi ungu/violet/biru dari poster referensi SYLUX. Tidak memakai nama tim, poster, teks panjang, atau identitas milik Ravenville sebagai konten komunitas baru. Struktur fitur publik dijadikan referensi, lalu diimplementasikan menggunakan React/TypeScript/Vite agar ringan dan mudah di-deploy ke Vercel.
 
 Penyesuaian scope: statistik baru hanya memakai total/online dari endpoint undangan publik Discord; voice/bot tidak ditiru tanpa sumber data. Tim menggunakan profil statis yang bisa diedit. Twibbon tersedia lokal tanpa login. Form berupa draft lokal dan ekspor, bukan penerimaan pendaftaran di database. Webhook hanya editor preview/JSON. OAuth, admin, database, pengiriman webhook, dan log keamanan tidak termasuk versi statis ini.
 

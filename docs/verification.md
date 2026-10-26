@@ -59,3 +59,5 @@ Penanganan error kini memisahkan konfigurasi aplikasi yang ditolak, kode login k
 Log produksi pada 26 Oktober 2026 pukul 17:25 UTC mengonfirmasi kegagalan pada `token_exchange`, HTTP `401`, alasan `invalid_client`. Perbaikan credential OAuth2 memerlukan Client Secret yang sesuai dengan aplikasi; tidak ada penonaktifan state/PKCE.
 
 Kartu profil tim kini menampilkan banner/warna/dekorasi avatar/tag yang tersedia dari Discord serta divisi/peran konfigurasi. Pemeriksaan otomatis mencakup penyaringan hash gambar dan warna, profil tanpa banner, mode server dengan nickname/avatar, serta tampilan dialog pada lebar 320/390/1440 piksel, tombol tutup, Escape, dan pengembalian fokus ke anggota yang diklik.
+
+Identitas SYLUX memakai logo PNG asli pengelola, gradasi ungu/violet/biru, metadata baru, serta logo pada kartu tim, footer, webhook, dan ekspor Twibbon. Pemeriksaan build, OAuth, dan browser smoke tetap lulus. Nama kunci draft lokal dipertahankan agar penggantian merek tidak menghilangkan draft pendaftaran yang sudah disimpan.

@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   ArrowLeft,
   ArrowUpRight,
-  Bird,
   DiscordLogo,
   List,
   X,
@@ -10,6 +9,10 @@ import {
 import { copy, site, type Language } from "../data/site";
 import { inviteCode } from "../lib/utils";
 import { AuthControl } from "./Auth";
+
+export function BrandLogo({ className = "" }: { className?: string }) {
+  return <img className={`brand-logo ${className}`} src="/images/sylux-logo.png" alt={site.name} width="128" height="128" />;
+}
 
 export function JoinButton({
   lang,
@@ -59,11 +62,7 @@ export function Header({
   return (
     <header className="header">
       <a className="wordmark" href="/" aria-label={`${site.name} home`}>
-        <Bird weight="fill" size={25} />
-        <span>
-          {site.name.toLowerCase()}
-          <span className="brand-period">.</span>
-        </span>
+        <BrandLogo />
       </a>
       <nav
         className={open ? "nav is-open" : "nav"}
@@ -113,9 +112,8 @@ export function Footer({ lang }: { lang: Language }) {
   return (
     <footer className="footer wrap">
       <div className="footer-top">
-        <a href="/" className="wordmark">
-          <Bird weight="fill" size={27} />
-          {site.name.toLowerCase()}.
+        <a href="/" className="wordmark" aria-label={`${site.name} home`}>
+          <BrandLogo />
         </a>
         <p>{site.tagline}</p>
         <div className="footer-links">
