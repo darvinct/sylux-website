@@ -15,7 +15,9 @@ export async function getTeam(entries = configuredTeam, env = process.env) {
         typeof m.role !== "string" ||
         !m.role.trim() ||
         m.role.length > 60 ||
-        (m.bio != null && typeof m.bio !== "string"),
+        (m.bio != null && typeof m.bio !== "string") ||
+        (m.division != null &&
+          (typeof m.division !== "string" || !m.division.trim() || m.division.length > 60)),
     ) ||
     new Set(entries.map((m) => m.id)).size !== entries.length
   )
@@ -30,23 +32,44 @@ export async function getTeam(entries = configuredTeam, env = process.env) {
   const profiles = await Promise.allSettled(
     entries.map(async (member) => {
       const guildId = env.DISCORD_GUILD_ID;
-      const data = await discordRequest(
+      const authorization = `Bot ${env.DISCORD_BOT_TOKEN}`;
+      const [profile, data] = await Promise.all([
+        discordRequest(`/users/${member.id}`, authorization),
         guildId
-          ? `/guilds/${guildId}/members/${member.id}`
-          : `/users/${member.id}`,
-        `Bot ${env.DISCORD_BOT_TOKEN}`,
-      );
+          ? discordRequest(`/guilds/${guildId}/members/${member.id}`, authorization)
+          : Promise.resolve(null),
+      ]);
+      if (guildId && data?.user?.id !== member.id)
+        throw new Error("Mismatched Discord member");
       const user = publicUser(
-        guildId ? data.user : data,
-        guildId ? data : null,
+        profile,
+        data,
         guildId,
       );
       if (user.id !== member.id) throw new Error("Mismatched Discord user");
+      const imageHash = (value) =>
+        typeof value === "string" && /^(a_)?[a-f0-9]{32}$/.test(value);
+      const banner = imageHash(profile.banner) ? profile.banner : null;
+      const decoration = profile.avatar_decoration_data?.asset;
+      const primaryGuild = profile.primary_guild;
       return {
         ...user,
         handle: `@${user.username}`,
         role: member.role.trim(),
+        division: (member.division || member.role).trim(),
         bio: (member.bio || "").slice(0, 500),
+        banner: banner
+          ? `https://cdn.discordapp.com/banners/${user.id}/${banner}.${banner.startsWith("a_") ? "gif" : "webp"}?size=1024`
+          : null,
+        accentColor: Number.isInteger(profile.accent_color) && profile.accent_color >= 0 && profile.accent_color <= 0xffffff
+          ? `#${profile.accent_color.toString(16).padStart(6, "0")}`
+          : null,
+        avatarDecoration: imageHash(decoration)
+          ? `https://cdn.discordapp.com/avatar-decoration-presets/${decoration}.png?size=240&passthrough=true`
+          : null,
+        guildTag: primaryGuild?.identity_enabled === true && typeof primaryGuild.tag === "string"
+          ? primaryGuild.tag.slice(0, 10)
+          : null,
       };
     }),
   );

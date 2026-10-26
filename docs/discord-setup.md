@@ -6,9 +6,9 @@ Application ID `1179801331821711441` dan tiga User ID tim sudah dimasukkan ke fi
 
 ## Status deployment yang diperiksa
 
-Domain produksi saat ini adalah https://website-komunitasi.vercel.app/. Versi terbaru dan endpoint `/api/auth/session` serta `/api/team` sudah ter-deploy. Pada 26 Oktober 2026, login belum dikonfigurasi lengkap dan profil tim belum tersedia karena credential Discord belum terpasang.
+Domain produksi saat ini adalah https://website-komunitasi.vercel.app/. Pada 26 Oktober 2026, ketiga profil tim berhasil dimuat. Percobaan login mengembalikan `401 invalid_client` saat pertukaran token; pengelola perlu memperbarui Client Secret OAuth2 dari aplikasi yang sama di Vercel lalu redeploy.
 
-`SITE_URL`, `DISCORD_CLIENT_ID`, dan `SESSION_SECRET` sudah dibuat untuk Production di proyek Vercel `website-komunitasi`. Kunci sesi dibuat acak dan disimpan sebagai Secret di Vercel. Kamu cukup menambahkan `DISCORD_CLIENT_SECRET` serta `DISCORD_BOT_TOKEN` yang baru, memasang redirect Discord di bawah, lalu redeploy.
+Kelima environment variable yang dibutuhkan sudah tersedia untuk Production di proyek Vercel `website-komunitasi`. Bot Token berhasil mengambil profil tim. Kunci sesi dibuat acak dan disimpan sebagai Secret di Vercel. Nilai secret tidak disimpan dalam repository ini.
 
 ## 1. Dapatkan domain Vercel
 
@@ -73,12 +73,14 @@ Bot token berbeda dari Client Secret. Login hanya membutuhkan konfigurasi langka
 
    ```json
    [
-     { "id": "123456789012345678", "role": "Owner", "bio": "Pengelola komunitas." },
-     { "id": "234567890123456789", "role": "Moderator", "bio": "Menjaga percakapan tetap nyaman." }
+     { "id": "123456789012345678", "division": "Management", "role": "Owner", "bio": "Pengelola komunitas." },
+     { "id": "234567890123456789", "division": "Community", "role": "Moderator", "bio": "Menjaga percakapan tetap nyaman." }
    ]
    ```
 
-5. Commit/push perubahan file itu. Jangan memasukkan token ke JSON. Nama/avatar/username tidak perlu diisi manual; website mengambilnya dari Discord. Peran dan bio adalah deskripsi tim yang kamu tentukan.
+5. Commit/push perubahan file itu. Jangan memasukkan token ke JSON. Nama/avatar/username tidak perlu diisi manual; website mengambilnya dari Discord. Divisi, peran dan bio adalah deskripsi tim yang kamu tentukan. Jika `division` tidak diisi, kartu memakai nilai `role`.
+
+Klik anggota tim untuk membuka kartu profil bergaya Discord. Banner, warna profil, dekorasi avatar, dan tag server utama ikut ditampilkan jika tersedia dari Discord. Tanpa banner, kartu menggunakan warna profil atau latar gelap. Status online dan waktu terakhir aktif tidak ditampilkan karena integrasi REST ini tidak menyediakan data tersebut.
 
 ## 6. Redeploy dan uji
 

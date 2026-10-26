@@ -306,11 +306,18 @@ try {
   assert.equal(JSON.parse(response.body).configured, false);
   process.env.DISCORD_CLIENT_SECRET = env.DISCORD_CLIENT_SECRET;
 
-  const members = [{ id: profile.id, role: "Founder", bio: "Team biography" }];
-  let requestedPath = "";
+  const members = [{ id: profile.id, role: "Founder", division: "Community", bio: "Team biography" }];
+  const requestedPaths = [];
   globalThis.fetch = async (input, options) => {
-    requestedPath = String(input);
+    requestedPaths.push(String(input));
     assert.equal(options.headers.Authorization, "Bot test-only-bot-token");
+    if (String(input).includes("/users/")) return Response.json({
+      ...profile,
+      banner: "a_" + "c".repeat(32),
+      accent_color: 0x102030,
+      avatar_decoration_data: { asset: "a_" + "d".repeat(32) },
+      primary_guild: { identity_enabled: true, tag: "crew" },
+    });
     return Response.json({
       user: profile,
       nick: "Server nickname",
@@ -324,10 +331,15 @@ try {
     DISCORD_GUILD_ID: "323456789012345678",
   });
   assert.ok(
-    requestedPath.endsWith("/guilds/323456789012345678/members/" + profile.id),
+    requestedPaths.some((path) => path.endsWith("/guilds/323456789012345678/members/" + profile.id)),
   );
   assert.equal(team.members[0].name, "Server nickname");
   assert.equal(team.members[0].role, "Founder");
+  assert.equal(team.members[0].division, "Community");
+  assert.equal(team.members[0].accentColor, "#102030");
+  assert.ok(team.members[0].banner.endsWith(".gif?size=1024"));
+  assert.ok(team.members[0].avatarDecoration.startsWith("https://cdn.discordapp.com/avatar-decoration-presets/"));
+  assert.equal(team.members[0].guildTag, "crew");
   assert.ok(
     !JSON.stringify(team).includes("private-role") &&
       !JSON.stringify(team).includes(profile.email),
@@ -346,6 +358,20 @@ try {
   await assert.rejects(
     getTeam([...members, ...members], { DISCORD_BOT_TOKEN: "test" }),
   );
+  await assert.rejects(getTeam([{ ...members[0], division: 42 }], env));
+  globalThis.fetch = async () => Response.json({
+    ...profile,
+    banner: "https://evil.example/image.png",
+    accent_color: "red",
+    avatar_decoration_data: { asset: "../../untrusted" },
+    primary_guild: { identity_enabled: false, tag: "crew" },
+  });
+  const fallback = (await getTeam([{ id: profile.id, role: "Team" }], { DISCORD_BOT_TOKEN: "test" })).members[0];
+  assert.equal(fallback.division, "Team");
+  assert.equal(fallback.banner, null);
+  assert.equal(fallback.accentColor, null);
+  assert.equal(fallback.avatarDecoration, null);
+  assert.equal(fallback.guildTag, null);
   assert.ok(
     publicUser({ ...profile, avatar: null }).avatar.includes("/embed/avatars/"),
   );
@@ -358,6 +384,7 @@ try {
   globalThis.fetch = async (input, options) => {
     assert.equal(options.headers.Authorization, "Bot test-only-bot-token");
     const id = String(input).split("/").at(-1);
+    if (String(input).includes("/users/")) return Response.json({ ...profile, id });
     requestedIds.push(id);
     return Response.json({
       user: { ...profile, id },

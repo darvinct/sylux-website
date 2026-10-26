@@ -56,4 +56,6 @@ Pada deployment produksi, endpoint sesi sudah melaporkan konfigurasi tersedia da
 
 Penanganan error kini memisahkan konfigurasi aplikasi yang ditolak, kode login kedaluwarsa/ditolak, dan gangguan provider. Log server hanya memuat tahap, status HTTP, kode error yang dibatasi, serta label PKCE/redirect. Pengujian memakai respons tiruan untuk invalid client/grant/scope, HTML error, timeout, dan kegagalan profil; juga memastikan deskripsi provider, client secret, dan access token tidak masuk log.
 
-Penyebab spesifik kegagalan otorisasi pengguna belum dapat dikonfirmasi sebelum percobaan login baru menghasilkan log tersebut. Tidak ada perubahan credential atau penonaktifan state/PKCE untuk diagnosis ini.
+Log produksi pada 26 Oktober 2026 pukul 17:25 UTC mengonfirmasi kegagalan pada `token_exchange`, HTTP `401`, alasan `invalid_client`. Perbaikan credential OAuth2 memerlukan Client Secret yang sesuai dengan aplikasi; tidak ada penonaktifan state/PKCE.
+
+Kartu profil tim kini menampilkan banner/warna/dekorasi avatar/tag yang tersedia dari Discord serta divisi/peran konfigurasi. Pemeriksaan otomatis mencakup penyaringan hash gambar dan warna, profil tanpa banner, mode server dengan nickname/avatar, serta tampilan dialog pada lebar 320/390/1440 piksel, tombol tutup, Escape, dan pengembalian fokus ke anggota yang diklik.

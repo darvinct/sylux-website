@@ -2,15 +2,25 @@ import { useEffect, useState } from "react";
 import {
   ArrowClockwise,
   ArrowUpRight,
+  Bird,
   DiscordLogo,
   MagnifyingGlass,
 } from "@phosphor-icons/react";
-import { copy, type Language } from "../data/site";
+import { copy, site, type Language } from "../data/site";
 import { filterMembers } from "../lib/utils";
 import { Modal } from "./Shell";
 import type { DiscordUser } from "./Auth";
 
-type Member = DiscordUser & { handle: string; role: string; bio: string };
+type Member = DiscordUser & {
+  handle: string;
+  role: string;
+  division?: string;
+  bio: string;
+  banner?: string | null;
+  accentColor?: string | null;
+  avatarDecoration?: string | null;
+  guildTag?: string | null;
+};
 export function Team({ lang }: { lang: Language }) {
   const t = copy[lang];
   const id = lang === "id";
@@ -137,6 +147,7 @@ export function Team({ lang }: { lang: Language }) {
                 <button
                   className="member"
                   key={member.id}
+                  aria-haspopup="dialog"
                   onClick={() => setSelected(member)}
                 >
                   <img
@@ -181,31 +192,54 @@ export function Team({ lang }: { lang: Language }) {
         )}
       </div>
       {selected && (
-        <Modal title={selected.name} onClose={() => setSelected(null)}>
-          <div className="profile-summary">
-            <img
-              className="account-avatar"
-              src={selected.avatar}
-              alt={selected.name}
-              width="80"
-              height="80"
-            />
-            <div>
-              <span className="sample-label">{selected.role}</span>
-              <p>{selected.handle}</p>
-            </div>
+        <Modal
+          title={selected.name}
+          className="member-profile-modal"
+          onClose={() => setSelected(null)}
+        >
+          <div className="member-profile-header">
+            <Bird size={22} weight="fill" />
+            <span>{site.name}</span>
           </div>
-          {selected.bio && <p>{selected.bio}</p>}
-          <a
-            className="button secondary profile-open"
-            href={selected.profileUrl}
-            target="_blank"
-            rel="noreferrer"
+          <div
+            className="member-profile-banner"
+            style={{ backgroundColor: selected.accentColor || undefined }}
           >
-            <DiscordLogo size={19} />
-            {id ? "Buka profil Discord" : "Open Discord profile"}
-            <ArrowUpRight size={17} />
-          </a>
+            {selected.banner && <img src={selected.banner} alt="" onError={(e) => { e.currentTarget.style.visibility = "hidden"; }} />}
+          </div>
+          <div className="member-profile-body">
+            <div className="member-profile-avatar">
+              <span className="member-profile-initials" aria-hidden="true">{Array.from(selected.name)[0]}</span>
+              <img className="member-profile-portrait" src={selected.avatar} alt="" width="112" height="112" onError={(e) => { e.currentTarget.style.visibility = "hidden"; }} />
+              {selected.avatarDecoration && (
+                <img className="member-profile-decoration" src={selected.avatarDecoration} alt="" onError={(e) => { e.currentTarget.style.visibility = "hidden"; }} />
+              )}
+            </div>
+            <div className="member-profile-identity">
+              <div className="member-profile-name">
+                <h3>{selected.name}</h3>
+                {selected.guildTag && (
+                  <span className="member-guild-tag"><DiscordLogo size={16} weight="fill" />{selected.guildTag}</span>
+                )}
+              </div>
+              <p className="member-profile-handle">{selected.handle}</p>
+            </div>
+            {selected.bio && <p className="member-profile-bio">{selected.bio}</p>}
+            <dl className="member-profile-details">
+              <div><dt>{id ? "Divisi" : "Division"}</dt><dd>{selected.division || selected.role}</dd></div>
+              <div><dt>{id ? "Peran" : "Role"}</dt><dd>{selected.role}</dd></div>
+            </dl>
+            <a
+              className="button secondary member-profile-open"
+              href={selected.profileUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <DiscordLogo size={19} weight="fill" />
+              {id ? "Buka profil Discord" : "Open Discord profile"}
+              <ArrowUpRight size={17} />
+            </a>
+          </div>
         </Modal>
       )}
     </section>
