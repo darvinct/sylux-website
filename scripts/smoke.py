@@ -164,6 +164,10 @@ async def main():
         await expect(page.get_by_role('heading', level=1)).to_contain_text('Masuk, lalu ikut ceritanya.')
         await page.goto(BASE + '/webhooks/editor', wait_until='networkidle')
         await expect(page.get_by_role('heading', level=1)).to_contain_text('Masuk, lalu ikut ceritanya.')
+        await page.goto(BASE + '/login?error=discord_configuration', wait_until='networkidle')
+        await expect(page.get_by_role('alert')).to_contain_text('Discord menolak konfigurasi')
+        await page.goto(BASE + '/login?error=login_expired', wait_until='networkidle')
+        await expect(page.get_by_role('alert')).to_contain_text('Kode login sudah kedaluwarsa')
         assert not errors, errors
         print('PASS: layouts, languages, team filters, modal keyboard, events, mobile navigation, form persistence/export, Twibbon crop/PNG, webhook export, storage failures, direct routes' + (', statistics retry/success' if os.environ.get('TEST_STATS') else ''))
         await browser.close()

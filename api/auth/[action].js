@@ -4,6 +4,7 @@ import {
   cookie,
   cookieName,
   discordRequest,
+  discordFailure,
   json,
   noStore,
   publicUser,
@@ -102,6 +103,7 @@ export default async function handler(req, res) {
   const code = url.searchParams.get("code");
   if (!code || code.length > 2048)
     return redirect(res, "/login?error=invalid_state");
+  let stage = "token_exchange";
   try {
     const response = await fetch("https://discord.com/api/oauth2/token", {
       method: "POST",
@@ -116,17 +118,22 @@ export default async function handler(req, res) {
       }),
       signal: AbortSignal.timeout(8000),
     });
-    if (!response.ok) throw new Error("Token exchange failed");
+    if (!response.ok) throw await discordFailure(response);
+    stage = "token_response";
     const token = await response.json();
     if (
       typeof token.access_token !== "string" ||
       token.token_type?.toLowerCase() !== "bearer" ||
       !(token.scope || "").split(" ").includes("identify")
     )
-      throw new Error("Invalid access token");
+      throw Object.assign(new Error("Invalid token response"), {
+        providerCode: "invalid_token_response",
+      });
+    stage = "profile";
     const user = publicUser(
       await discordRequest("/users/@me", `Bearer ${token.access_token}`),
     );
+    stage = "session";
     // Access and refresh tokens are intentionally not persisted or sent to the browser.
     res.setHeader("Set-Cookie", [
       cookie(config, "oauth", "", 0),
@@ -138,7 +145,31 @@ export default async function handler(req, res) {
       ),
     ]);
     return redirect(res, safeReturn(oauth.returnTo));
-  } catch {
-    return redirect(res, "/login?error=discord_unavailable");
+  } catch (error) {
+    const reason =
+      typeof error.providerCode === "string"
+        ? error.providerCode
+        : ["TimeoutError", "AbortError"].includes(error.name)
+          ? "timeout"
+          : "request_failed";
+    console.error("Discord login failed", {
+      stage,
+      status: Number.isInteger(error.status) ? error.status : null,
+      reason,
+      detail: error.detail || null,
+    });
+    const clientError = [
+      "invalid_client",
+      "unauthorized_client",
+      "invalid_scope",
+      "unsupported_grant_type",
+    ].includes(reason);
+    const loginError =
+      clientError || error.detail === "redirect_uri"
+        ? "discord_configuration"
+        : reason === "invalid_grant"
+          ? "login_expired"
+          : "discord_unavailable";
+    return redirect(res, `/login?error=${loginError}`);
   }
 }

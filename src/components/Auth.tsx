@@ -156,6 +156,14 @@ const authErrors: Record<string, [string, string]> = {
     "Discord belum dapat dihubungi. Silakan coba lagi.",
     "Discord is unavailable. Please try again.",
   ],
+  discord_configuration: [
+    "Discord menolak konfigurasi login komunitas. Hubungi pengelola agar pengaturan aplikasinya diperiksa.",
+    "Discord rejected this community’s sign-in configuration. Please contact the community team.",
+  ],
+  login_expired: [
+    "Kode login sudah kedaluwarsa atau ditolak. Mulai login baru dengan tombol di bawah.",
+    "The sign-in code expired or was rejected. Start a new sign-in using the button below.",
+  ],
   not_configured: [
     "Login komunitas belum tersedia. Silakan kembali nanti.",
     "Community sign-in is not available yet. Please check back later.",

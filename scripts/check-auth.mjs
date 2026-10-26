@@ -26,6 +26,9 @@ const originalEnv = Object.fromEntries(
   Object.keys(env).map((key) => [key, process.env[key]]),
 );
 const originalFetch = globalThis.fetch;
+const originalConsoleError = console.error;
+const loginFailures = [];
+console.error = (label, details) => loginFailures.push({ label, ...details });
 Object.assign(process.env, env);
 const config = authConfig();
 assert.ok(config);
@@ -230,6 +233,74 @@ try {
     Response.json({ error: "do-not-reflect-provider-error" }, { status: 503 });
   response = await invoke(auth, callback, { cookie: browserCookie });
   assert.equal(response.headers.location, "/login?error=discord_unavailable");
+  for (const [providerCode, status, expected] of [
+    ["invalid_client", 401, "discord_configuration"],
+    ["invalid_scope", 400, "discord_configuration"],
+    ["invalid_grant", 400, "login_expired"],
+  ]) {
+    globalThis.fetch = async () =>
+      Response.json(
+        {
+          error: providerCode,
+          error_description:
+            "sensitive-provider-echo " + env.DISCORD_CLIENT_SECRET,
+        },
+        { status },
+      );
+    response = await invoke(auth, callback, { cookie: browserCookie });
+    assert.equal(response.headers.location, "/login?error=" + expected);
+    assert.equal(loginFailures.at(-1).stage, "token_exchange");
+    assert.equal(loginFailures.at(-1).reason, providerCode);
+    assert.equal(loginFailures.at(-1).status, status);
+  }
+  globalThis.fetch = async () =>
+    Response.json(
+      {
+        error: "invalid_grant",
+        error_description: "Invalid code_verifier sensitive-provider-echo",
+      },
+      { status: 400 },
+    );
+  await invoke(auth, callback, { cookie: browserCookie });
+  assert.equal(loginFailures.at(-1).detail, "pkce");
+  globalThis.fetch = async () =>
+    Response.json(
+      {
+        error: "invalid_grant",
+        error_description: "Mismatched redirect_uri sensitive-provider-echo",
+      },
+      { status: 400 },
+    );
+  response = await invoke(auth, callback, { cookie: browserCookie });
+  assert.equal(response.headers.location, "/login?error=discord_configuration");
+  assert.equal(loginFailures.at(-1).detail, "redirect_uri");
+  globalThis.fetch = async () =>
+    new Response("<html>sensitive-provider-echo</html>", { status: 403 });
+  response = await invoke(auth, callback, { cookie: browserCookie });
+  assert.equal(response.headers.location, "/login?error=discord_unavailable");
+  assert.equal(loginFailures.at(-1).reason, "unknown");
+  globalThis.fetch = async () => {
+    throw new DOMException("sensitive-provider-echo", "TimeoutError");
+  };
+  await invoke(auth, callback, { cookie: browserCookie });
+  assert.equal(loginFailures.at(-1).reason, "timeout");
+  globalThis.fetch = async (input) =>
+    String(input).endsWith("/oauth2/token")
+      ? Response.json({
+          access_token: "test-only-access-token",
+          token_type: "Bearer",
+          scope: "identify",
+        })
+      : Response.json(
+          { code: 50014, message: "sensitive-provider-echo" },
+          { status: 401 },
+        );
+  await invoke(auth, callback, { cookie: browserCookie });
+  assert.equal(loginFailures.at(-1).stage, "profile");
+  assert.equal(loginFailures.at(-1).reason, "50014");
+  assert.ok(!JSON.stringify(loginFailures).includes("sensitive-provider-echo"));
+  assert.ok(!JSON.stringify(loginFailures).includes(env.DISCORD_CLIENT_SECRET));
+  assert.ok(!JSON.stringify(loginFailures).includes("test-only-access-token"));
   delete process.env.DISCORD_CLIENT_SECRET;
   response = await invoke(auth, "/api/auth/session");
   assert.equal(JSON.parse(response.body).configured, false);
@@ -314,6 +385,7 @@ try {
     "Passed: OAuth state/PKCE/issuer, token exchange, encrypted expiry-bound sessions, origin-checked logout, private-data filtering, and whitelisted Discord team profiles.",
   );
 } finally {
+  console.error = originalConsoleError;
   globalThis.fetch = originalFetch;
   for (const [key, value] of Object.entries(originalEnv)) {
     if (value === undefined) delete process.env[key];

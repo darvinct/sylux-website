@@ -155,15 +155,44 @@ export function publicUser(user, member = null, guildId = "") {
   };
 }
 
+export async function discordFailure(response) {
+  const body = await response.json().catch(() => null);
+  const knownErrors = [
+    "invalid_client",
+    "unauthorized_client",
+    "invalid_grant",
+    "invalid_request",
+    "invalid_scope",
+    "unsupported_grant_type",
+    "access_denied",
+    "server_error",
+    "temporarily_unavailable",
+  ];
+  const providerCode = knownErrors.includes(body?.error)
+    ? body.error
+    : Number.isSafeInteger(body?.code)
+      ? String(body.code)
+      : "unknown";
+  // Convert provider text to fixed labels; never retain descriptions, tokens, or request bodies.
+  const description =
+    typeof body?.error_description === "string" ? body.error_description : "";
+  const detail = /code_verifier|code_challenge|pkce/i.test(description)
+    ? "pkce"
+    : /redirect_uri|redirect uri/i.test(description)
+      ? "redirect_uri"
+      : null;
+  return Object.assign(new Error("Discord request failed"), {
+    status: response.status,
+    providerCode,
+    detail,
+  });
+}
+
 export async function discordRequest(path, authorization) {
   const response = await fetch(`https://discord.com/api/v10${path}`, {
     headers: { Authorization: authorization },
     signal: AbortSignal.timeout(8000),
   });
-  if (!response.ok) {
-    const error = new Error("Discord request failed");
-    error.status = response.status;
-    throw error;
-  }
+  if (!response.ok) throw await discordFailure(response);
   return response.json();
 }

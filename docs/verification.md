@@ -49,3 +49,11 @@ Tidak ada backend database, penerimaan formulir online, pengiriman webhook, atau
 - `preview-login.png`: halaman login sebelum aplikasi Discord dihubungkan.
 - `preview-twibbon.png`, `preview-public.png`, `preview-editor.png`: permintaan login sebelum membuka alat.
 - `preview-account-test.png`: akun fixture pengujian, bukan pengguna Discord nyata.
+
+## Diagnosis OAuth lanjutan
+
+Pada deployment produksi, endpoint sesi sudah melaporkan konfigurasi tersedia dan API tim berhasil memuat tiga profil. URL otorisasi memakai Application ID serta callback domain baru yang benar. Detail kegagalan callback sebelumnya tidak terekam karena catch mengubah semua error menjadi `discord_unavailable`.
+
+Penanganan error kini memisahkan konfigurasi aplikasi yang ditolak, kode login kedaluwarsa/ditolak, dan gangguan provider. Log server hanya memuat tahap, status HTTP, kode error yang dibatasi, serta label PKCE/redirect. Pengujian memakai respons tiruan untuk invalid client/grant/scope, HTML error, timeout, dan kegagalan profil; juga memastikan deskripsi provider, client secret, dan access token tidak masuk log.
+
+Penyebab spesifik kegagalan otorisasi pengguna belum dapat dikonfirmasi sebelum percobaan login baru menghasilkan log tersebut. Tidak ada perubahan credential atau penonaktifan state/PKCE untuk diagnosis ini.
