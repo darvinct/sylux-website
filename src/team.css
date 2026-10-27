@@ -36,7 +36,15 @@
 .team-node::after { content: ""; position: absolute; left: 50%; top: 0; height: 20px; width: 1px; background: #c8adff30; pointer-events: none; }
 .team-node:nth-child(4n)::before, .team-node:last-child::before { display: none; }
 #team .member { position: relative; display: flex; flex-direction: row; align-items: center; width: 100%; min-height: 88px; padding: 14px 12px; gap: 11px; background: #120e1b; border-color: #c8adff30; border-radius: 13px; }
-#team .member:hover { background: #1e152b; border-color: #c8adff90; }
+#team .member:hover { background: #1e152b; border-color: #c8adff90; translate: 0; }
+#team .member > .avatar, #team .member > .member-info, #team .member > .member-arrow { transition: opacity .24s ease, transform .3s cubic-bezier(.22, 1, .36, 1); }
+.member-profile-cta { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 7px; border-radius: inherit; opacity: 0; transform: translateY(6px); pointer-events: none; color: #f2eaff; font-size: 12px; font-weight: 500; transition: opacity .24s ease .04s, transform .32s cubic-bezier(.22, 1, .36, 1); }
+#team .member:focus-visible > .avatar, #team .member:focus-visible > .member-info, #team .member:focus-visible > .member-arrow { opacity: 0; transform: translateY(-4px); }
+#team .member:focus-visible > .member-profile-cta { opacity: 1; transform: translateY(0); }
+@media (hover: hover) and (pointer: fine) {
+  #team .member:hover > .avatar, #team .member:hover > .member-info, #team .member:hover > .member-arrow { opacity: 0; transform: translateY(-4px); }
+  #team .member:hover > .member-profile-cta { opacity: 1; transform: translateY(0); }
+}
 #team .member .avatar { width: 42px; height: 42px; min-width: 42px; }
 #team .member-info { gap: 3px; flex: 1; }
 #team .member-info > strong { display: flex; align-items: center; gap: 5px; font-size: 14px; line-height: 1.3; }

@@ -5,6 +5,7 @@ import {
   DiscordLogo,
   MagnifyingGlass,
   CaretDown,
+  Eye,
 } from "@phosphor-icons/react";
 import { copy, site, type Language } from "../data/site";
 import { filterMembers } from "../lib/utils";
@@ -186,7 +187,7 @@ export function Team({ lang, directory }: { lang: Language; directory: ReturnTyp
                       <ul className="team-branch" id={`team-branch-${index}`} hidden={collapsedRoles.includes(group.name)}>
                         {group.members.map((member) => (
                           <li className="team-node" key={member.id}>
-                            <button className="member" aria-haspopup="dialog" onClick={() => setSelected(member)}>
+                            <button className="member" aria-label={`${id ? "Lihat profil" : "View profile"} ${member.name}, ${member.handle}, ${member.role}`} aria-haspopup="dialog" onClick={() => setSelected(member)}>
                               <img
                                 className="avatar discord-avatar"
                                 src={member.avatar}
@@ -204,6 +205,7 @@ export function Team({ lang, directory }: { lang: Language; directory: ReturnTyp
                                 <span>{member.division || member.role}</span>
                               </span>
                               <ArrowUpRight size={19} className="member-arrow" />
+                              <span className="member-profile-cta" aria-hidden="true"><Eye size={15} />View Profile</span>
                             </button>
                           </li>
                         ))}
