@@ -25,7 +25,7 @@ export default function Twibbon({ lang }: { lang: Language }) {
     let active = true;
     const image = new Image();
     image.onload = () => { if (active) setLogo(image); };
-    image.src = "/images/sylux-logo.png";
+    image.src = "/images/sylux-logo-hd.png";
     return () => { active = false; };
   }, []);
   useEffect(
@@ -74,7 +74,12 @@ export default function Twibbon({ lang }: { lang: Language }) {
       fontSize -= 2;
       ctx.font = `700 ${fontSize}px Outfit, sans-serif`;
     }
-    if (logo) ctx.drawImage(logo, 0, 48, 128, 36, 60, 880, 360, 102);
+    if (logo) {
+      ctx.save();
+      ctx.globalCompositeOperation = "screen";
+      ctx.drawImage(logo, 60, 864, 380, 128);
+      ctx.restore();
+    }
     else ctx.fillText(site.name, 60, 966);
     ctx.fillStyle = "#cbb9ed";
     ctx.font = "28px Outfit, sans-serif";

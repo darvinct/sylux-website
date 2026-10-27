@@ -288,6 +288,7 @@ textarea:focus-visible {
   object-fit: cover;
   object-position: center;
   flex-shrink: 0;
+  mix-blend-mode: screen;
 }
 .member-profile-header .brand-logo {
   width: 96px;
@@ -399,8 +400,9 @@ textarea:focus-visible {
   width: min(480px, 100%);
   height: 140px;
   background: linear-gradient(110deg, #d2abff 8%, #c6c0ff 53%, #a5e5ff);
-  -webkit-mask: url('/images/sylux-logo.png') center / 100% auto no-repeat;
-  mask: url('/images/sylux-logo.png') center / 100% auto no-repeat;
+  -webkit-mask: url('/images/sylux-logo-hd.png') center / 100% auto no-repeat;
+  mask: url('/images/sylux-logo-hd.png') center / 100% auto no-repeat;
+  mask-mode: luminance;
   filter: drop-shadow(0 0 35px #a27bff29);
 }
 .hero-tagline {
@@ -511,6 +513,74 @@ textarea:focus-visible {
 .hero-intro { animation-delay: .12s; }
 .hero-presence { animation-delay: .16s; }
 .hero-buttons { animation-delay: .2s; }
+
+/* Reveal once as content enters the viewport; no scroll interception. */
+.motion-ready .scroll-reveal {
+  transition:
+    opacity .65s ease,
+    transform .7s cubic-bezier(.2, .65, .3, 1),
+    filter .65s ease;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.motion-ready .scroll-reveal:not(.is-visible) {
+  opacity: 0;
+  transform: translateY(28px);
+  filter: blur(3px);
+}
+.motion-ready .scroll-reveal.is-visible,
+.motion-ready .scroll-reveal:focus-within {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+.reading-progress { display: none; }
+@supports (animation-timeline: scroll()) {
+  .reading-progress {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 50;
+    height: 2px;
+    width: 100%;
+    background: var(--brand-gradient);
+    transform-origin: left;
+    animation: reading-progress linear both;
+    animation-timeline: scroll(root block);
+    pointer-events: none;
+  }
+  @keyframes reading-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+}
+@supports (animation-timeline: view()) {
+  .motion-page .hero { view-timeline-name: --hero-exit; }
+  .motion-page .hero-background {
+    animation: hero-glow-parallax linear both;
+    animation-timeline: --hero-exit;
+    animation-range: exit 0% exit 100%;
+  }
+  @keyframes hero-glow-parallax {
+    from { transform: translateY(0) scale(1); }
+    to { transform: translateY(90px) scale(1.12); }
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .motion-page :is(.member, .event-card, .tool-link) {
+    transition: translate .25s ease, border-color .25s ease, background .25s ease, opacity .65s ease, transform .7s ease, filter .65s ease;
+  }
+  .motion-page :is(.member, .event-card):hover {
+    translate: 0 -4px;
+    transition-delay: 0s;
+    box-shadow: 0 12px 32px #12072255;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .motion-ready .scroll-reveal:not(.is-visible) { opacity: 1; transform: none; filter: none; }
+  .reading-progress { display: none; }
+  .motion-page :is(.member, .event-card):hover { translate: none; }
+}
 .community-strip {
   display: flex;
   justify-content: space-between;

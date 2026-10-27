@@ -11,7 +11,7 @@ import { inviteCode } from "../lib/utils";
 import { AuthControl } from "./Auth";
 
 export function BrandLogo({ className = "" }: { className?: string }) {
-  return <img className={`brand-logo ${className}`} src="/images/sylux-logo.png" alt={site.name} width="128" height="128" />;
+  return <img className={`brand-logo ${className}`} src="/images/sylux-logo-hd.png" alt={site.name} width="2158" height="729" />;
 }
 
 export function JoinButton({
