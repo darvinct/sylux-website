@@ -17,36 +17,6 @@ export function inviteCode(value: string): string | null {
   }
 }
 
-export function downloadFile(
-  content: BlobPart,
-  filename: string,
-  type = "application/json",
-) {
-  const url = URL.createObjectURL(new Blob([content], { type }));
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-
-export function webhookPayload(
-  title: string,
-  description: string,
-  color: string,
-) {
-  return {
-    allowed_mentions: { parse: [] },
-    embeds: [
-      {
-        title: title.trim().slice(0, 256),
-        description: description.trim().slice(0, 4096),
-        color: parseInt(color.slice(1), 16),
-      },
-    ],
-  };
-}
-
 export function filterMembers<
   T extends { name: string; role: string; handle: string; division?: string },
 >(members: T[], query: string, role: string, sorted: boolean) {

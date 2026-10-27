@@ -49,15 +49,14 @@ Login pengunjung **tidak otomatis menjadikan mereka anggota tim**. Bot token ber
 
 Hero terpusat menampilkan logo asli SYLUX dengan gradasi, avatar tim, dan jumlah anggota yang sedang online. Avatar terhubung ke direktori tim dan tidak menandakan status online per akun. `/api/community` mengambil jumlah total/online dari undangan Discord publik; tidak memerlukan bot token. Hero dan Server Stats berbagi satu permintaan, dengan refresh setiap 60 detik ketika halaman aktif dan cache CDN 60 detik. Jika data gagal dimuat, UI menampilkan status tidak tersedia serta tombol coba lagi. Tidak ada angka atau kehadiran yang dibuat-buat.
 
-## Login dan alat komunitas
+## Login Discord
 
 - Login hanya meminta scope `identify`: ID, nama, username, avatar. Tidak meminta email, pesan, atau izin bergabung server.
 - Authorization code + PKCE S256, state browser, dan issuer Discord diverifikasi di backend.
 - Website menyimpan profil dasar dalam cookie terenkripsi, HttpOnly, SameSite=Lax, dan Secure pada HTTPS. Sesi berakhir setelah 24 jam; login ulang untuk memperbarui profil akun.
 - Access token dan refresh token Discord dipakai sementara saat callback, tidak dipersistenkan dan tidak dikirim ke browser.
 - Logout memakai POST dengan pemeriksaan origin dan menghapus cookie browser. Tidak mencabut otorisasi aplikasi di pengaturan Discord. Sesi bersifat stateless; penghapusan cookie tidak mencabut salinan cookie lain sebelum masa berlakunya habis.
-- Beranda dan tim bersifat publik. Editor webhook meminta login untuk membuka UI. Twibbon dan form komunitas sudah dihapus.
-- Editor webhook bekerja lokal untuk preview/ekspor JSON. Tidak ada database atau pengiriman webhook ke server. Jika menambahkan aksi server di masa depan, endpoint aksi tersebut juga harus memverifikasi sesi, bukan mengandalkan tampilan login.
+- Beranda, tim, dan informasi bersifat publik. Akun Discord dapat diakses langsung dari navbar. Twibbon, form komunitas, Webhook Studio, dan menu More sudah dihapus.
 
 ## Identitas dan konten
 

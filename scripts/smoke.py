@@ -27,18 +27,17 @@ async def main():
         page = await context.new_page()
         errors = []
         page.on('pageerror', lambda error: errors.append(str(error)))
-        await page.goto(BASE + '/webhooks/editor', wait_until='networkidle')
+        await page.goto(BASE + '/account', wait_until='networkidle')
         await expect(page.get_by_role('heading', level=1)).to_contain_text('Masuk, lalu ikut ceritanya.')
         assert await page.locator('input[type=file]').count() == 0
-        assert '/api/auth/login?returnTo=%2Fwebhooks%2Feditor' in await page.locator('.login-card a').get_attribute('href')
+        assert '/api/auth/login?returnTo=%2Faccount' in await page.locator('.login-card a').get_attribute('href')
         session.update(user=user, expiresAt=int(time.time() * 1000) + 3600000)
         await page.goto(BASE + '/account', wait_until='networkidle')
         await expect(page.locator('.account-card')).to_contain_text('session.user')
         await page.goto(BASE, wait_until='networkidle')
         await expect(page.locator('.member')).to_have_count(4)
         await expect(page.locator('a[href="/twibbon"], a[href="/forms/public"]')).to_have_count(0)
-        await expect(page.locator('.tool-link')).to_have_count(1)
-        await expect(page.locator('.tool-link')).to_have_attribute('href', '/webhooks/editor')
+        await expect(page.locator('.tools-section, .nav-more, a[href="/webhooks/editor"]')).to_have_count(0)
         assert await page.locator('.member').filter(has_text='Session User').count() == 0
         await expect(page.get_by_role('heading', level=1)).to_contain_text('SYLUX')
         await expect(page.locator('.hero-tagline')).to_have_text('Ruangmu untuk bersinar.')
@@ -47,13 +46,8 @@ async def main():
         for width in [320, 390, 768, 1024, 1440]:
             await page.set_viewport_size({'width': width, 'height': 900})
             assert await page.evaluate('document.documentElement.scrollWidth <= window.innerWidth'), f'Overflow at {width}px'
-        more = page.locator('.nav-more summary')
-        await more.press('Enter')
-        await expect(page.locator('.nav-more .account-control')).to_be_visible()
-        await expect(page.locator('.nav-more a[href="/information"]')).to_be_visible()
-        await page.keyboard.press('Escape')
-        await expect(more).to_be_focused()
-        await expect(page.locator('.nav-more-menu')).not_to_be_visible()
+        await expect(page.locator('#main-nav .account-control')).to_be_visible()
+        await expect(page.locator('#main-nav a[href="/information"]')).to_be_visible()
         await page.get_by_role('button', name='Ringkas navbar', exact=True).click()
         await expect(page.locator('.header-content')).not_to_be_visible()
         await expect(page.get_by_role('button', name='EN', exact=True)).to_be_visible()
@@ -129,23 +123,10 @@ async def main():
         await page.locator('#main-nav a').nth(2).click()
         await expect(page.locator('#main-nav')).to_be_hidden()
 
-        for removed in ['/twibbon', '/forms/public']:
+        for removed in ['/twibbon', '/forms/public', '/webhooks/editor']:
             await page.goto(BASE + removed, wait_until='networkidle')
             await expect(page.get_by_role('heading', level=1)).to_contain_text('Halaman belum ditemukan')
             await expect(page.locator('a[href="/twibbon"], a[href="/forms/public"]')).to_have_count(0)
-
-        await page.goto(BASE + '/webhooks/editor', wait_until='networkidle')
-        await page.get_by_label('Judul').fill('<script>alert(1)</script>')
-        await expect(page.locator('.discord-embed h3')).to_have_text('<script>alert(1)</script>')
-        assert await page.locator('.discord-embed script').count() == 0
-        await page.get_by_label('Isi pesan').fill('Hello @everyone')
-        async with page.expect_download() as download_info:
-            await page.get_by_role('button', name='Unduh JSON').click()
-        data = json.loads(Path(await (await download_info.value).path()).read_text())
-        assert data['allowed_mentions']['parse'] == [] and data['embeds'][0]['description'] == 'Hello @everyone'
-        await page.get_by_label('Judul').fill('')
-        await page.get_by_label('Isi pesan').fill('')
-        await expect(page.get_by_role('button', name='Unduh JSON')).to_be_disabled()
 
         if os.environ.get('TEST_STATS') == '1':
             counter = 0
@@ -234,7 +215,7 @@ async def main():
         await page.route('**/api/auth/logout', logout_response)
         await page.get_by_role('button', name='Keluar dari website').click()
         await expect(page.get_by_role('heading', level=1)).to_contain_text('Masuk, lalu ikut ceritanya.')
-        await page.goto(BASE + '/webhooks/editor', wait_until='networkidle')
+        await page.goto(BASE + '/account', wait_until='networkidle')
         await expect(page.get_by_role('heading', level=1)).to_contain_text('Masuk, lalu ikut ceritanya.')
         await page.goto(BASE + '/login?error=discord_configuration', wait_until='networkidle')
         await expect(page.get_by_role('alert')).to_contain_text('Discord menolak konfigurasi')
@@ -250,16 +231,16 @@ async def main():
         moving = await motion.new_page()
         await moving.goto(BASE, wait_until='networkidle')
         await expect(moving.locator('main')).to_have_class('motion-page motion-ready')
-        await expect(moving.locator('.tool-link').first).to_have_css('opacity', '0')
-        await moving.locator('.tool-link').first.scroll_into_view_if_needed()
-        await expect(moving.locator('.tool-link').first).to_have_css('opacity', '1')
+        await expect(moving.locator('.faq-section > h2').first).to_have_css('opacity', '0')
+        await moving.locator('.faq-section > h2').first.scroll_into_view_if_needed()
+        await expect(moving.locator('.faq-section > h2').first).to_have_css('opacity', '1')
         await moving.locator('.team-toolbar select').first.select_option('Founder')
         await expect(moving.locator('.member')).to_have_count(1)
         await moving.locator('.member').scroll_into_view_if_needed()
         await expect(moving.locator('.member')).to_have_class('member scroll-reveal is-visible')
         await moving.emulate_media(reduced_motion='reduce')
         await expect(moving.locator('main')).to_have_class('motion-page')
-        await expect(moving.locator('.tool-link').last).to_have_css('opacity', '1')
+        await expect(moving.locator('.faq-section > h2').last).to_have_css('opacity', '1')
         await moving.emulate_media(reduced_motion='no-preference')
         await moving.goto(BASE + '/information', wait_until='networkidle')
         division_names = await moving.locator('.role-selector button').all_inner_texts()
@@ -289,7 +270,7 @@ async def main():
         await moving.get_by_role('button',name='Event Creative Staff',exact=True).click()
         await expect(moving.locator('.role-feature h3')).to_have_text('Event Creative Staff')
         await motion.close()
-        print('PASS: layouts, languages, team filters, modal keyboard, events, mobile navigation, removed tool routes, webhook export, storage failures, direct routes' + (', statistics retry/success' if os.environ.get('TEST_STATS') else ''))
+        print('PASS: layouts, languages, team filters, modal keyboard, events, mobile navigation, removed tool routes and More menu, storage failures, direct routes' + (', statistics retry/success' if os.environ.get('TEST_STATS') else ''))
         await browser.close()
 
 

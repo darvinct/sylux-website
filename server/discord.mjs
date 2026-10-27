@@ -116,7 +116,6 @@ export function noStore(res) {
 export function safeReturn(value) {
   return [
     "/",
-    "/webhooks/editor",
     "/account",
   ].includes(value)
     ? value

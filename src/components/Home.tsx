@@ -1,13 +1,11 @@
 import {
   ArrowRight,
-  ArrowUpRight,
   ChatCircleDots,
   Headphones,
   Microphone,
   PaintBrush,
   UsersThree,
   Waveform,
-  Code,
   ArrowClockwise,
 } from "@phosphor-icons/react";
 import { copy, site, type Language } from "../data/site";
@@ -22,7 +20,7 @@ export default function Home({ lang }: { lang: Language }) {
   const id = lang === "id";
   const community = useCommunity();
   const directory = useTeam();
-  const page = useScrollReveal(".about-copy, .activity, .stats-intro, .stats-data, .section-heading, .event-card, .team-toolbar, .member, .tool-link, .faq-section > h2, .faq-list details, .closing > div:not(.closing-mark), .closing > .button");
+  const page = useScrollReveal(".about-copy, .activity, .stats-intro, .stats-data, .section-heading, .event-card, .team-toolbar, .member, .faq-section > h2, .faq-list details, .closing > div:not(.closing-mark), .closing > .button");
   const activityIcons = [ChatCircleDots, Headphones, Microphone, PaintBrush];
   return (
     <main ref={page} className="motion-page">
@@ -114,22 +112,6 @@ export default function Home({ lang }: { lang: Language }) {
       <Stats lang={lang} community={community} />
       <Portfolio lang={lang} />
       <Team lang={lang} directory={directory} />
-      <section className="section wrap tools-section">
-        <div className="section-heading">
-          <h2>{t.tools}</h2>
-          <p>{t.toolsBody}</p>
-        </div>
-        <div className="tools-list">
-          <a className="tool-link" href="/webhooks/editor">
-            <span className="tool-icon"><Code size={26} weight="light" /></span>
-            <div>
-              <h3>{t.webhookName}</h3>
-              <p>{t.webhookBody}</p>
-            </div>
-            <ArrowUpRight size={25} />
-          </a>
-        </div>
-      </section>
       <section className="section wrap faq-section">
         <h2>{t.faq}</h2>
         <div className="faq-list">

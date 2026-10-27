@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { inviteCode, filterMembers, webhookPayload } from "../src/lib/utils.ts";
+import { inviteCode, filterMembers } from "../src/lib/utils.ts";
 
 assert.equal(inviteCode("https://discord.gg/my-community"), "my-community");
 assert.equal(
@@ -29,22 +29,4 @@ assert.equal(
   "Zara",
   "Sorting must not mutate original members",
 );
-const message = webhookPayload(
-  "x".repeat(300),
-  "@everyone <script>alert(1)</script>",
-  "#ffffff",
-);
-assert.equal(message.embeds[0].title.length, 256);
-assert.equal(message.embeds[0].color, 16777215);
-assert.deepEqual(
-  message.allowed_mentions.parse,
-  [],
-  "Exported payload must disable mentions",
-);
-assert.equal(
-  webhookPayload("", "a".repeat(4200), "#000000").embeds[0].description.length,
-  4096,
-);
-console.log(
-  "Passed: invite validation, member filters, export limits, and mention safety.",
-);
+console.log("Passed: invite validation and member filters.");

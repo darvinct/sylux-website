@@ -170,19 +170,11 @@ const authErrors: Record<string, [string, string]> = {
   ],
 };
 
-export function LoginPage({
-  lang,
-  gated = false,
-}: {
-  lang: Language;
-  gated?: boolean;
-}) {
+export function LoginPage({ lang }: { lang: Language }) {
   const auth = useAuth();
   const id = lang === "id";
   const params = new URLSearchParams(window.location.search);
-  const returnTo = gated
-    ? window.location.pathname
-    : params.get("returnTo") || "/account";
+  const returnTo = params.get("returnTo") || "/account";
   const message = authErrors[params.get("error") || ""];
   return (
     <main className="tool-page wrap login-page">
@@ -192,13 +184,9 @@ export function LoginPage({
           id ? "Masuk, lalu ikut ceritanya." : "Sign in. Be part of the story."
         }
         body={
-          gated
-            ? id
-              ? "Masuk dengan akun Discord untuk menggunakan alat komunitas ini."
-              : "Sign in with Discord to use this community tool."
-            : id
-              ? `Satu akun Discord untuk terhubung dengan ${site.name}.`
-              : `Connect with ${site.name} using your Discord account.`
+          id
+            ? `Satu akun Discord untuk terhubung dengan ${site.name}.`
+            : `Connect with ${site.name} using your Discord account.`
         }
       />
       <div className="login-card">
@@ -253,17 +241,6 @@ export function LoginPage({
       </div>
     </main>
   );
-}
-
-export function RequireLogin({
-  children,
-  lang,
-}: {
-  children: ReactNode;
-  lang: Language;
-}) {
-  const { user } = useAuth();
-  return user ? children : <LoginPage lang={lang} gated />;
 }
 
 export function AccountPage({ lang }: { lang: Language }) {

@@ -6,13 +6,11 @@ import { Footer, Header } from "./components/Shell";
 import Home from "./components/Home";
 import {
   AuthProvider,
-  RequireLogin,
   LoginPage,
   AccountPage,
 } from "./components/Auth";
 import "./styles.css";
 
-const Webhook = lazy(() => import("./components/Webhook"));
 const Information = lazy(() => import("./components/Information"));
 const SharePreview = lazy(() => import("./components/SharePreview"));
 
@@ -37,9 +35,7 @@ function App() {
         ? (lang === "id" ? "Pratinjau Discord" : "Discord preview")
         : path === "/information"
           ? copy[lang].information
-          : path === "/webhooks/editor"
-            ? "Webhook Studio"
-            : site.tagline;
+          : site.tagline;
     document.title = `${site.name} | ${title}`;
   }, [lang, path]);
   return (
@@ -66,10 +62,6 @@ function App() {
               <Information lang={lang} />
             ) : path === "/preview-discord" ? (
               <SharePreview lang={lang} />
-            ) : path === "/webhooks/editor" ? (
-              <RequireLogin lang={lang}>
-                <Webhook lang={lang} />
-              </RequireLogin>
             ) : path === "/login" ? (
               <LoginPage lang={lang} />
             ) : path === "/account" ? (

@@ -3,7 +3,6 @@ import {
   ArrowLeft,
   ArrowUpRight,
   DiscordLogo,
-  CaretDown,
   CaretLeft,
   List,
   X,
@@ -55,36 +54,21 @@ export function Header({
 }) {
   const [open, setOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  const more = useRef<HTMLDetailsElement>(null);
   const t = copy[lang];
-  const closeMenus = () => {
-    setOpen(false);
-    more.current?.removeAttribute("open");
-  };
+  const closeMenus = () => setOpen(false);
   useEffect(() => {
     const narrow = window.matchMedia("(max-width: 1023px)");
     const expandOnMobile = () => { if (narrow.matches) setCollapsed(false); };
     const close = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
-      if (more.current?.open) {
-        more.current.removeAttribute("open");
-        more.current.querySelector("summary")?.focus();
-      } else {
-        setOpen(false);
-        const trigger = document.getElementById("nav-menu-toggle");
-        if (trigger?.getAttribute("aria-expanded") === "true") trigger.focus();
-      }
-    };
-    const dismiss = (e: PointerEvent) => {
-      if (e.target instanceof Node && !more.current?.contains(e.target))
-        more.current?.removeAttribute("open");
+      setOpen(false);
+      const trigger = document.getElementById("nav-menu-toggle");
+      if (trigger?.getAttribute("aria-expanded") === "true") trigger.focus();
     };
     window.addEventListener("keydown", close);
-    document.addEventListener("pointerdown", dismiss);
     narrow.addEventListener("change", expandOnMobile);
     return () => {
       window.removeEventListener("keydown", close);
-      document.removeEventListener("pointerdown", dismiss);
       narrow.removeEventListener("change", expandOnMobile);
     };
   }, []);
@@ -110,14 +94,8 @@ export function Header({
               {t.nav[i]}
             </a>
           ))}
-          <a href="/webhooks/editor" onClick={closeMenus}>Webhook</a>
-          <details className="nav-more" ref={more}>
-            <summary>{lang === "id" ? "Lainnya" : "More"}<CaretDown size={12} aria-hidden="true" /></summary>
-            <div className="nav-more-menu">
-              <a href="/information" onClick={closeMenus} aria-current={window.location.pathname.replace(/\/$/, "") === "/information" ? "page" : undefined}>{t.information}</a>
-              <AuthControl lang={lang} />
-            </div>
-          </details>
+          <a href="/information" onClick={closeMenus} aria-current={window.location.pathname.replace(/\/$/, "") === "/information" ? "page" : undefined}>{t.information}</a>
+          <AuthControl lang={lang} />
         </nav>
       </div>
       <div className="header-actions">
@@ -158,7 +136,6 @@ export function Footer({ lang }: { lang: Language }) {
         <p>{site.tagline}</p>
         <div className="footer-links">
           <a href="/information">{t.information}</a>
-          <a href="/webhooks/editor">Webhook</a>
           {site.instagram && (
             <a href={site.instagram} target="_blank" rel="noreferrer">
               Instagram

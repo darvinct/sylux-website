@@ -297,18 +297,9 @@ textarea:focus-visible {
 .header .brand-logo { width: 104px; height: 28px; }
 .nav-emblem { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
 .header .nav { justify-content: center; flex: 1; min-width: 0; }
-.header .nav > a, .nav-more > summary { font-size: 12px; padding: 12px 9px; color: #c1b9cb; border-radius: 8px; }
-.header .nav > a:hover, .nav-more > summary:hover { color: #fff; background: #ffffff06; }
+.header .nav > a { font-size: 12px; padding: 12px 9px; color: #c1b9cb; border-radius: 8px; }
+.header .nav > a:hover { color: #fff; background: #ffffff06; }
 .header .nav > a[aria-current="page"] { color: #e5d6ff; background: transparent; }
-.nav-more { position: relative; }
-.nav-more > summary { display: flex; align-items: center; gap: 6px; min-height: 44px; white-space: nowrap; list-style: none; cursor: pointer; }
-.nav-more > summary::-webkit-details-marker { display: none; }
-.nav-more[open] > summary { color: #eee4ff; }
-.nav-more[open] > summary > svg { transform: rotate(180deg); }
-.nav-more-menu { position: absolute; top: calc(100% + 14px); right: 0; width: 206px; padding: 8px; border: 1px solid var(--border); border-radius: 12px; background: #14101dfc; box-shadow: 0 12px 30px #0006; }
-.nav-more-menu a { padding: 12px; min-height: 44px; border-radius: 8px; }
-.header .nav-more-menu .login-control, .header .nav-more-menu .account-control { width: 100%; max-width: none; justify-content: flex-start; border: 0; background: transparent; color: var(--text); font-size: 13px; }
-.nav-more-menu .login-control > span, .nav-more-menu .account-control > span { display: inline; }
 .nav-collapse { flex-shrink: 0; color: #aaa0b7; }
 .nav-collapse > svg { transition: transform .45s cubic-bezier(.22, 1, .36, 1); }
 .header .header-actions { flex-shrink: 0; }
@@ -340,10 +331,6 @@ textarea:focus-visible {
 .member-profile-header .brand-logo {
   width: 96px;
   height: 26px;
-}
-.bot-avatar .brand-logo {
-  width: 34px;
-  height: 14px;
 }
 .brand-period {
   color: var(--accent);
@@ -620,7 +607,7 @@ textarea:focus-visible {
   }
 }
 @media (hover: hover) and (pointer: fine) {
-  .motion-page :is(.member, .event-card, .tool-link) {
+  .motion-page :is(.member, .event-card) {
     transition: translate .25s ease, border-color .25s ease, background .25s ease, opacity .65s ease, transform .7s ease, filter .65s ease;
   }
   .motion-page :is(.member, .event-card):hover {
@@ -999,47 +986,6 @@ textarea:focus-visible {
   align-items: center;
   gap: 18px;
 }
-.tools-section {
-  padding-top: 50px;
-}
-.tools-list {
-  display: flex;
-  flex-direction: column;
-}
-.tool-link {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  padding: 26px 0;
-  border-bottom: 1px solid var(--border);
-  transition: padding 0.2s;
-}
-.tool-link:hover {
-  padding-inline: 12px;
-}
-.tool-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: #18102d;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--accent);
-  flex-shrink: 0;
-}
-.tool-link h3 {
-  font-size: 20px;
-}
-.tool-link p {
-  font-size: 13px;
-  margin-top: 6px;
-}
-.tool-link > svg {
-  margin-left: auto;
-  flex-shrink: 0;
-}
 .faq-section {
   display: grid;
   grid-template-columns: 1fr 1.5fr;
@@ -1375,29 +1321,6 @@ textarea:focus-visible {
   margin-top: 18px;
   max-width: 640px;
 }
-.tool-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 44px;
-  align-items: start;
-}
-.tool-panel {
-  background: #100b1a;
-  border: 1px solid var(--border);
-  padding: 32px;
-  border-radius: var(--radius);
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  min-width: 0;
-}
-.tool-panel h2 {
-  font-size: 28px;
-  letter-spacing: -0.8px;
-}
-.tool-panel > p {
-  font-size: 14px;
-}
 .field {
   display: flex;
   flex-direction: column;
@@ -1437,136 +1360,6 @@ textarea {
 .error {
   font-size: 14px;
   color: #ffc8bd;
-}
-.form-status {
-  font-size: 13px;
-  color: #d2bffc;
-  min-height: 20px;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  line-height: 1.6;
-}
-.color-field > span {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  color: #b8bfc3;
-}
-.color-field input {
-  width: 56px;
-  height: 42px;
-  background: transparent;
-  border: 1px solid #555f5a;
-  border-radius: 6px;
-  padding: 4px;
-}
-.color-field code {
-  font-size: 12px;
-}
-.preview-panel {
-  min-width: 0;
-  padding: 4px 0;
-}
-.preview-label {
-  font-size: 12px;
-  color: #b8bfc1;
-  display: block;
-  margin-bottom: 18px;
-}
-.discord-preview {
-  padding: 28px 22px;
-  background: #313338;
-  border: 1px solid #484b52;
-  border-radius: 12px;
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  margin-bottom: 20px;
-  min-height: 250px;
-}
-.bot-avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  background: #07060c;
-  border-radius: 50%;
-  color: #d8e1d1;
-}
-.discord-message {
-  min-width: 0;
-  flex: 1;
-}
-.discord-author {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  font-family: Arial, sans-serif;
-  margin-bottom: 12px;
-}
-.discord-author > strong {
-  font-size: 14px;
-  color: #f3f3f4;
-}
-.discord-author > span {
-  font-size: 9px;
-  padding: 3px 4px;
-  background: #5865f2;
-  color: white;
-  border-radius: 3px;
-}
-.discord-author > small {
-  font-size: 10px;
-  color: #b9bcc4;
-}
-.discord-embed {
-  border-left: 4px solid;
-  border-radius: 4px;
-  background: #292b30;
-  padding: 18px;
-  overflow-wrap: anywhere;
-  min-height: 90px;
-  white-space: pre-wrap;
-  font-family: Arial, sans-serif;
-}
-.discord-embed h3 {
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.5;
-}
-.discord-embed p {
-  font-size: 13px;
-  color: #d7d8de;
-  line-height: 1.6;
-  margin-top: 10px;
-}
-.preview-panel > small {
-  font-size: 12px;
-  line-height: 1.7;
-  display: block;
-}
-.json-details {
-  margin-top: 28px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 18px;
-  background: #07060c;
-}
-.json-details summary {
-  cursor: pointer;
-  font-size: 13px;
-  color: #bfc8ba;
-}
-.json-details pre {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  font-size: 11px;
-  line-height: 1.7;
-  color: #b6beb0;
 }
 .not-found > span {
   font-size: 16px;
@@ -1647,12 +1440,6 @@ textarea {
   .event-2 h3 {
     font-size: 20px;
   }
-  .tool-grid {
-    gap: 28px;
-  }
-  .tool-panel {
-    padding: 24px;
-  }
 }
 @media (max-width: 1000px) {
   .header .menu-button { display: flex; }
@@ -1679,9 +1466,7 @@ textarea {
   .header .nav { max-height: calc(100svh - 112px); overflow-y: auto; opacity: 0; transform: translateY(-6px); transition: opacity .2s ease, transform .25s ease, display .25s allow-discrete; }
   .header .nav.is-open { opacity: 1; transform: translateY(0); }
   @starting-style { .header .nav.is-open { opacity: 0; transform: translateY(-6px); } }
-  .header .nav > a, .header .nav-more > summary { font-size: 15px; min-height: 48px; padding: 12px; }
-  .header .nav-more > summary { justify-content: space-between; }
-  .nav-more-menu { position: static; width: 100%; margin-top: 4px; padding: 4px; box-shadow: none; }
+  .header .nav > a { font-size: 15px; min-height: 48px; padding: 12px; }
 }
 @media (max-width: 767px) {
   :root { --nav-clearance: 96px; }
@@ -1923,32 +1708,6 @@ textarea {
     height: 44px;
     min-width: 44px;
   }
-  .tools-section {
-    padding-top: 24px;
-  }
-  .tool-link {
-    gap: 16px;
-    padding-block: 24px;
-  }
-  .tool-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 8px;
-  }
-  .tool-icon > svg {
-    width: 23px;
-  }
-  .tool-link h3 {
-    font-size: 17px;
-  }
-  .tool-link p {
-    font-size: 12px;
-    max-width: 220px;
-    line-height: 1.65;
-  }
-  .tool-link > svg {
-    width: 20px;
-  }
   .faq-section {
     grid-template-columns: 1fr;
     gap: 20px;
@@ -2030,17 +1789,6 @@ textarea {
     font-size: 14px;
     margin-top: 16px;
   }
-  .tool-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-  .tool-panel {
-    padding: 24px 20px;
-    gap: 22px;
-  }
-  .tool-panel h2 {
-    font-size: 26px;
-  }
   .button-row {
     gap: 10px;
   }
@@ -2049,19 +1797,9 @@ textarea {
     padding: 12px 15px;
     flex: 1;
   }
-  .form-status {
-    font-size: 12px;
-  }
   .notice {
     font-size: 12px;
     padding: 16px;
-  }
-  .discord-preview {
-    padding: 22px 16px;
-    gap: 10px;
-  }
-  .discord-embed {
-    padding: 16px 12px;
   }
   .modal-content {
     padding: 32px 24px;

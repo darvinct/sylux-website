@@ -49,10 +49,11 @@ for (const value of [
   "/api/auth/callback",
   "/twibbon",
   "/forms/public",
+  "/webhooks/editor",
   "/account?to=https://evil.example",
 ])
   assert.equal(safeReturn(value), "/account");
-assert.equal(safeReturn("/webhooks/editor"), "/webhooks/editor");
+assert.equal(safeReturn("/account"), "/account");
 const encrypted = seal(
   { user: { id: "123" } },
   env.SESSION_SECRET,
@@ -110,7 +111,7 @@ const profile = {
   email: "must-not-be-public@example.com",
 };
 try {
-  let response = await invoke(auth, "/api/auth/login?returnTo=/webhooks/editor");
+  let response = await invoke(auth, "/api/auth/login?returnTo=/account");
   assert.equal(response.statusCode, 303);
   const authorize = new URL(response.headers.location);
   assert.equal(authorize.origin, "https://discord.com");
@@ -184,7 +185,7 @@ try {
   assert.equal(response.headers.location, "/login?error=invalid_state");
   assert.equal(tokenExchanges, 0);
   response = await invoke(auth, callback, { cookie: browserCookie });
-  assert.equal(response.headers.location, "/webhooks/editor");
+  assert.equal(response.headers.location, "/account");
   assert.equal(tokenExchanges, 1);
   const cookies = response.headers["set-cookie"];
   const sessionCookie = cookies.find((value) =>
