@@ -1,6 +1,6 @@
 # Pratinjau tautan Discord
 
-Konfigurasi publik berada di `src/data/share.json`. Plugin Vite `scripts/share.mjs` memasukkan Open Graph, Twitter Card, dan JSON Component Embed langsung ke HTML saat build. Discord tidak perlu menjalankan JavaScript untuk membacanya. `SITE_URL` menentukan origin produksi; build Vercel Preview memakai `VERCEL_URL` agar aset dan tautannya mengarah ke deployment yang ditinjau.
+Konfigurasi publik berada di `src/data/share.json`. Plugin Vite `scripts/share.mjs` memasukkan Open Graph, Twitter Card, dan JSON Component Embed langsung ke HTML saat build. Discord tidak perlu menjalankan JavaScript untuk membacanya. Origin produksi mengikuti `VERCEL_PROJECT_PRODUCTION_URL`, lalu `SITE_URL` jika build di luar Vercel, dengan fallback `https://syluxofficial.vercel.app`. Build Vercel Preview memakai `VERCEL_URL` agar aset dan tautannya mengarah ke deployment yang ditinjau. Variabel ini hanya digunakan untuk metadata berbagi; konfigurasi OAuth tidak diubah.
 
 Component Embed memakai satu Container, Section dengan thumbnail logo, Media Gallery dengan gambar beranda, Separator, teks, empat tombol tautan, dan footer. Tidak ada bot, webhook, pengiriman pesan, atau secret yang diperlukan. Pemeriksaan `npm run check` memvalidasi batas JSON 3000 byte, maksimal 40 komponen, dan tombol style 5 (link). Open Graph menjadi fallback ketika klien tidak menampilkan Component Embed.
 

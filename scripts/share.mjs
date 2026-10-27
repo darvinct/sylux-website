@@ -1,11 +1,14 @@
 import data from "../src/data/share.json" with { type: "json" };
 import { inviteCode } from "../src/lib/utils.ts";
 
-export const DEFAULT_ORIGIN = "https://website-komunitasi.vercel.app";
+export const DEFAULT_ORIGIN = "https://syluxofficial.vercel.app";
 
 export function shareOrigin(env = process.env) {
   const value = env.VERCEL_ENV === "preview" && env.VERCEL_URL
-    ? `https://${env.VERCEL_URL}` : env.SITE_URL || DEFAULT_ORIGIN;
+    ? `https://${env.VERCEL_URL}`
+    : env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : env.SITE_URL || DEFAULT_ORIGIN;
   const url = new URL(value);
   const local = ["localhost", "127.0.0.1"].includes(url.hostname);
   if ((url.protocol !== "https:" && !(local && url.protocol === "http:")) ||

@@ -44,6 +44,7 @@ const preview = shareOrigin({ VERCEL_ENV: "preview", VERCEL_URL: "sylux-preview.
 assert.equal(preview, "https://sylux-preview.vercel.app");
 assert.ok(buildShare(preview).json.includes(preview));
 assert.equal(shareOrigin({ SITE_URL: "https://sylux.example" }), "https://sylux.example");
+assert.equal(shareOrigin({ VERCEL_PROJECT_PRODUCTION_URL: "syluxofficial.vercel.app", SITE_URL: "https://website-komunitasi.vercel.app" }), DEFAULT_ORIGIN);
 for (const origin of ["http://sylux.example", "https://user:pass@sylux.example", "https://sylux.example/path", "https://sylux.example/?token=private"])
   assert.throws(() => buildShare(origin));
 assert.throws(() => buildShare(DEFAULT_ORIGIN, "https://example.com/invite"));
