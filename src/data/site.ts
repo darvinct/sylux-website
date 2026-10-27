@@ -1,4 +1,4 @@
-// Identitas SYLUX; kegiatan contoh bisa diganti dengan agenda komunitas.
+// Identitas dan konsep acara SYLUX dari pengelola komunitas.
 // Jangan taruh bot token, webhook URL, atau secret di frontend.
 export const site = {
   name: "SYLUX",
@@ -6,55 +6,72 @@ export const site = {
   discordInvite: import.meta.env.VITE_DISCORD_INVITE || "https://discord.gg/sylux",
   instagram: "",
   contactEmail: "", // Opsional, untuk membuka draft pendaftaran di aplikasi email.
-  isDemo: true,
+  isDemo: false,
 };
 
 export const events = [
   {
-    id: "afterhours",
-    category: "Music",
-    title: "After Hours",
-    subtitle: {
-      id: "Satu ruang, banyak selera musik.",
-      en: "One room. A thousand different sounds.",
+    "id": "luxstars",
+    "category": "Sharing",
+    "title": "LUXSTARS",
+    "subtitle": {
+      "id": "Cerita, kenangan, dan momen bersama.",
+      "en": "Stories, memories, and shared moments."
     },
-    description: {
-      id: "Sesi mendengarkan musik bersama. Bawa lagu favoritmu, ceritakan kenangannya, dan temukan musik baru dari teman-teman komunitas.",
-      en: "A shared listening session. Bring your favorite song, share the memory behind it, and discover something new together.",
+    "description": {
+      "id": "LUXSTARS menghadirkan malam penuh cerita, kenangan, dan momen bersama. Lewat sharing session yang santai, anggota berbagi pengalaman masa lalu, kejadian berkesan, dan cerita di antaranya. Keseruan berlanjut dengan spin wheel minigames berisi tantangan seru.",
+      "en": "LUXSTARS brings a night of stories, memories, and shared moments. A relaxed sharing session invites everyone to talk about past experiences, memorable moments, and everything in between. Spin wheel minigames with fun challenges make the night even more exciting."
     },
-    image: "/images/music.jpg",
-    alt: "Kerumunan penonton dan cahaya di panggung konser",
+    "program": [
+      "Sharing session",
+      "Spin wheel minigames"
+    ],
+    "image": "/images/music.jpg",
+    "imageKind": "illustration",
+    "alt": "Ilustrasi kegiatan komunitas; bukan dokumentasi LUXSTARS"
   },
   {
-    id: "latenight",
-    category: "Talk",
-    title: "Late Night Stories",
-    subtitle: {
-      id: "Obrolan kecil yang terasa dekat.",
-      en: "Small conversations. Real connections.",
+    "id": "sylux-got-talent-s2",
+    "category": "Talent",
+    "title": "SYLUX GOT TALENT S2",
+    "subtitle": {
+      "id": "Kesempatan baru untuk menunjukkan bakatmu.",
+      "en": "A new chance to let your talent speak."
     },
-    description: {
-      id: "Ruang ngobrol santai tentang keseharian, cerita lucu, dan hal-hal yang sedang kamu pikirkan. Boleh ikut cerita, boleh sekadar mendengarkan.",
-      en: "A relaxed space for everyday stories and whatever is on your mind. Join the conversation, or just stay and listen.",
+    "description": {
+      "id": "SYLUX Got Talent kembali hadir dengan Season 2. Bagi anggota yang ketinggalan informasi atau belum sempat menunjukkan bakat pada musim pertama, inilah kesempatan untuk tampil dan membiarkan bakatmu berbicara.",
+      "en": "SYLUX Got Talent returns for Season 2. If you missed the first season or did not get the chance to show your skills, now is the time to put your best foot forward and let your talent speak for itself."
     },
-    image: "/images/conversation.jpg",
-    alt: "Mikrofon untuk sesi percakapan dan podcast",
+    "program": [
+      "Talent showcase",
+      "Season 2"
+    ],
+    "image": "/images/conversation.jpg",
+    "imageKind": "illustration",
+    "alt": "Ilustrasi mikrofon; bukan dokumentasi SYLUX GOT TALENT S2"
   },
   {
-    id: "game",
-    category: "Games",
-    title: "Play Together",
-    subtitle: {
-      id: "Menang boleh. Seru wajib.",
-      en: "Good games. Better company.",
+    "id": "boo-the-show",
+    "category": "Horror",
+    "title": "BOO! THE SHOW: A NIGHT OF FRIGHTS",
+    "subtitle": {
+      "id": "Satu malam horor, penuh interaksi dan kejutan.",
+      "en": "A night of horror, interaction, and surprises."
     },
-    description: {
-      id: "Sesi bermain bareng yang terbuka untuk pemain baru. Pilih permainan bersama dan nikmati waktunya tanpa harus menjadi yang paling jago.",
-      en: "A friendly game session open to newcomers. Choose a game together and enjoy the company, whatever your skill level.",
+    "description": {
+      "id": "BOO! THE SHOW merupakan event hiburan bertema horor yang menggabungkan sesi podcast, horror storytelling, interactive minigames, dan performances dalam satu rangkaian acara yang interaktif dan penuh kejutan.",
+      "en": "BOO! THE SHOW is a horror-themed entertainment event bringing together podcast sessions, horror storytelling, interactive minigames, and performances in one interactive program full of surprises."
     },
-    image: "/images/games.jpg",
-    alt: "Kontroler permainan untuk sesi bermain bersama",
-  },
+    "program": [
+      "Podcast",
+      "Horror storytelling",
+      "Interactive minigames",
+      "Performances"
+    ],
+    "image": "/images/games.jpg",
+    "imageKind": "illustration",
+    "alt": "Ilustrasi permainan; bukan dokumentasi BOO! THE SHOW"
+  }
 ];
 
 export const copy = {

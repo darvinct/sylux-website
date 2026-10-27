@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { ArrowUpRight } from "@phosphor-icons/react";
-import { copy, events, site, type Language } from "../data/site";
+import { copy, events, type Language } from "../data/site";
 import { Modal } from "./Shell";
+import "../portfolio.css";
 
 export function Portfolio({ lang }: { lang: Language }) {
   const t = copy[lang];
+  const id = lang === "id";
   const [filter, setFilter] = useState("All");
   const [selected, setSelected] = useState<(typeof events)[number] | null>(
     null,
@@ -18,8 +20,8 @@ export function Portfolio({ lang }: { lang: Language }) {
         <h2>{t.portfolio}</h2>
         <p>{t.portfolioBody}</p>
       </div>
-      <div className="filter-row" role="group" aria-label="Portfolio filter">
-        {["All", "Music", "Talk", "Games"].map((f) => (
+      <div className="filter-row" role="group" aria-label={id ? "Filter acara" : "Event filter"}>
+        {["All", ...new Set(events.map((event) => event.category))].map((f) => (
           <button
             key={f}
             aria-pressed={filter === f}
@@ -28,7 +30,6 @@ export function Portfolio({ lang }: { lang: Language }) {
             {f === "All" ? t.allEvents : f}
           </button>
         ))}
-        {site.isDemo && <span className="sample-label">{t.sample}</span>}
       </div>
       <div
         className={`event-grid ${result.length === 1 ? "single-event" : ""}`}
@@ -37,9 +38,11 @@ export function Portfolio({ lang }: { lang: Language }) {
           <button
             key={event.id}
             className={`event-card event-${i}`}
+            aria-haspopup="dialog"
+            aria-label={`${t.detail}: ${event.title}`}
             onClick={() => setSelected(event)}
           >
-            <div className="event-image">
+            <div className={`event-image${event.imageKind === "documentation" ? " is-documentation" : ""}`}>
               <img
                 src={event.image}
                 alt={event.alt}
@@ -48,10 +51,12 @@ export function Portfolio({ lang }: { lang: Language }) {
                 height="800"
               />
             </div>
+            {event.imageKind === "illustration" && <span className="event-media-note">{id ? "Ilustrasi sementara" : "Temporary illustration"}</span>}
             <div className="event-body">
               <span className="category">{event.category}</span>
               <h3>{event.title}</h3>
-              <p>{event.subtitle[lang]}</p>
+              <span className="event-concept-label">{id ? "Konsep acara" : "Event concept"}</span>
+              <p>{event.description[lang]}</p>
               <span className="event-link">
                 {t.detail}
                 <ArrowUpRight size={18} />
@@ -63,12 +68,15 @@ export function Portfolio({ lang }: { lang: Language }) {
       {selected && (
         <Modal title={selected.title} onClose={() => setSelected(null)}>
           <img
-            className="modal-image"
+            className={`modal-image${selected.imageKind === "documentation" ? " event-documentation" : ""}`}
             src={selected.image}
             alt={selected.alt}
           />
+          {selected.imageKind === "illustration" && <span className="event-media-note">{id ? "Ilustrasi sementara" : "Temporary illustration"}</span>}
+          <h3>{id ? "Konsep acara" : "Event concept"}</h3>
           <p>{selected.description[lang]}</p>
-          {site.isDemo && <span className="sample-label">{t.sample}</span>}
+          <h3>{id ? "Rangkaian acara" : "Program"}</h3>
+          <ul className="event-program">{selected.program.map((item) => <li key={item}>{item}</li>)}</ul>
         </Modal>
       )}
     </section>
