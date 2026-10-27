@@ -1,6 +1,6 @@
 # Galeri tim SYLUX
 
-Cabang `preview/team-gallery` menyediakan alternatif tata letak untuk ditinjau. Produksi tetap pada `8161e3a` sampai pengelola memilih desain ini.
+Desain ini disiapkan melalui cabang `preview/team-gallery`. Pengelola meminta perubahan terbaru diterapkan langsung ke produksi pada 27 Oktober 2026.
 
 - Dua Founder menjadi kartu visual besar, memakai avatar dan banner Discord asli. Banner diminta sebagai WebP statis untuk tampilan kartu; modal profil tetap mempertahankan sumber aslinya.
 - Owner mendapat satu baris lebar dengan identitas yang lebih besar.
