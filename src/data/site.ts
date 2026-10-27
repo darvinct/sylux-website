@@ -68,9 +68,9 @@ export const events = [
       "Interactive minigames",
       "Performances"
     ],
-    "image": "/images/games.jpg",
-    "imageKind": "illustration",
-    "alt": "Ilustrasi permainan; bukan dokumentasi BOO! THE SHOW"
+    "image": "/images/boo-the-show-documentation.png",
+    "imageKind": "documentation",
+    "alt": "Dokumentasi BOO! THE SHOW: A NIGHT OF FRIGHTS di Discord Stage SYLUX, menampilkan pembicara dan audiens"
   }
 ];
 
