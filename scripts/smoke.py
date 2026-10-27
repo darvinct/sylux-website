@@ -44,6 +44,17 @@ async def main():
         for width in [320, 390, 768, 1024, 1440]:
             await page.set_viewport_size({'width': width, 'height': 900})
             assert await page.evaluate('document.documentElement.scrollWidth <= window.innerWidth'), f'Overflow at {width}px'
+        more = page.locator('.nav-more summary')
+        await more.press('Enter')
+        await expect(page.locator('.nav-more .account-control')).to_be_visible()
+        await expect(page.locator('.nav-more a[href="/information"]')).to_be_visible()
+        await page.keyboard.press('Escape')
+        await expect(more).to_be_focused()
+        await expect(page.locator('.nav-more-menu')).not_to_be_visible()
+        await page.get_by_role('button', name='Ringkas navbar', exact=True).click()
+        await expect(page.locator('.header-content')).not_to_be_visible()
+        await page.get_by_role('button', name='Perluas navbar', exact=True).press('Enter')
+        await expect(page.locator('.header-content')).to_be_visible()
         await page.get_by_role('button', name='EN', exact=True).click()
         await expect(page.locator('.hero-tagline')).to_have_text('Find your people. Shine together.')
         await expect(page.locator('.hero-online')).to_contain_text('online now')
