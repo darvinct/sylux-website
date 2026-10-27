@@ -1,5 +1,5 @@
 .information-page {
-  --role-color: #c4adff;
+  --role-color: #a1a2fa;
   --role-gradient: var(--brand-gradient);
   padding-top: 158px;
   padding-bottom: 60px;
@@ -60,7 +60,7 @@
   border: 1px solid var(--border);
   border-radius: 10px;
   color: #c7bdd6;
-  background: #130d2670;
+  background: #210b3e70;
   font-size: 14px;
   transition: background .2s, border-color .2s, color .2s;
 }
@@ -129,7 +129,7 @@
   scroll-padding: 2px;
   padding: 4px 2px 18px;
   scrollbar-width: thin;
-  scrollbar-color: #75519d #130d26;
+  scrollbar-color: #75519d #210b3e;
 }
 .community-role-track:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .community-role { scroll-snap-align: start; }
@@ -186,7 +186,7 @@
 .is-scroll-driven .information-section-title h2 { font-size: clamp(24px, 2.8vw, 34px); }
 @media (max-width: 900px) {
   .management-layout { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-  .role-selector { flex-direction: row; overflow-x: auto; padding: 4px 4px 12px; margin-inline: -4px; scrollbar-width: thin; scrollbar-color: #75519d #130d26; }
+  .role-selector { flex-direction: row; overflow-x: auto; padding: 4px 4px 12px; margin-inline: -4px; scrollbar-width: thin; scrollbar-color: #75519d #210b3e; }
   .role-selector button { flex-shrink: 0; white-space: nowrap; min-height: 48px; padding: 12px 14px; }
   .role-selector-arrow { display: none; }
   .role-feature { min-height: 420px; position: relative; top: auto; }
