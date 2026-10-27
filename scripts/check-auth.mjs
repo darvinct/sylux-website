@@ -63,7 +63,7 @@ const encrypted = seal(
 assert.equal(unseal(encrypted, env.SESSION_SECRET, "session").user.id, "123");
 assert.equal(unseal(encrypted, env.SESSION_SECRET, "oauth"), null);
 assert.equal(
-  unseal("x" + encrypted.slice(1), env.SESSION_SECRET, "session"),
+  unseal((encrypted[0] === "A" ? "B" : "A") + encrypted.slice(1), env.SESSION_SECRET, "session"),
   null,
 );
 assert.equal(

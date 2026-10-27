@@ -271,28 +271,33 @@ textarea:focus-visible {
   line-height: 1.5;
 }
 .header {
-  --nav-compact-width: 520px;
   position: fixed;
   z-index: 20;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 80px);
-  max-width: 1120px;
+  top: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(0);
+  width: 100%;
+  max-width: none;
   height: 68px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  border: 1px solid #ffffff26;
-  background: linear-gradient(135deg, #2e2e2ef5, #121212f7);
+  border: 0;
+  border-bottom: 1px solid #ffffff16;
+  background: linear-gradient(110deg, #242129f2, #111015f5 65%, #16121df2);
   backdrop-filter: blur(20px);
-  border-radius: 22px;
-  padding: 0 24px;
+  border-radius: 0;
+  padding: 0 clamp(20px, 3vw, 48px);
   box-shadow: 0 8px 28px #0005, inset 0 1px 0 #ffffff06;
-  transition: max-width .5s cubic-bezier(.22, 1, .36, 1), box-shadow .25s ease;
+  opacity: 1;
+  transition: transform .5s cubic-bezier(.22, 1, .36, 1), opacity .4s ease, background .25s ease;
 }
-.header-content { display: flex; align-items: center; flex: 1; min-width: 0; opacity: 1; visibility: visible; transform: translateX(0); transition: opacity .22s ease .16s, transform .45s cubic-bezier(.22, 1, .36, 1), visibility 0s; }
+.header.is-hidden { transform: translateY(-110%); opacity: 0; pointer-events: none; }
+.header:has(:focus-visible) { transform: translateY(0); opacity: 1; pointer-events: auto; }
+.header::after { content: ""; position: absolute; inset: auto 0 -1px; height: 1px; background: linear-gradient(90deg, transparent, #c8adff70 50%, transparent); pointer-events: none; }
+.header-content { display: flex; align-items: center; flex: 1; min-width: 0; }
 .header .wordmark { gap: 10px; flex-shrink: 0; }
 .header .brand-logo { width: 104px; height: 28px; }
 .nav-emblem { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
@@ -300,8 +305,6 @@ textarea:focus-visible {
 .header .nav > a { font-size: 12px; padding: 12px 9px; color: #c1b9cb; border-radius: 8px; }
 .header .nav > a:hover { color: #fff; background: #ffffff06; }
 .header .nav > a[aria-current="page"] { color: #e5d6ff; background: transparent; }
-.nav-collapse { flex-shrink: 0; color: #aaa0b7; }
-.nav-collapse > svg { transition: transform .45s cubic-bezier(.22, 1, .36, 1); }
 .header .header-actions { flex-shrink: 0; }
 .header .account-control { border: 0; background: transparent; padding: 4px; min-height: 36px; max-width: 112px; font-size: 12px; color: #c1b9cb; }
 .header .login-control { min-height: 36px; padding: 6px 10px; border-color: #ffffff20; background: #ffffff04; }
@@ -311,12 +314,7 @@ textarea:focus-visible {
 .header .language { padding: 2px; background: #0002; border-color: #ffffff17; }
 .header .language button { min-width: 34px; min-height: 30px; transition: background .2s ease, color .2s ease; }
 .header .language button[aria-pressed="true"] { background: #ffffff12; }
-@media (min-width: 1024px) {
-  .header.is-collapsed { max-width: var(--nav-compact-width); }
-  .header.is-collapsed .header-content { overflow: hidden; opacity: 0; visibility: hidden; pointer-events: none; transform: translateX(-10px); transition: opacity .14s ease, transform .3s ease, visibility 0s .14s; }
-  .header.is-collapsed .nav-collapse > svg { transform: rotate(180deg); }
-  .header.is-collapsed .account-control > span, .header.is-collapsed .login-control > span { max-width: 0; opacity: 0; }
-}
+
 .wordmark {
   display: inline-flex;
   align-items: center;
@@ -1407,8 +1405,6 @@ textarea {
     width: calc(100% - 72px);
   }
   .header {
-    --nav-compact-width: 500px;
-    width: calc(100% - 48px);
     padding-inline: 20px;
     gap: 16px;
   }
@@ -1465,9 +1461,7 @@ textarea {
   .header .nav a { font-size: 15px; min-height: 48px; justify-content: space-between; border-radius: 10px; }
 }
 @media (max-width: 1023px) {
-  .header { transition: none; }
-  .header-content { flex: 0; transform: none; transition: none; }
-  .nav-collapse { display: none; }
+  .header-content { flex: 0; }
   .header .header-actions { gap: 12px; }
   .header .nav { max-height: calc(100svh - 112px); overflow-y: auto; opacity: 0; transform: translateY(-6px); transition: opacity .2s ease, transform .25s ease, display .25s allow-discrete; }
   .header .nav.is-open { opacity: 1; transform: translateY(0); }
@@ -1483,9 +1477,7 @@ textarea {
     padding-block: 64px;
   }
   .header {
-    top: 16px;
     height: 64px;
-    width: calc(100% - 32px);
     padding-inline: 16px;
     gap: 8px;
   }

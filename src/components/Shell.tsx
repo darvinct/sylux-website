@@ -3,7 +3,6 @@ import {
   ArrowLeft,
   ArrowUpRight,
   DiscordLogo,
-  CaretLeft,
   List,
   X,
 } from "@phosphor-icons/react";
@@ -53,12 +52,11 @@ export function Header({
   tool?: boolean;
 }) {
   const [open, setOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const header = useRef<HTMLElement>(null);
   const t = copy[lang];
   const closeMenus = () => setOpen(false);
   useEffect(() => {
-    const narrow = window.matchMedia("(max-width: 1023px)");
-    const expandOnMobile = () => { if (narrow.matches) setCollapsed(false); };
     const close = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
       setOpen(false);
@@ -66,19 +64,40 @@ export function Header({
       if (trigger?.getAttribute("aria-expanded") === "true") trigger.focus();
     };
     window.addEventListener("keydown", close);
-    narrow.addEventListener("change", expandOnMobile);
     return () => {
       window.removeEventListener("keydown", close);
-      narrow.removeEventListener("change", expandOnMobile);
     };
   }, []);
+  useEffect(() => {
+    let previousY = window.scrollY;
+    let direction = 0;
+    let distance = 0;
+    const scroll = () => {
+      const currentY = Math.max(0, Math.min(window.scrollY, document.documentElement.scrollHeight - window.innerHeight));
+      const delta = currentY - previousY;
+      previousY = currentY;
+      if (currentY <= 96 || open || header.current?.querySelector(":focus-visible")) {
+        setHidden(false);
+        distance = 0;
+        return;
+      }
+      if (!delta) return;
+      const nextDirection = Math.sign(delta);
+      if (nextDirection !== direction) distance = 0;
+      direction = nextDirection;
+      distance += Math.abs(delta);
+      if (distance >= (direction > 0 ? 16 : 8)) setHidden(direction > 0);
+    };
+    window.addEventListener("scroll", scroll, { passive: true });
+    return () => window.removeEventListener("scroll", scroll);
+  }, [open]);
   return (
-    <header className={`header${collapsed ? " is-collapsed" : ""}`}>
+    <header ref={header} className={`header${hidden && !open ? " is-hidden" : ""}`} onFocusCapture={() => setHidden(false)}>
       <a className="wordmark" href="/" aria-label={`${site.name} home`}>
         <img className="nav-emblem" src={share.thumbnail} alt="" width="28" height="28" />
         <BrandLogo />
       </a>
-      <div className="header-content" id="header-content" inert={collapsed}>
+      <div className="header-content" id="header-content">
         <nav
           className={open ? "nav is-open" : "nav"}
           aria-label={lang === "id" ? "Navigasi utama" : "Main navigation"}
@@ -118,9 +137,6 @@ export function Header({
           {open ? <X size={23} /> : <List size={23} />}
         </button>
       </div>
-      <button className="icon-button nav-collapse" onClick={() => { closeMenus(); setCollapsed(!collapsed); }} aria-label={lang === "id" ? (collapsed ? "Perluas navbar" : "Ringkas navbar") : (collapsed ? "Expand navigation" : "Collapse navigation")} aria-expanded={!collapsed} aria-controls="header-content">
-        <CaretLeft size={20} aria-hidden="true" />
-      </button>
     </header>
   );
 }
