@@ -280,9 +280,9 @@ textarea:focus-visible {
   width: 100%;
   max-width: none;
   height: 68px;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
   gap: 24px;
   border: 0;
   border-bottom: 1px solid #ffffff16;
@@ -299,7 +299,7 @@ textarea:focus-visible {
 .header::after { content: ""; position: absolute; inset: auto 0 -1px; height: 1px; background: linear-gradient(90deg, transparent, #c8adff70 50%, transparent); pointer-events: none; }
 .header-content { display: flex; align-items: center; flex: 1; min-width: 0; }
 .header .wordmark { gap: 10px; flex-shrink: 0; }
-.header .brand-logo { width: 104px; height: 28px; }
+.header .brand-logo { width: 104px; height: 28px; object-fit: contain; mix-blend-mode: normal; mask: url('/images/sylux-logo-hd.png') center / contain no-repeat; mask-mode: luminance; }
 .nav-emblem { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
 .header .nav { justify-content: center; flex: 1; min-width: 0; }
 .header .nav > a { font-size: 12px; padding: 12px 9px; color: #c1b9cb; border-radius: 8px; }
@@ -394,9 +394,6 @@ textarea:focus-visible {
   justify-content: center;
   min-width: 32px;
   min-height: 44px;
-}
-.menu-button {
-  display: none;
 }
 /* A centered welcome, with SYLUX's original mark rendered in brand colors. */
 .hero {
@@ -1408,12 +1405,6 @@ textarea {
     padding-inline: 20px;
     gap: 16px;
   }
-  .nav {
-    gap: 2px;
-  }
-  .nav a {
-    font-size: 12px;
-  }
   .header-actions {
     gap: 10px;
   }
@@ -1443,31 +1434,6 @@ textarea {
     font-size: 20px;
   }
 }
-@media (max-width: 1000px) {
-  .header .menu-button { display: flex; }
-  .header .nav {
-    display: none;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: calc(100% + 8px);
-    padding: 12px 20px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--surface);
-    box-shadow: 0 20px 40px #0005;
-  }
-  .header .nav.is-open { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
-  .header .nav a { font-size: 15px; min-height: 48px; justify-content: space-between; border-radius: 10px; }
-}
-@media (max-width: 1023px) {
-  .header-content { flex: 0; }
-  .header .header-actions { gap: 12px; }
-  .header .nav { max-height: calc(100svh - 112px); overflow-y: auto; opacity: 0; transform: translateY(-6px); transition: opacity .2s ease, transform .25s ease, display .25s allow-discrete; }
-  .header .nav.is-open { opacity: 1; transform: translateY(0); }
-  @starting-style { .header .nav.is-open { opacity: 0; transform: translateY(-6px); } }
-  .header .nav > a { font-size: 15px; min-height: 48px; padding: 12px; }
-}
 @media (max-width: 767px) {
   :root { --nav-clearance: 96px; }
   .wrap {
@@ -1489,38 +1455,11 @@ textarea {
   .wordmark > svg {
     width: 21px;
   }
-  .menu-button {
-    display: flex;
-    width: 36px;
-  }
   .header-actions {
     gap: 8px;
   }
   .nav-discord {
     display: none;
-  }
-  .nav {
-    display: none;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 74px;
-    background: #100b1a;
-    border: 1px solid #454b4e;
-    border-radius: 12px;
-    padding: 12px 20px;
-    box-shadow: 0 20px 40px #0005;
-  }
-  .nav.is-open {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-  }
-  .nav a {
-    font-size: 15px;
-    min-height: 48px;
-    justify-content: space-between;
   }
   .hero {
     min-height: min(800px, 100svh);
@@ -2033,22 +1972,6 @@ textarea {
   .header .nav a {
     font-size: 15px;
   }
-  .login-control,
-  .account-control {
-    padding: 7px;
-    min-width: 44px;
-    width: 44px;
-    height: 44px;
-    min-height: 44px;
-    max-width: 44px;
-  }
-  .account-control {
-    padding: 2px;
-  }
-  .login-control > span,
-  .account-control > span {
-    display: none;
-  }
   .header .header-actions {
     gap: 6px;
   }
@@ -2089,30 +2012,25 @@ textarea {
     animation: none;
   }
 }
-@media (min-width: 768px) and (max-width: 1023px) {
-  .header .nav {
-    display: none;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 82px;
-    background: #100b1a;
-    border: 1px solid #454b4e;
-    border-radius: 12px;
-    padding: 12px 20px;
-  }
-  .header .nav.is-open {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-  }
-  .header .nav a {
-    font-size: 15px;
-    min-height: 48px;
-    justify-content: space-between;
-  }
-  .header .menu-button {
-    display: flex;
-  }
+
+
+/* The same navigation is always visible: one row on desktop, two on narrow screens. */
+@media (max-width: 1023px) {
+  :root { --nav-clearance: 136px; }
+  html { scroll-padding-top: 136px; }
+  .header { height: 112px; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: 60px 44px; padding: 0 16px 8px; gap: 0 16px; }
+  .header .wordmark { grid-column: 1; grid-row: 1; }
+  .header .header-actions { grid-column: 2; grid-row: 1; gap: 6px; }
+  .header-content { grid-column: 1 / -1; grid-row: 2; width: 100%; }
+  .header .nav { display: flex; position: static; flex-direction: row; align-items: center; justify-content: safe center; width: 100%; gap: 2px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; border: 0; background: transparent; padding: 0; box-shadow: none; }
+  .header .nav::-webkit-scrollbar { display: none; }
+  .header .nav > a { flex-shrink: 0; font-size: 12px; min-height: 44px; padding: 0 10px; }
+  .header .account-control, .header .login-control { max-width: 104px; }
+  .header .account-control > span, .header .login-control > span { display: inline; max-width: 58px; }
+}
+@media (max-width: 550px) {
+  .header .nav > a { font-size: 11px; padding-inline: 6px; }
+}
+@media (max-width: 359px) {
+  .header { padding-inline: 12px; gap: 0 12px; }
 }

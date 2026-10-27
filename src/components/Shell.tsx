@@ -3,7 +3,6 @@ import {
   ArrowLeft,
   ArrowUpRight,
   DiscordLogo,
-  List,
   X,
 } from "@phosphor-icons/react";
 import { copy, site, type Language } from "../data/site";
@@ -51,23 +50,9 @@ export function Header({
   setLang: (lang: Language) => void;
   tool?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const header = useRef<HTMLElement>(null);
   const t = copy[lang];
-  const closeMenus = () => setOpen(false);
-  useEffect(() => {
-    const close = (e: KeyboardEvent) => {
-      if (e.key !== "Escape") return;
-      setOpen(false);
-      const trigger = document.getElementById("nav-menu-toggle");
-      if (trigger?.getAttribute("aria-expanded") === "true") trigger.focus();
-    };
-    window.addEventListener("keydown", close);
-    return () => {
-      window.removeEventListener("keydown", close);
-    };
-  }, []);
   useEffect(() => {
     let previousY = window.scrollY;
     let direction = 0;
@@ -76,7 +61,7 @@ export function Header({
       const currentY = Math.max(0, Math.min(window.scrollY, document.documentElement.scrollHeight - window.innerHeight));
       const delta = currentY - previousY;
       previousY = currentY;
-      if (currentY <= 96 || open || header.current?.querySelector(":focus-visible")) {
+      if (currentY <= 96 || header.current?.querySelector(":focus-visible")) {
         setHidden(false);
         distance = 0;
         return;
@@ -90,16 +75,16 @@ export function Header({
     };
     window.addEventListener("scroll", scroll, { passive: true });
     return () => window.removeEventListener("scroll", scroll);
-  }, [open]);
+  }, []);
   return (
-    <header ref={header} className={`header${hidden && !open ? " is-hidden" : ""}`} onFocusCapture={() => setHidden(false)}>
+    <header ref={header} className={`header${hidden ? " is-hidden" : ""}`} onFocusCapture={() => setHidden(false)}>
       <a className="wordmark" href="/" aria-label={`${site.name} home`}>
         <img className="nav-emblem" src={share.thumbnail} alt="" width="28" height="28" />
         <BrandLogo />
       </a>
       <div className="header-content" id="header-content">
         <nav
-          className={open ? "nav is-open" : "nav"}
+          className="nav"
           aria-label={lang === "id" ? "Navigasi utama" : "Main navigation"}
           id="main-nav"
         >
@@ -108,12 +93,11 @@ export function Header({
               key={id}
               href={`${tool ? "/" : ""}#${id}`}
               aria-current={!tool && i === 0 ? "page" : undefined}
-              onClick={closeMenus}
             >
               {t.nav[i]}
             </a>
           ))}
-          <a href="/information" onClick={closeMenus} aria-current={window.location.pathname.replace(/\/$/, "") === "/information" ? "page" : undefined}>{t.information}</a>
+          <a href="/information" aria-current={window.location.pathname.replace(/\/$/, "") === "/information" ? "page" : undefined}>{t.information}</a>
         </nav>
       </div>
       <div className="header-actions">
@@ -126,16 +110,6 @@ export function Header({
           </button>
         </div>
         <AuthControl lang={lang} />
-        <button
-          id="nav-menu-toggle"
-          className="icon-button menu-button"
-          onClick={() => { if (open) closeMenus(); else setOpen(true); }}
-          aria-label={open ? t.close : "Menu"}
-          aria-expanded={open}
-          aria-controls="main-nav"
-        >
-          {open ? <X size={23} /> : <List size={23} />}
-        </button>
       </div>
     </header>
   );

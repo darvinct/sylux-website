@@ -10,12 +10,16 @@ Daftar role serta rentang level berasal dari pengelola SYLUX:
 
 Deskripsi disunting dan diterjemahkan dari fokus singkat yang diberikan pengelola. Tidak ada harga, benefit donasi, role contoh dari komunitas lain, atau janji pemberian role otomatis yang ditambahkan. Halaman ini tidak mengubah konfigurasi Discord dan tidak menetapkan divisi untuk tiga profil tim yang sudah ada.
 
-Pemilih divisi mendukung klik/touch, tombol panah, Home, dan End. Panel detail mengikuti scroll di desktop; pilihan divisi menjadi baris yang bisa digeser pada layar kecil. Kartu level mendukung swipe, tombol sebelumnya/berikutnya, dan fokus keyboard. Tombol navigasi dinonaktifkan di ujung daftar.
+Tampilan mengikuti struktur halaman referensi yang diperiksa pada 27 Oktober 2026: pembuka identitas besar di bidang terang, transisi menuju bidang gelap, daftar role/deskripsi di kiri, kartu ikon/judul yang tetap di kanan dan berubah mengikuti scroll, lalu deretan kartu role horizontal. Identitas, logo, warna aksen, serta isi seluruhnya memakai SYLUX. Tidak menyalin aset ilustrasi milik komunitas referensi.
 
-Saat motion aktif dan tinggi viewport minimal 640px, seluruh panel Sentinel ditahan menggunakan native CSS sticky. Sepuluh langkah scroll memilih divisi secara otomatis melalui IntersectionObserver; scroll naik mengembalikan urutannya. Klik atau keyboard tetap dapat langsung menuju divisi, dengan posisi scroll diselaraskan agar pilihan tidak saling menimpa. Tidak ada penangkapan wheel/touch atau listener scroll per frame. Viewport pendek dan reduced-motion memakai pilihan manual tanpa ruang scroll tambahan.
+Daftar divisi dan kartu detail tetap memakai struktur dua kolom di HP serta desktop. IntersectionObserver memilih artikel yang melewati tengah viewport. Klik/touch, tombol panah, Home, dan End bisa langsung menuju role. CSS sticky menjaga kartu tetap terlihat tanpa menangkap wheel atau touch. Kartu level dapat digeser, dioperasikan dengan keyboard, dan memakai tombol sebelumnya/berikutnya yang dinonaktifkan di ujung daftar.
+
+Pembuka menggunakan CSS scroll timeline untuk memperbesar logo dan menggelapkan bidang saat pengguna melanjutkan scroll. Browser yang belum mendukung scroll timeline mendapat pembuka statis. Reduced-motion menonaktifkan zoom/transisi dan merapatkan daftar role sehingga tidak ada ruang scroll ekstra untuk animasi.
+
+Navbar memakai daftar menu yang sama dan langsung terlihat di semua lebar: Beranda → Server Stats → Team → Portfolio → Informasi. Pada HP, menu berada di baris kedua; akun dan bahasa tetap di kanan baris pertama. Tidak ada hamburger atau drawer tersembunyi. Navbar tetap penuh dari kiri ke kanan dengan perilaku memudar saat scroll turun dan muncul saat scroll naik.
 
 Warna/gradient role mengikuti screenshot Discord yang dikirim pengelola. Warna gelap dicerahkan untuk keterbacaan web; seluruh stop warna yang dipakai diperiksa minimal 5:1 terhadap latar gelap pembanding `#392a3d`. Warna ini merupakan penyesuaian visual dari screenshot, bukan pembacaan HEX melalui API Discord.
 
 Animasi memakai hook observer yang sama dengan beranda, menghormati reduced-motion, dan menjaga fokus keyboard tetap terlihat. Halaman di-load terpisah agar konten/piktogramnya tidak membebani beranda. Validasi browser mencakup route langsung dengan trailing slash, pergantian bahasa, pilihan peran, navigasi keyboard, carousel, rentang level, legacy, dan lebar 320/390/768/1024/1440px.
 
-Perubahan tetap berada pada cabang pratinjau sampai pengelola meminta penerapan ke website utama.
+Pengelola meminta penerapan ke website utama. Perubahan diterbitkan melalui branch `main` ke produksi Vercel.

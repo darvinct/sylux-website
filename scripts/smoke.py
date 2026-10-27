@@ -121,10 +121,9 @@ async def main():
         await expect(page.locator('.faq-list details').first).to_have_attribute('open', '')
         await page.set_viewport_size({'width': 390, 'height': 844})
         await page.evaluate('window.scrollTo(0,0)')
-        await page.get_by_role('button', name='Menu', exact=True).click()
         await expect(page.locator('#main-nav')).to_be_visible()
+        assert await page.locator('#main-nav a').evaluate_all('(es)=>es.map(e=>e.getAttribute("href"))') == ['#home','#stats','#team','#portfolio','/information']
         await page.locator('#main-nav a').nth(2).click()
-        await expect(page.locator('#main-nav')).to_be_hidden()
 
         for removed in ['/twibbon', '/forms/public', '/webhooks/editor']:
             await page.goto(BASE + removed, wait_until='networkidle')
@@ -179,14 +178,15 @@ async def main():
         await expect(page.locator('.community-role-track .community-role')).to_have_count(8)
         await expect(page.locator('.community-role-track .level-range').first).to_have_text('Level 0–5')
         await expect(page.locator('.community-role-track .level-range').last).to_have_text('Level 111–135')
-        await expect(page.locator('.legacy-role h3')).to_have_text('Cyber Veteran')
+        await expect(page.locator('.legacy-role h2')).to_have_text('Cyber Veteran')
         await expect(page.locator('.legacy-role')).not_to_contain_text('Level 136')
         for width in [320,390,768,1024,1440]:
             await page.set_viewport_size({'width':width,'height':900})
             assert await page.evaluate('document.documentElement.scrollWidth <= innerWidth'), f'Information overflow at {width}px'
+        await page.evaluate('scrollTo({top:0,behavior:"instant"})')
         await page.get_by_role('button', name='EN', exact=True).click()
         await expect(page).to_have_title('SYLUX | Information')
-        await expect(page.get_by_role('heading',level=1)).to_contain_text('information.')
+        await expect(page.get_by_role('heading',level=1)).to_contain_text('information')
         await page.get_by_role('button', name='ID', exact=True).click()
         await expect(page.locator('#main-nav a[href="/information"]')).to_have_attribute('aria-current','page')
         await page.set_viewport_size({'width':390,'height':844})
@@ -249,27 +249,16 @@ async def main():
         division_names = await moving.locator('.role-selector button').all_inner_texts()
         for width,height in [(1440,900),(390,844),(320,640)]:
             await moving.set_viewport_size({'width':width,'height':height})
-            await expect(moving.locator('.sentinel-scroll')).to_have_class('information-section sentinel-scroll is-scroll-driven')
-            await moving.locator('.role-selector button').first.click()
-            await expect(moving.locator('.management-layout')).to_have_css('opacity','1')
-            for index in [1,2,3,4,5,6,7,8,9,8,1,0]:
-                await moving.locator(f'.sentinel-step[data-step="{index}"]').evaluate('(e)=>scrollTo({top:scrollY+e.getBoundingClientRect().top+e.offsetHeight/2-innerHeight/2,behavior:"instant"})')
+            for index in [0,1,2,3,4,5,6,7,8,9,8,1,0]:
+                await moving.locator(f'.info-role-item[data-step="{index}"]').evaluate('(e)=>scrollTo({top:scrollY+e.getBoundingClientRect().top+e.offsetHeight/2-innerHeight/2,behavior:"instant"})')
                 await expect(moving.locator('.role-feature h3')).to_have_text(division_names[index])
                 await expect(moving.locator(f'.role-selector button[data-division="{index}"]')).to_have_attribute('aria-pressed','true')
-                if index > 0:
-                    bounds = await moving.locator('.sentinel-stage').bounding_box()
-                    navbar = await moving.locator('.header').bounding_box()
-                    assert bounds['y'] >= navbar['y']+navbar['height'] and bounds['y']+bounds['height'] <= height, f'Pinned division clipped or covered at {width}x{height}'
+                bounds = await moving.locator('.role-feature').bounding_box()
+                assert bounds['y'] >= 0 and bounds['y']+bounds['height'] <= height, f'Role card clipped at {width}x{height}'
             assert await moving.evaluate('document.documentElement.scrollWidth <= innerWidth')
         await moving.get_by_role('button',name='Payment Staff',exact=True).click()
         await expect(moving.locator('.role-feature h3')).to_have_text('Payment Staff')
-        await moving.mouse.wheel(0,-500)
-        await moving.set_viewport_size({'width':390,'height':600})
-        await expect(moving.locator('.sentinel-scroll')).to_have_class('information-section sentinel-scroll')
-        await moving.set_viewport_size({'width':390,'height':844})
-        await expect(moving.locator('.sentinel-scroll')).to_have_class('information-section sentinel-scroll is-scroll-driven')
         await moving.emulate_media(reduced_motion='reduce')
-        await expect(moving.locator('.sentinel-scroll')).to_have_class('information-section sentinel-scroll')
         await moving.get_by_role('button',name='Event Creative Staff',exact=True).click()
         await expect(moving.locator('.role-feature h3')).to_have_text('Event Creative Staff')
         await motion.close()
