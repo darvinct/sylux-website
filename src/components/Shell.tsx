@@ -24,7 +24,7 @@ export function JoinButton({
   const t = copy[lang];
   return inviteCode(site.discordInvite) ? (
     <a
-      className={`button primary ${className}`}
+      className={`button join-button ${className}`}
       href={site.discordInvite}
       target="_blank"
       rel="noreferrer"
@@ -34,7 +34,7 @@ export function JoinButton({
       <ArrowUpRight size={18} />
     </a>
   ) : (
-    <button className={`button primary ${className}`} disabled>
+    <button className={`button join-button ${className}`} disabled>
       <DiscordLogo size={20} weight="fill" />
       {t.waiting}
     </button>
@@ -73,6 +73,7 @@ export function Header({
           <a
             key={id}
             href={`${tool ? "/" : ""}#${id}`}
+            aria-current={!tool && i === 0 ? "page" : undefined}
             onClick={() => setOpen(false)}
           >
             {t.nav[i]}
