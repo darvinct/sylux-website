@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     // Design previews can show the already-public team without copying bot secrets.
     let data;
     if (process.env.VERCEL_ENV === "preview" && !process.env.DISCORD_BOT_TOKEN) {
-      const response = await fetch("https://website-komunitasi.vercel.app/api/team", {
+      const response = await fetch("https://syluxofficial.vercel.app/api/team", {
         signal: AbortSignal.timeout(8000),
       });
       if (!response.ok) throw new Error("Published team unavailable");

@@ -7,7 +7,7 @@ import {
   CaretDown,
   Eye,
 } from "@phosphor-icons/react";
-import { copy, site, type Language } from "../data/site";
+import { copy, type Language } from "../data/site";
 import { filterMembers } from "../lib/utils";
 import { BrandLogo, Modal } from "./Shell";
 import type { DiscordUser } from "./Auth";
@@ -96,7 +96,7 @@ export function Team({ lang, directory }: { lang: Language; directory: ReturnTyp
         <p>{t.teamBody}</p>
         <span className="source-label">
           <DiscordLogo size={16} />
-          {id ? "Profil terhubung ke Discord" : "Profiles connected to Discord"}
+          {state === "success" ? `${members.length} ${id ? "profil Discord" : "Discord profiles"}` : (id ? "Profil terhubung ke Discord" : "Profiles connected to Discord")}
         </span>
       </div>
       <div id="team-directory" hidden={!expanded}>
@@ -131,7 +131,7 @@ export function Team({ lang, directory }: { lang: Language; directory: ReturnTyp
             </div>
           </div>
         )}
-        <div aria-live="polite" aria-busy={state === "loading"}>
+        <div className="team-results" aria-live="polite" aria-busy={state === "loading"}>
           {state === "loading" ? (
             <div className="team-grid">
               {[0, 1, 2, 3].map((i) => (
@@ -167,11 +167,10 @@ export function Team({ lang, directory }: { lang: Language; directory: ReturnTyp
             </div>
           ) : result.length ? (
             <>
-              <div className="team-tree">
-                <div className="team-root" aria-label={`${site.name} community`}><DiscordLogo size={18} aria-hidden="true" /><BrandLogo /></div>
+              <div className="team-gallery">
                 <ol className="team-groups" aria-label={id ? "Tim berdasarkan peran" : "Team by role"}>
                   {groups.map((group, index) => (
-                    <li className="team-group" key={group.name}>
+                    <li className="team-group" key={group.name} data-role={group.name.toLowerCase()}>
                       <h3>
                         <button
                           className="team-role-toggle"
@@ -181,13 +180,19 @@ export function Team({ lang, directory }: { lang: Language; directory: ReturnTyp
                             ? previous.filter((name) => name !== group.name)
                             : [...previous, group.name])}
                         >
-                          {group.name}<span>({group.members.length})</span><CaretDown size={12} aria-hidden="true" />
+                          <span className="team-role-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                          <span className="team-role-title">{group.name}</span>
+                          <span className="team-role-count">{group.members.length} {id ? "orang" : group.members.length === 1 ? "person" : "people"}</span>
+                          <CaretDown size={14} aria-hidden="true" />
                         </button>
                       </h3>
                       <ul className="team-branch" id={`team-branch-${index}`} hidden={collapsedRoles.includes(group.name)}>
                         {group.members.map((member) => (
                           <li className="team-node" key={member.id}>
                             <button className="member" aria-label={`${id ? "Lihat profil" : "View profile"} ${member.name}, ${member.handle}, ${member.role}`} aria-haspopup="dialog" onClick={() => setSelected(member)}>
+                              <span className="member-backdrop" aria-hidden="true">
+                                {member.banner && ["Founder", "Owner"].includes(group.name) && <img src={member.banner.replace(".gif?", ".webp?")} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} />}
+                              </span>
                               <img
                                 className="avatar discord-avatar"
                                 src={member.avatar}
