@@ -33,7 +33,7 @@ Dijalankan pada 26 Oktober 2026 di Node.js 24.19.0 dan Chromium headless. Penguj
 - Penanganan localStorage yang diblokir dan route yang dibuka langsung.
 - Tidak ada uncaught JavaScript exception dalam smoke test.
 
-Sesi/profil browser menggunakan fixture yang diberi nama akun pengujian. Pengujian statistik error/retry dari versi awal tetap ada di smoke script dan sebelumnya lulus menggunakan build undangan tiruan; perubahan versi ini tidak mengubah komponen statistik.
+Sesi/profil browser menggunakan fixture yang diberi nama akun pengujian. Pengujian statistik memakai `/api/community` tiruan untuk memeriksa error/retry, konsistensi angka pada hero dan Server Stats dari satu permintaan, hasil nol yang valid, serta polling setelah 60 detik. Pengujian server memeriksa undangan tetap, format angka, respons minimum tanpa metadata pribadi, metode, cache, dan kegagalan provider.
 
 Hasil axe-core 4.10.3 dengan tag WCAG A/AA terkait dicatat di `accessibility-results.json`, meliputi beranda, login, login gate, akun fixture, dan alat sesudah login. Hasil otomatis bukan sertifikasi aksesibilitas penuh.
 
@@ -61,3 +61,5 @@ Log produksi pada 26 Oktober 2026 pukul 17:25 UTC mengonfirmasi kegagalan pada `
 Kartu profil tim kini menampilkan banner/warna/dekorasi avatar/tag yang tersedia dari Discord serta divisi/peran konfigurasi. Pemeriksaan otomatis mencakup penyaringan hash gambar dan warna, profil tanpa banner, mode server dengan nickname/avatar, serta tampilan dialog pada lebar 320/390/1440 piksel, tombol tutup, Escape, dan pengembalian fokus ke anggota yang diklik.
 
 Identitas SYLUX memakai logo PNG asli pengelola, gradasi ungu/violet/biru, metadata baru, serta logo pada kartu tim, footer, webhook, dan ekspor Twibbon. Pemeriksaan build, OAuth, dan browser smoke tetap lulus. Nama kunci draft lokal dipertahankan agar penggantian merek tidak menghilangkan draft pendaftaran yang sudah disimpan.
+
+Hero kini terpusat mengikuti komposisi referensi Ravenville, menggunakan logo SYLUX asli sebagai mask gradasi, judul, profil tim, dan indikator jumlah online. Avatar adalah profil tim, tanpa klaim bahwa masing-masing sedang online. Jumlah online berasal dari public invite Discord melalui backend. Screenshot lokal dengan angka pengujian diberi nama `sylux-centered-fixture-*` agar tidak disalahartikan sebagai hasil pengamatan server nyata.

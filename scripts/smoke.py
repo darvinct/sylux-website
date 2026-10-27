@@ -1,6 +1,5 @@
 """Browser smoke checks. Start Vite or preview first; set BASE_URL if needed.
-To check live statistics with mocked Discord, build with VITE_DISCORD_INVITE
-set to https://discord.gg/test-community, then set TEST_STATS=1.
+Set TEST_STATS=1 to check shared hero/statistics data, retries and minute refresh.
 """
 import asyncio
 import json
@@ -24,8 +23,8 @@ async def main():
         await context.route('https://cdn.discordapp.com/**', lambda route: route.fulfill(path=ROOT / 'public/images/conversation.jpg'))
         team = {'configured': True, 'partial': False, 'members': [dict(user, id=str(323456789012345678+i), name=name, username=name.lower(), handle='@'+name.lower(), role=role, bio='Test fixture') for i, (name, role) in enumerate([('Ara','Founder'),('Ren','Moderator'),('Kai','Event Host'),('Luna','Designer')])]}
         await context.route('**/api/team', lambda route: route.fulfill(status=200, content_type='application/json', body=json.dumps(team)))
+        await context.route('**/api/community', lambda route: route.fulfill(status=200, content_type='application/json', body=json.dumps({'total':1234, 'online':321})))
         page = await context.new_page()
-        await page.route('https://discord.com/api/v10/invites/**', lambda route: route.fulfill(status=503, content_type='application/json', body='{}'))
         errors = []
         page.on('pageerror', lambda error: errors.append(str(error)))
         await page.goto(BASE + '/twibbon', wait_until='networkidle')
@@ -38,12 +37,16 @@ async def main():
         await page.goto(BASE, wait_until='networkidle')
         await expect(page.locator('.member')).to_have_count(4)
         assert await page.locator('.member').filter(has_text='Session User').count() == 0
-        await expect(page.get_by_role('heading', level=1)).to_contain_text('Malam panjang.')
+        await expect(page.get_by_role('heading', level=1)).to_contain_text('SYLUX')
+        await expect(page.locator('.hero-tagline')).to_have_text('Ruangmu untuk bersinar.')
+        await expect(page.locator('.hero-online')).to_contain_text('321')
+        await expect(page.locator('.hero-members img')).to_have_count(3)
         for width in [320, 390, 768, 1024, 1440]:
             await page.set_viewport_size({'width': width, 'height': 900})
             assert await page.evaluate('document.documentElement.scrollWidth <= window.innerWidth'), f'Overflow at {width}px'
         await page.get_by_role('button', name='EN', exact=True).click()
-        await expect(page.get_by_role('heading', level=1)).to_contain_text('Long nights.')
+        await expect(page.locator('.hero-tagline')).to_have_text('Find your people. Shine together.')
+        await expect(page.locator('.hero-online')).to_contain_text('online now')
         await page.reload()
         await expect(page.locator('html')).to_have_attribute('lang', 'en')
         await page.get_by_role('button', name='ID', exact=True).click()
@@ -150,14 +153,23 @@ async def main():
                 if counter == 1:
                     await route.fulfill(status=503, content_type='application/json', body='{}')
                 else:
-                    await route.fulfill(status=200, content_type='application/json', body=json.dumps({'approximate_member_count': 1234, 'approximate_presence_count': 321}))
-            await page.route('https://discord.com/api/v10/invites/**', discord_response)
+                    await route.fulfill(status=200, content_type='application/json', body=json.dumps({'total':1234,'online':321 if counter == 2 else 0}))
+            await page.route('**/api/community', discord_response)
+            await page.clock.install()
             await page.goto(BASE, wait_until='networkidle')
             await expect(page.get_by_text('Statistik belum bisa dimuat.')).to_be_visible()
+            await expect(page.locator('.hero-online')).to_contain_text('Status online belum tersedia')
+            await expect(page.locator('.presence-dot')).to_have_count(0)
             await page.get_by_role('button', name='Coba lagi').click()
             await expect(page.locator('.stat strong').first).to_have_text('1.234')
             await expect(page.locator('.stat strong').nth(1)).to_have_text('321')
-            await page.unroute('https://discord.com/api/v10/invites/**')
+            await expect(page.locator('.hero-online strong')).to_have_text('321')
+            assert counter == 2, 'Hero and statistics must share one request'
+            await page.clock.fast_forward(60000)
+            await expect(page.locator('.hero-online strong')).to_have_text('0')
+            await expect(page.locator('.stat strong').nth(1)).to_have_text('0')
+            await expect(page.locator('.presence-dot')).to_have_class('presence-dot is-quiet')
+            await page.unroute('**/api/community')
 
         await page.goto(BASE + '/missing', wait_until='networkidle')
         await expect(page.get_by_role('heading', level=1)).to_contain_text('Halaman belum ditemukan')

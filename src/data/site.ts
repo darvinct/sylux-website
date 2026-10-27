@@ -63,7 +63,7 @@ export const copy = {
     join: "Gabung Discord",
     waiting: "Undangan segera hadir",
     eyebrow: "KOMUNITAS DISCORD INDONESIA",
-    hero: ["Malam panjang.", "Cerita baru."],
+    heroTagline: "Ruangmu untuk bersinar.",
     intro:
       "Tempat singgah untuk ngobrol, berbagi musik, dan menemukan orang-orang yang satu frekuensi.",
     explore: "Jelajahi komunitas",
@@ -130,7 +130,7 @@ export const copy = {
     join: "Join Discord",
     waiting: "Invite coming soon",
     eyebrow: "INDONESIAN DISCORD COMMUNITY",
-    hero: ["Long nights.", "New stories."],
+    heroTagline: "Find your people. Shine together.",
     intro:
       "A place to hang out, share music, and find people on your wavelength.",
     explore: "Explore the community",

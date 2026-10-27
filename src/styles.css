@@ -354,157 +354,163 @@ textarea:focus-visible {
 .menu-button {
   display: none;
 }
+/* A centered welcome, with SYLUX's original mark rendered in brand colors. */
 .hero {
   position: relative;
   isolation: isolate;
-  min-height: 720px;
-  height: min(850px, 100dvh);
+  min-height: min(860px, 100svh);
   display: flex;
   align-items: center;
+  padding-block: 160px 90px;
   overflow: hidden;
 }
 .hero-background,
 .hero-shade {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
   z-index: -2;
+  pointer-events: none;
 }
 .hero-background {
   background:
-    radial-gradient(ellipse at 76% 42%, #ad6dffb8, transparent 25%),
-    radial-gradient(ellipse at 94% 11%, #4744d6b3, transparent 38%),
-    radial-gradient(ellipse at 55% 100%, #6231cf99, transparent 47%),
-    linear-gradient(120deg, #0a061c 12%, #28104b 65%, #15103c);
+    radial-gradient(ellipse at 50% 36%, #7942c85c, transparent 54%),
+    radial-gradient(ellipse at 3% 14%, #433ca64d, transparent 40%),
+    radial-gradient(ellipse at 95% 52%, #4027814d, transparent 40%),
+    linear-gradient(155deg, #0c071c, #180c30 52%, #090617);
 }
 .hero-shade {
   z-index: -1;
-  background:
-    linear-gradient(90deg, #090617b3, transparent 75%),
-    linear-gradient(0deg, var(--bg), transparent 40%);
-  pointer-events: none;
-}
-.hero-orbit {
-  position: absolute;
-  z-index: -1;
-  width: min(41vw, 560px);
-  aspect-ratio: 1;
-  right: 5%;
-  top: 50%;
-  transform: translateY(-43%);
-  color: #e6dcff;
-}
-.orbit-core {
-  position: absolute;
-  inset: 23%;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  border: 1px solid #d5baff4d;
-  background:
-    radial-gradient(circle at 30% 25%, #d4b2ff4d, transparent 70%),
-    linear-gradient(140deg, #6a3bc64d, #12102c99);
-  box-shadow: inset 0 0 55px #b68aff33, 0 0 75px #a85cff40;
-}
-.orbit-core .brand-logo {
-  width: 70%;
-  height: 25%;
-  filter: drop-shadow(0 0 16px #dfbdff80);
-}
-.orbit-ring {
-  position: absolute;
-  inset: 8% -5%;
-  border: 1px solid #b7c5ffb3;
-  border-radius: 50%;
-  transform: rotate(-32deg) scaleY(.48);
-  box-shadow: 0 0 18px #ab83ff4d, inset 0 0 16px #9883ff33;
-}
-.orbit-ring-two {
-  inset: 0 12%;
-  transform: rotate(36deg) scaleX(.66);
-  border-color: #cd9bff70;
-}
-.orbit-star {
-  position: absolute;
-  filter: drop-shadow(0 0 10px #a5bdff);
-}
-.orbit-star-one {
-  top: 17%;
-  right: 18%;
-}
-.orbit-star-two {
-  bottom: 23%;
-  left: 7%;
-}
-.orbit-star-three {
-  bottom: 15%;
-  right: 22%;
+  background: linear-gradient(0deg, var(--bg), transparent 36%);
 }
 .hero-content {
-  padding-top: 96px;
-  padding-bottom: 64px;
-}
-.eyebrow {
+  max-width: 780px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  color: #d0d3cd;
-  font-size: 10px;
-  letter-spacing: 2.2px;
-  font-weight: 500;
-  margin-bottom: 26px;
+  text-align: center;
 }
-.eyebrow span {
-  height: 1px;
-  width: 28px;
-  background: var(--accent);
+.hero-name {
+  display: grid;
+  place-items: center;
+  width: 100%;
 }
-.hero h1 {
-  font-size: clamp(64px, 6.5vw, 96px);
-  line-height: 1.05;
-  letter-spacing: -4.5px;
-  font-weight: 500;
+.hero-title-logo {
+  display: block;
+  width: min(480px, 100%);
+  height: 140px;
+  background: linear-gradient(110deg, #d2abff 8%, #c6c0ff 53%, #a5e5ff);
+  -webkit-mask: url('/images/sylux-logo.png') center / 100% auto no-repeat;
+  mask: url('/images/sylux-logo.png') center / 100% auto no-repeat;
+  filter: drop-shadow(0 0 35px #a27bff29);
 }
-.hero h1 > span {
-  color: #c4adff;
-  background: linear-gradient(100deg, #d2abff, #a7adff 60%, #b1e7ff);
+.hero-tagline {
+  color: var(--accent);
+  background: linear-gradient(100deg, #d6b6ff, #b0dcff);
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  font-size: clamp(28px, 3vw, 38px);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -1px;
+  text-wrap: balance;
+}
+.hero-welcome {
+  margin-top: 28px;
+  color: #c1b5d6;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 .hero-intro {
+  max-width: 550px;
+  margin-top: 16px;
   font-size: 16px;
-  max-width: 380px;
-  margin-top: 24px;
-  color: #c0c3c4;
+  color: #beb3cf;
   line-height: 1.8;
+  text-wrap: balance;
+}
+.hero-presence {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 44px;
+  margin-top: 26px;
+}
+.hero-members {
+  display: flex;
+  flex-shrink: 0;
+  padding-block: 5px;
+}
+.hero-members img {
+  width: 34px;
+  height: 34px;
+  border: 3px solid #211236;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--raised);
+}
+.hero-members img + img {
+  margin-left: -11px;
+}
+.hero-online {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  color: #bdb1cf;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.hero-online strong {
+  color: #eee7fa;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.presence-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #57d49b;
+  margin-right: 2px;
+}
+.presence-dot.is-quiet {
+  background: #a49aaf;
+}
+.presence-retry {
+  margin-block: -10px;
 }
 .hero-buttons {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 26px;
-  margin-top: 32px;
-  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 22px;
+}
+.hero-buttons .primary {
+  min-width: 194px;
 }
 .hero-secondary {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-size: 13px;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 12px;
+  color: #c2b6d3;
   padding-block: 12px;
 }
-.hero-content > h1,
+.hero-name,
+.hero-tagline,
 .hero-intro,
+.hero-presence,
 .hero-buttons {
-  animation: arrive 0.7s ease-out both;
+  animation: arrive .7s ease-out both;
 }
-.hero-intro {
-  animation-delay: 0.12s;
-}
-.hero-buttons {
-  animation-delay: 0.22s;
-}
+.hero-tagline { animation-delay: .08s; }
+.hero-intro { animation-delay: .12s; }
+.hero-presence { animation-delay: .16s; }
+.hero-buttons { animation-delay: .2s; }
 .community-strip {
   display: flex;
   justify-content: space-between;
@@ -1588,14 +1594,6 @@ textarea {
     opacity: 1;
   }
 }
-@media (min-width: 1600px) {
-  .hero-content {
-    padding-top: 120px;
-  }
-  .hero {
-    max-height: 880px;
-  }
-}
 @media (max-width: 1100px) {
   .wrap {
     width: calc(100% - 72px);
@@ -1704,55 +1702,35 @@ textarea {
     justify-content: space-between;
   }
   .hero {
-    height: auto;
-    min-height: 680px;
-    align-items: center;
+    min-height: min(800px, 100svh);
+    padding-block: 144px 56px;
   }
-  .hero-background {
-    opacity: 1;
+  .hero-title-logo {
+    width: min(330px, 100%);
+    height: 100px;
   }
-  .hero-orbit {
-    width: 85vw;
-    right: -28%;
-    top: 42%;
-    opacity: .38;
+  .hero-tagline {
+    font-size: clamp(25px, 6vw, 32px);
+    letter-spacing: -.6px;
   }
-  .hero-shade {
-    background:
-      linear-gradient(90deg, #090617b3, #09061733),
-      linear-gradient(0deg, #090617, transparent 80%);
-  }
-  .hero-content {
-    padding-top: 144px;
-    padding-bottom: 74px;
-  }
-  .eyebrow {
-    font-size: 9px;
+  .hero-welcome {
+    margin-top: 24px;
+    font-size: 10px;
     letter-spacing: 1.4px;
-    margin-bottom: 24px;
-  }
-  .hero h1 {
-    font-size: clamp(47px, 9vw, 68px);
-    letter-spacing: -2.5px;
-    line-height: 1.08;
   }
   .hero-intro {
     font-size: 15px;
-    max-width: 310px;
-    margin-top: 24px;
+    max-width: 380px;
   }
-  .hero-buttons {
-    gap: 20px;
-    align-items: flex-start;
-    flex-direction: column;
-    margin-top: 28px;
+  .hero-presence {
+    gap: 10px;
+    margin-top: 22px;
+  }
+  .hero-online {
+    font-size: 12px;
   }
   .hero .button {
-    min-height: 46px;
     font-size: 13px;
-  }
-  .hero-secondary {
-    font-size: 12px;
   }
   .community-strip {
     gap: 16px;
@@ -2103,15 +2081,11 @@ textarea {
   .language button {
     padding-inline: 5px;
   }
-  .hero h1 {
-    font-size: 43px;
-  }
   .hero-intro {
     font-size: 14px;
   }
-  .hero {
-    min-height: 650px;
-  }
+  .hero-presence { gap: 8px; }
+  .hero-members img { width: 30px; height: 30px; }
   .community-strip > span {
     font-size: 9px;
   }

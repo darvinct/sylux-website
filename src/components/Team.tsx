@@ -20,13 +20,7 @@ type Member = DiscordUser & {
   avatarDecoration?: string | null;
   guildTag?: string | null;
 };
-export function Team({ lang }: { lang: Language }) {
-  const t = copy[lang];
-  const id = lang === "id";
-  const [query, setQuery] = useState("");
-  const [role, setRole] = useState("");
-  const [sorted, setSorted] = useState(false);
-  const [selected, setSelected] = useState<Member | null>(null);
+export function useTeam() {
   const [members, setMembers] = useState<Member[]>([]);
   const [state, setState] = useState<"loading" | "empty" | "error" | "success">(
     "loading",
@@ -61,6 +55,17 @@ export function Team({ lang }: { lang: Language }) {
       controller.abort();
     };
   }, [retry]);
+  return { members, state, partial, reload: () => setRetry((n) => n + 1) };
+}
+
+export function Team({ lang, directory }: { lang: Language; directory: ReturnType<typeof useTeam> }) {
+  const t = copy[lang];
+  const id = lang === "id";
+  const [query, setQuery] = useState("");
+  const [role, setRole] = useState("");
+  const [sorted, setSorted] = useState(false);
+  const [selected, setSelected] = useState<Member | null>(null);
+  const { members, state, partial, reload } = directory;
   const result = filterMembers(members, query, role, sorted);
   return (
     <section className="section wrap" id="team">
@@ -124,7 +129,7 @@ export function Team({ lang }: { lang: Language }) {
             </p>
             <button
               className="button secondary"
-              onClick={() => setRetry((n) => n + 1)}
+              onClick={reload}
             >
               <ArrowClockwise size={18} />
               {id ? "Coba lagi" : "Retry"}

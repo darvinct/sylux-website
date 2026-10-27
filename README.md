@@ -41,9 +41,11 @@ Isi `server/team.json` dengan akun tim yang ingin dipublikasikan. Contoh berikut
 ]
 ```
 
-Nama, username, avatar, dan tautan profil diambil dari Discord. Jika `DISCORD_GUILD_ID` diisi, nickname dan avatar server digunakan bila tersedia. Peran serta deskripsi `bio` berasal dari file konfigurasi, bukan dari bio pribadi atau role otomatis Discord. Maksimal 30 profil unik. Nama/avatar dapat tertunda beberapa menit karena cache publik. Status online dan aktivitas tidak diambil.
+Nama, username, avatar, dan tautan profil diambil dari Discord. Jika `DISCORD_GUILD_ID` diisi, nickname dan avatar server digunakan bila tersedia. Peran serta deskripsi `bio` berasal dari file konfigurasi, bukan dari bio pribadi atau role otomatis Discord. Maksimal 30 profil unik. Nama/avatar dapat tertunda beberapa menit karena cache publik. Status online dan aktivitas per akun tidak diambil.
 
 Login pengunjung **tidak otomatis menjadikan mereka anggota tim**. Bot token berada di server, tidak diberikan ke pengunjung. Direktori tim bersifat publik dan dapat dilihat tanpa login.
+
+Hero terpusat menampilkan logo asli SYLUX dengan gradasi, avatar tim, dan jumlah anggota yang sedang online. Avatar terhubung ke direktori tim dan tidak menandakan status online per akun. `/api/community` mengambil jumlah total/online dari undangan Discord publik; tidak memerlukan bot token. Hero dan Server Stats berbagi satu permintaan, dengan refresh setiap 60 detik ketika halaman aktif dan cache CDN 60 detik. Jika data gagal dimuat, UI menampilkan status tidak tersedia serta tombol coba lagi. Tidak ada angka atau kehadiran yang dibuat-buat.
 
 ## Login dan alat komunitas
 
@@ -92,7 +94,7 @@ npm run build
 npm run preview
 ```
 
-`check` memeriksa validasi undangan/filter/ekspor, OAuth state/PKCE/issuer, token exchange, sesi terenkripsi/kedaluwarsa, origin logout, dan pembatasan data profil tim. Pengujian Discord menggunakan respons tiruan dan tidak memanggil akun nyata.
+`check` memeriksa validasi undangan/filter/ekspor, OAuth state/PKCE/issuer, token exchange, sesi terenkripsi/kedaluwarsa, origin logout, pembatasan data profil tim, serta sumber dan format angka komunitas. Pengujian Discord menggunakan respons tiruan dan tidak memanggil akun nyata.
 
 Pengujian browser menggunakan session/team fixtures untuk memeriksa UI dan alat lokal, termasuk login gate dan logout:
 
@@ -103,6 +105,8 @@ python -m playwright install chromium
 python scripts/smoke.py
 # Untuk production preview di port 4173:
 BASE_URL=http://localhost:4173 python scripts/smoke.py
+# Termasuk error/retry, angka nol, serta refresh status online:
+BASE_URL=http://localhost:4173 TEST_STATS=1 python scripts/smoke.py
 ```
 
 Hasil dan batas verifikasi ada di `docs/verification.md`. Login end-to-end dengan akun Discord dan deploy Vercel milikmu baru bisa diperiksa setelah credential dan redirect URL terpasang.

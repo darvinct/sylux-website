@@ -5,60 +5,61 @@ import {
   Users,
   Waveform,
 } from "@phosphor-icons/react";
-import { copy, site, type Language } from "../data/site";
-import { inviteCode } from "../lib/utils";
+import { copy, type Language } from "../data/site";
 
-export function Stats({ lang }: { lang: Language }) {
-  const [state, setState] = useState<"idle" | "loading" | "success" | "error">(
-    "idle",
-  );
-  const [counts, setCounts] = useState({ total: 0, online: 0 });
+export function useCommunity() {
+  const [state, setState] = useState<"loading" | "success" | "error">("loading");
+  const [counts, setCounts] = useState<{ total: number; online: number } | null>(null);
   const [retry, setRetry] = useState(0);
-  const code = inviteCode(site.discordInvite);
   useEffect(() => {
-    if (!code) return;
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
     let active = true;
+    let controller: AbortController | null = null;
     setState("loading");
-    fetch(
-      `https://discord.com/api/v10/invites/${encodeURIComponent(code)}?with_counts=true`,
-      { signal: controller.signal },
-    )
-      .then(async (response) => {
+    async function load() {
+      controller?.abort();
+      const request = new AbortController();
+      controller = request;
+      const timeout = setTimeout(() => request.abort(), 10000);
+      try {
+        const response = await fetch("/api/community", { signal: request.signal });
         if (!response.ok) throw new Error("Discord unavailable");
-        return response.json();
-      })
-      .then((data) => {
-        if (
-          !Number.isFinite(data.approximate_member_count) ||
-          !Number.isFinite(data.approximate_presence_count)
-        )
+        const data = await response.json();
+        if (![data.total, data.online].every((n) => Number.isSafeInteger(n) && n >= 0))
           throw new Error("No counts");
-        if (active) {
-          setCounts({
-            total: data.approximate_member_count,
-            online: data.approximate_presence_count,
-          });
+        if (active && controller === request) {
+          setCounts({ total: data.total, online: data.online });
           setState("success");
         }
-      })
-      .catch(() => {
-        if (active) setState("error");
-      })
-      .finally(() => clearTimeout(timeout));
+      } catch {
+        if (active && controller === request) {
+          setCounts(null);
+          setState("error");
+        }
+      } finally {
+        clearTimeout(timeout);
+      }
+    }
+    void load();
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") void load();
+    }, 60000);
     return () => {
       active = false;
-      clearTimeout(timeout);
-      controller.abort();
+      controller?.abort();
+      clearInterval(interval);
     };
-  }, [code, retry]);
+  }, [retry]);
+  return { state, counts, refresh: () => setRetry((n) => n + 1) };
+}
+
+export function Stats({ lang, community }: { lang: Language; community: ReturnType<typeof useCommunity> }) {
+  const { state, counts, refresh } = community;
   const t = copy[lang];
   const values = [
-    state === "success"
+    state === "success" && counts
       ? counts.total.toLocaleString(lang === "id" ? "id-ID" : "en-US")
       : "···",
-    state === "success"
+    state === "success" && counts
       ? counts.online.toLocaleString(lang === "id" ? "id-ID" : "en-US")
       : "···",
   ];
@@ -92,13 +93,7 @@ export function Stats({ lang }: { lang: Language }) {
           <span>{lang === "id" ? "Sedang online" : "Online now"}</span>
         </div>
         <div className="stats-message">
-          {!code ? (
-            lang === "id" ? (
-              "Server belum terhubung. Angka akan muncul setelah undangan Discord ditambahkan."
-            ) : (
-              "No server connected. Counts appear when a Discord invite is added."
-            )
-          ) : state === "loading" ? (
+          {state === "loading" ? (
             lang === "id" ? (
               "Menghubungkan ke Discord…"
             ) : (
@@ -111,16 +106,16 @@ export function Stats({ lang }: { lang: Language }) {
                 : "Statistics are unavailable."}
               <button
                 className="text-button"
-                onClick={() => setRetry(retry + 1)}
+                onClick={refresh}
               >
                 <ArrowClockwise size={15} />
                 {lang === "id" ? "Coba lagi" : "Retry"}
               </button>
             </>
           ) : lang === "id" ? (
-            "Perkiraan anggota dari Discord. Tidak mencakup statistik voice atau bot."
+            "Perkiraan dari Discord, diperbarui setiap menit."
           ) : (
-            "Approximate counts from Discord. Voice and bot counts are not included."
+            "Approximate Discord counts, refreshed every minute."
           )}
         </div>
       </div>

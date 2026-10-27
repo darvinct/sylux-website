@@ -10,42 +10,61 @@ import {
   Waveform,
   FileText,
   Code,
-  StarFour,
+  ArrowClockwise,
 } from "@phosphor-icons/react";
 import { copy, site, type Language } from "../data/site";
 import { BrandLogo, JoinButton } from "./Shell";
 import { Portfolio } from "./Portfolio";
-import { Stats } from "./Stats";
-import { Team } from "./Team";
+import { Stats, useCommunity } from "./Stats";
+import { Team, useTeam } from "./Team";
 
 export default function Home({ lang }: { lang: Language }) {
   const t = copy[lang];
+  const id = lang === "id";
+  const community = useCommunity();
+  const directory = useTeam();
   const activityIcons = [ChatCircleDots, Headphones, Microphone, PaintBrush];
   const toolIcons = [ImageSquare, FileText, Code];
   return (
     <main>
       <section className="hero" id="home">
         <div className="hero-background" aria-hidden="true" />
-        <div className="hero-orbit" aria-hidden="true">
-          <div className="orbit-ring orbit-ring-one" />
-          <div className="orbit-ring orbit-ring-two" />
-          <div className="orbit-core"><BrandLogo /></div>
-          <StarFour className="orbit-star orbit-star-one" size={48} weight="fill" />
-          <StarFour className="orbit-star orbit-star-two" size={28} weight="fill" />
-          <StarFour className="orbit-star orbit-star-three" size={20} weight="fill" />
-        </div>
         <div className="hero-shade" />
         <div className="hero-content wrap">
-          <p className="eyebrow">
-            <span />
-            {t.eyebrow}
-          </p>
-          <h1>
-            {t.hero[0]}
-            <br />
-            <span>{t.hero[1]}</span>
+          <h1 className="hero-name">
+            <span className="sr-only">{site.name}</span>
+            <span className="hero-title-logo" aria-hidden="true" />
           </h1>
+          <p className="hero-tagline">{t.heroTagline}</p>
+          <p className="hero-welcome">{t.eyebrow}</p>
           <p className="hero-intro">{t.intro}</p>
+          <div className="hero-presence">
+            {directory.members.length > 0 && (
+              <a className="hero-members" href="#team" aria-label={id ? "Kenali tim SYLUX" : "Meet the SYLUX team"}>
+                {directory.members.slice(0, 3).map((member) => (
+                  <img key={member.id} src={member.avatar} alt={member.name} title={`${member.name} · Team SYLUX`} width="34" height="34" />
+                ))}
+              </a>
+            )}
+            <span className="hero-online" aria-live="polite" aria-busy={community.state === "loading"}>
+              {community.state === "success" && community.counts ? (
+                <>
+                  <span className={`presence-dot${community.counts.online === 0 ? " is-quiet" : ""}`} aria-hidden="true" />
+                  <strong>{community.counts.online.toLocaleString(id ? "id-ID" : "en-US")}</strong>
+                  {id ? "sedang online" : "online now"}
+                </>
+              ) : community.state === "loading" ? (
+                id ? "Menghubungkan ke Discord…" : "Connecting to Discord…"
+              ) : (
+                <>
+                  {id ? "Status online belum tersedia" : "Online status unavailable"}
+                  <button className="icon-button presence-retry" onClick={community.refresh} aria-label={id ? "Muat ulang status online" : "Reload online status"}>
+                    <ArrowClockwise size={16} />
+                  </button>
+                </>
+              )}
+            </span>
+          </div>
           <div className="hero-buttons">
             <JoinButton lang={lang} />
             <a className="hero-secondary" href="#community">
@@ -92,9 +111,9 @@ export default function Home({ lang }: { lang: Language }) {
           ))}
         </div>
       </section>
-      <Stats lang={lang} />
+      <Stats lang={lang} community={community} />
       <Portfolio lang={lang} />
-      <Team lang={lang} />
+      <Team lang={lang} directory={directory} />
       <section className="section wrap tools-section">
         <div className="section-heading">
           <h2>{t.tools}</h2>
