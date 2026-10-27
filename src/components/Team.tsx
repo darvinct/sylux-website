@@ -182,7 +182,6 @@ export function Team({ lang, directory }: { lang: Language; directory: ReturnTyp
                         >
                           <span className="team-role-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                           <span className="team-role-title">{group.name}</span>
-                          <span className="team-role-count">{group.members.length} {id ? "orang" : group.members.length === 1 ? "person" : "people"}</span>
                           <CaretDown size={14} aria-hidden="true" />
                         </button>
                       </h3>

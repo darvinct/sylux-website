@@ -28,8 +28,7 @@
 .team-role-toggle { display: flex; align-items: center; width: 100%; min-height: 44px; padding: 4px 0 14px; gap: 14px; border-bottom: 1px solid #c8adff24; background: transparent; text-align: left; }
 .team-role-number { color: #a58abf; font-size: 11px; font-variant-numeric: tabular-nums; }
 .team-role-title { font-size: 20px; font-weight: 500; color: #f5efff; }
-.team-role-count { margin-left: auto; color: #afa2c3; font-size: 11px; }
-.team-role-toggle > svg { color: #b6a1d0; }
+.team-role-toggle > svg { margin-left: auto; color: #b6a1d0; }
 .team-role-toggle:hover .team-role-title { color: #d1b5ff; }
 .team-branch { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 .team-branch[hidden] { display: none; }
