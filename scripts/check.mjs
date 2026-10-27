@@ -22,6 +22,7 @@ const members = [
 assert.deepEqual(filterMembers(members, "   @A ", "", false), [members[1]]);
 assert.deepEqual(filterMembers(members, "", "Host", true), [members[0]]);
 assert.deepEqual(filterMembers(members, "nobody", "", false), []);
+assert.deepEqual(filterMembers([{ ...members[0], division: "Creative" }], "creative", "", false).map((member) => member.name), ["Zara"]);
 assert.equal(filterMembers(members, "", "", true)[0].name, "Ara");
 assert.equal(
   members[0].name,

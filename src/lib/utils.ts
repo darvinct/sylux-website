@@ -48,12 +48,12 @@ export function webhookPayload(
 }
 
 export function filterMembers<
-  T extends { name: string; role: string; handle: string },
+  T extends { name: string; role: string; handle: string; division?: string },
 >(members: T[], query: string, role: string, sorted: boolean) {
   const q = query.trim().toLocaleLowerCase();
   const result = members.filter(
     (m) =>
-      `${m.name} ${m.role} ${m.handle}`.toLocaleLowerCase().includes(q) &&
+      `${m.name} ${m.role} ${m.handle} ${m.division || ""}`.toLocaleLowerCase().includes(q) &&
       (!role || role === m.role),
   );
   return sorted ? result.sort((a, b) => a.name.localeCompare(b.name)) : result;

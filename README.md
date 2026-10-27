@@ -2,7 +2,7 @@
 
 Website komunitas React/TypeScript dengan login OAuth Discord, profil tim dari Discord, dan Vercel Functions. Versi 1.1 menggantikan profil tim contoh dengan akun Discord nyata yang dipilih pemilik website.
 
-**Sudah dibuat:** login/logout, halaman akun, session cookie, proteksi tampilan alat komunitas, direktori tim berdasarkan User ID, pencarian/filter/peran tim, serta fitur komunitas versi awal. Tiga User ID yang kamu berikan sudah dimasukkan dengan peran sementara `Team`; Application ID sudah diisi di `.env.example`. Domain produksi `https://website-komunitasi.vercel.app` sudah diisi di `.env.example`. **Perlu diisi di Vercel:** nilai environment variables, termasuk credential baru aplikasi Discord. Tidak ada secret akunmu dalam ZIP ini.
+**Sudah dibuat:** login/logout, halaman akun, session cookie, proteksi tampilan alat komunitas, direktori tim berdasarkan User ID, pencarian/filter/peran tim, serta fitur komunitas versi awal. Daftar tim terbaru sudah dikonfigurasi sebagai 1 Owner, 2 Founder, dan 8 Developer; Application ID sudah diisi di `.env.example`. Domain produksi `https://website-komunitasi.vercel.app` sudah diisi di `.env.example`. **Perlu diisi di Vercel:** nilai environment variables, termasuk credential baru aplikasi Discord. Tidak ada secret akunmu dalam ZIP ini.
 
 ## Deploy singkat
 
@@ -31,6 +31,8 @@ Salin nama variabel dari `.env.example` ke **Vercel → Settings → Environment
 Client secret, session secret, dan bot token tidak menggunakan awalan `VITE_` dan tidak dimasukkan ke `src/` atau GitHub. Preview deployment memerlukan `SITE_URL` dan redirect Discord yang sesuai jika ingin login di sana; panduan ini menargetkan domain produksi.
 
 ## Tim dengan profil Discord
+
+Direktori tim tampil sebagai bagan SYLUX → peran → anggota. Urutan kelompok mengikuti urutan peran di `server/team.json`. Setiap kelompok dapat diringkas. Pencarian mencakup nama, username, peran, dan divisi; tombol `/` memfokuskan pencarian. A–Z mengurutkan nama di dalam kelompok.
 
 Isi `server/team.json` dengan akun tim yang ingin dipublikasikan. Contoh berikut harus diganti dengan ID milik anggota timmu:
 

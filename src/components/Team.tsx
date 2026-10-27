@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowClockwise,
   ArrowUpRight,
   DiscordLogo,
   MagnifyingGlass,
+  CaretDown,
 } from "@phosphor-icons/react";
-import { copy, type Language } from "../data/site";
+import { copy, site, type Language } from "../data/site";
 import { filterMembers } from "../lib/utils";
 import { BrandLogo, Modal } from "./Shell";
 import type { DiscordUser } from "./Auth";
+import "../team.css";
 
 type Member = DiscordUser & {
   handle: string;
@@ -65,135 +67,176 @@ export function Team({ lang, directory }: { lang: Language; directory: ReturnTyp
   const [role, setRole] = useState("");
   const [sorted, setSorted] = useState(false);
   const [selected, setSelected] = useState<Member | null>(null);
+  const [expanded, setExpanded] = useState(true);
+  const [collapsedRoles, setCollapsedRoles] = useState<string[]>([]);
+  const search = useRef<HTMLInputElement>(null);
   const { members, state, partial, reload } = directory;
   const result = filterMembers(members, query, role, sorted);
+  const groups = [...new Set(members.map((member) => member.role))]
+    .map((name) => ({ name, members: result.filter((member) => member.role === name) }))
+    .filter((group) => group.members.length > 0);
+  useEffect(() => {
+    const shortcut = (event: KeyboardEvent) => {
+      const target = event.target;
+      if (event.key !== "/" || event.ctrlKey || event.metaKey || event.altKey ||
+          !search.current || document.querySelector("dialog[open]") ||
+          (target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)))) return;
+      event.preventDefault();
+      setExpanded(true);
+      requestAnimationFrame(() => search.current?.focus());
+    };
+    window.addEventListener("keydown", shortcut);
+    return () => window.removeEventListener("keydown", shortcut);
+  }, []);
   return (
-    <section className="section wrap" id="team">
+    <section className="section wrap team-section" id="team">
       <div className="section-heading">
-        <h2>{t.team}</h2>
+        <h2><button className="team-section-toggle" aria-expanded={expanded} aria-controls="team-directory" onClick={() => setExpanded(!expanded)}>{t.team}<CaretDown size={18} aria-hidden="true" /></button></h2>
         <p>{t.teamBody}</p>
         <span className="source-label">
           <DiscordLogo size={16} />
           {id ? "Profil terhubung ke Discord" : "Profiles connected to Discord"}
         </span>
       </div>
-      {state === "success" && (
-        <div className="team-toolbar">
-          <label className="search">
-            <MagnifyingGlass size={20} />
-            <span className="sr-only">{t.search}</span>
-            <input
-              type="search"
-              placeholder={t.search}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          </label>
-          <label>
-            <span className="sr-only">{t.all}</span>
-            <select value={role} onChange={(e) => setRole(e.target.value)}>
-              <option value="">{t.all}</option>
-              {[...new Set(members.map((m) => m.role))].map((r) => (
-                <option key={r}>{r}</option>
-              ))}
-            </select>
-          </label>
-          <label>
-            <span className="sr-only">{t.sort}</span>
-            <select
-              value={String(sorted)}
-              onChange={(e) => setSorted(e.target.value === "true")}
-            >
-              <option value="false">{t.defaultSort}</option>
-              <option value="true">{t.az}</option>
-            </select>
-          </label>
-        </div>
-      )}
-      <div aria-live="polite" aria-busy={state === "loading"}>
-        {state === "loading" ? (
-          <div className="team-grid">
-            {[0, 1, 2, 3].map((i) => (
-              <div className="member team-skeleton" key={i} />
-            ))}
-            <span className="sr-only">
-              {id ? "Memuat profil tim…" : "Loading team profiles…"}
-            </span>
-          </div>
-        ) : state === "error" ? (
-          <div className="empty-state">
-            <p>
-              {id
-                ? "Profil tim belum dapat dimuat dari Discord."
-                : "Team profiles could not be loaded from Discord."}
-            </p>
-            <button
-              className="button secondary"
-              onClick={reload}
-            >
-              <ArrowClockwise size={18} />
-              {id ? "Coba lagi" : "Retry"}
-            </button>
-          </div>
-        ) : state === "empty" ? (
-          <div className="empty-state">
-            <DiscordLogo size={32} />
-            <p>
-              {id
-                ? "Tim komunitas akan segera diperkenalkan."
-                : "Meet the community team here soon."}
-            </p>
-          </div>
-        ) : result.length ? (
-          <>
-            <div className="team-grid">
-              {result.map((member) => (
-                <button
-                  className="member"
-                  key={member.id}
-                  aria-haspopup="dialog"
-                  onClick={() => setSelected(member)}
-                >
-                  <img
-                    className="avatar discord-avatar"
-                    src={member.avatar}
-                    alt=""
-                    loading="lazy"
-                    width="48"
-                    height="48"
-                  />
-                  <span className="member-info">
-                    <strong>{member.name}</strong>
-                    <span>{member.role}</span>
-                    <small>{member.handle}</small>
-                  </span>
-                  <ArrowUpRight size={19} className="member-arrow" />
-                </button>
-              ))}
+      <div id="team-directory" hidden={!expanded}>
+        {state === "success" && (
+          <div className="team-toolbar">
+            <label className="search">
+              <MagnifyingGlass size={20} />
+              <span className="sr-only">{t.search}</span>
+              <input
+                ref={search}
+                type="search"
+                placeholder={t.search}
+                value={query}
+                onChange={(e) => { setQuery(e.target.value); setCollapsedRoles([]); }}
+              />
+              <kbd aria-hidden="true">/</kbd>
+            </label>
+            <div className="team-controls">
+              <label>
+                <span className="sr-only">{t.all}</span>
+                <select value={role} onChange={(e) => { setRole(e.target.value); setCollapsedRoles([]); }}>
+                  <option value="">{t.all}</option>
+                  {[...new Set(members.map((m) => m.role))].map((r) => (
+                    <option key={r}>{r}</option>
+                  ))}
+                </select>
+              </label>
+              <div className="team-sort" role="group" aria-label={t.sort}>
+                <button aria-pressed={!sorted} onClick={() => setSorted(false)}>{t.defaultSort}</button>
+                <button aria-pressed={sorted} onClick={() => setSorted(true)}>{t.az}</button>
+              </div>
             </div>
-            {partial && (
-              <p className="team-partial">
-                {id
-                  ? "Sebagian profil belum tersedia. Coba lagi beberapa saat lagi."
-                  : "Some profiles are unavailable. Please try again shortly."}
-              </p>
-            )}
-          </>
-        ) : (
-          <div className="empty-state">
-            <MagnifyingGlass size={28} />
-            <p>{t.noMembers}</p>
-            <button
-              className="button secondary"
-              onClick={() => {
-                setQuery("");
-                setRole("");
-              }}
-            >
-              {t.reset}
-            </button>
           </div>
         )}
+        <div aria-live="polite" aria-busy={state === "loading"}>
+          {state === "loading" ? (
+            <div className="team-grid">
+              {[0, 1, 2, 3].map((i) => (
+                <div className="member team-skeleton" key={i} />
+              ))}
+              <span className="sr-only">
+                {id ? "Memuat profil tim…" : "Loading team profiles…"}
+              </span>
+            </div>
+          ) : state === "error" ? (
+            <div className="empty-state">
+              <p>
+                {id
+                  ? "Profil tim belum dapat dimuat dari Discord."
+                  : "Team profiles could not be loaded from Discord."}
+              </p>
+              <button
+                className="button secondary"
+                onClick={reload}
+              >
+                <ArrowClockwise size={18} />
+                {id ? "Coba lagi" : "Retry"}
+              </button>
+            </div>
+          ) : state === "empty" ? (
+            <div className="empty-state">
+              <DiscordLogo size={32} />
+              <p>
+                {id
+                  ? "Tim komunitas akan segera diperkenalkan."
+                  : "Meet the community team here soon."}
+              </p>
+            </div>
+          ) : result.length ? (
+            <>
+              <div className="team-tree">
+                <div className="team-root" aria-label={`${site.name} community`}><DiscordLogo size={18} aria-hidden="true" /><BrandLogo /></div>
+                <ol className="team-groups" aria-label={id ? "Tim berdasarkan peran" : "Team by role"}>
+                  {groups.map((group, index) => (
+                    <li className="team-group" key={group.name}>
+                      <h3>
+                        <button
+                          className="team-role-toggle"
+                          aria-expanded={!collapsedRoles.includes(group.name)}
+                          aria-controls={`team-branch-${index}`}
+                          onClick={() => setCollapsedRoles((previous) => previous.includes(group.name)
+                            ? previous.filter((name) => name !== group.name)
+                            : [...previous, group.name])}
+                        >
+                          {group.name}<span>({group.members.length})</span><CaretDown size={12} aria-hidden="true" />
+                        </button>
+                      </h3>
+                      <ul className="team-branch" id={`team-branch-${index}`} hidden={collapsedRoles.includes(group.name)}>
+                        {group.members.map((member) => (
+                          <li className="team-node" key={member.id}>
+                            <button className="member" aria-haspopup="dialog" onClick={() => setSelected(member)}>
+                              <img
+                                className="avatar discord-avatar"
+                                src={member.avatar}
+                                alt=""
+                                loading="lazy"
+                                width="48"
+                                height="48"
+                              />
+                              <span className="member-info">
+                                <strong>
+                                  <span className="member-card-name">{member.name}</span>
+                                  {member.guildTag && <span className="member-card-tag"><DiscordLogo size={11} weight="fill" aria-hidden="true" />{member.guildTag}</span>}
+                                </strong>
+                                <small>{member.handle}</small>
+                                <span>{member.division || member.role}</span>
+                              </span>
+                              <ArrowUpRight size={19} className="member-arrow" />
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+              {partial && (
+                <p className="team-partial">
+                  {id
+                    ? "Sebagian profil belum tersedia. Coba lagi beberapa saat lagi."
+                    : "Some profiles are unavailable. Please try again shortly."}
+                </p>
+              )}
+            </>
+          ) : (
+            <div className="empty-state">
+              <MagnifyingGlass size={28} />
+              <p>{t.noMembers}</p>
+              <button
+                className="button secondary"
+                onClick={() => {
+                  setQuery("");
+                  setRole("");
+                  setCollapsedRoles([]);
+                }}
+              >
+                {t.reset}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
       {selected && (
         <Modal
