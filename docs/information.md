@@ -20,7 +20,7 @@ Navbar memakai daftar menu yang sama dan langsung terlihat di semua lebar: Beran
 
 Papan palet Figma: https://www.figma.com/design/NvrkOMIR7TDzEDIHLds2ni?node-id=2-2
 
-Palet latar mengikuti permintaan terbaru: gradasi ungu elektrik di kedua sisi, tanpa cahaya lavender terang atau bidang pembuka putih. Beranda dan pembuka Informasi memakai sumber CSS `--community-backdrop` yang sama. Panel Informasi memakai surface ungu gelap, dengan teks terang untuk keterbacaan.
+Palet latar mengikuti permintaan terbaru: hitam keunguan dengan satu gradasi violet tipis, tanpa sorot terang besar di tepi. Beranda dan pembuka Informasi memakai sumber CSS `--community-backdrop` yang sama. Panel Informasi memakai surface ungu gelap dan teks terang. Palet Figma tetap menjadi acuan warna; intensitas latar website sudah dibuat lebih tenang.
 
 Warna/gradient role mengikuti screenshot Discord yang dikirim pengelola. Warna gelap dicerahkan untuk keterbacaan web; seluruh stop warna yang dipakai diperiksa minimal 5:1 terhadap latar gelap pembanding `#392a3d`. Warna ini merupakan penyesuaian visual dari screenshot, bukan pembacaan HEX melalui API Discord.
 

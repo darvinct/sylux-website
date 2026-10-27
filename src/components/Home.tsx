@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   ArrowRight,
   ChatCircleDots,
@@ -14,6 +15,36 @@ import { BrandLogo, JoinButton } from "./Shell";
 import { Portfolio } from "./Portfolio";
 import { Stats, useCommunity } from "./Stats";
 import { Team, useTeam } from "./Team";
+
+function TypewriterIntro({ text }: { text: string }) {
+  const [length, setLength] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches ? text.length : 0);
+  useEffect(() => {
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let timer: number | undefined;
+    const start = () => {
+      window.clearTimeout(timer);
+      if (preference.matches) { setLength(text.length); return; }
+      let position = 0;
+      setLength(0);
+      const type = () => {
+        position += 1;
+        setLength(position);
+        if (position < text.length) timer = window.setTimeout(type, 28);
+      };
+      timer = window.setTimeout(type, 300);
+    };
+    start();
+    preference.addEventListener("change", start);
+    return () => { window.clearTimeout(timer); preference.removeEventListener("change", start); };
+  }, [text]);
+  return (
+    <p className="hero-intro">
+      <span className="sr-only">{text}</span>
+      <span className="typing-space" aria-hidden="true">{text}</span>
+      <span className="typing-copy" aria-hidden="true">{text.slice(0, length)}{length < text.length && <span className="typing-caret" />}</span>
+    </p>
+  );
+}
 
 export default function Home({ lang }: { lang: Language }) {
   const t = copy[lang];
@@ -35,7 +66,7 @@ export default function Home({ lang }: { lang: Language }) {
           </h1>
           <p className="hero-tagline">{t.heroTagline}</p>
           <p className="hero-welcome">{t.eyebrow}</p>
-          <p className="hero-intro">{t.intro}</p>
+          <TypewriterIntro key={lang} text={t.intro} />
           <div className="hero-presence">
             {directory.members.length > 0 && (
               <a className="hero-members" href="#team" aria-label={id ? "Kenali tim SYLUX" : "Meet the SYLUX team"}>

@@ -49,6 +49,8 @@ Login pengunjung **tidak otomatis menjadikan mereka anggota tim**. Bot token ber
 
 Hero terpusat menampilkan logo asli SYLUX dengan gradasi, avatar tim, dan jumlah anggota yang sedang online. Avatar terhubung ke direktori tim dan tidak menandakan status online per akun. `/api/community` mengambil jumlah total/online dari undangan Discord publik; tidak memerlukan bot token. Hero dan Server Stats berbagi satu permintaan, dengan refresh setiap 60 detik ketika halaman aktif dan cache CDN 60 detik. Jika data gagal dimuat, UI menampilkan status tidak tersedia serta tombol coba lagi. Tidak ada angka atau kehadiran yang dibuat-buat.
 
+Deskripsi pembuka memakai animasi ketik satu kali, menyisakan ruang untuk kalimat lengkap agar elemen di bawahnya tidak bergeser. Pergantian bahasa memulai teks baru; reduced-motion menampilkan kalimat lengkap tanpa animasi. Latar beranda dan Informasi memakai gradasi ungu yang tipis, dan navbar hanya memakai satu wordmark SYLUX tanpa tombol login atau ikon bulat.
+
 ## Login Discord
 
 - Login hanya meminta scope `identify`: ID, nama, username, avatar. Tidak meminta email, pesan, atau izin bergabung server.

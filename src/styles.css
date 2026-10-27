@@ -31,10 +31,8 @@
   -webkit-font-smoothing: antialiased;
   --bg: #07060c;
   --community-backdrop:
-    radial-gradient(ellipse 27% 90% at -6% 70%, #6c00fff2, #4b00c866 43%, transparent 76%),
-    radial-gradient(ellipse 27% 90% at 106% 70%, #6c00fff2, #4b00c866 43%, transparent 76%),
-    radial-gradient(ellipse 52% 45% at 24% 0%, #3100b380, transparent 85%),
-    linear-gradient(130deg, #130728, #07060c 52%, #0c0816);
+    radial-gradient(ellipse 75% 85% at 15% 0%, #260b6840, transparent 75%),
+    var(--bg);
   --surface: #100b1a;
   --raised: #1e1230;
   --text: #f8f5ff;
@@ -56,10 +54,7 @@ html {
 }
 body {
   margin: 0;
-  background:
-    radial-gradient(ellipse at 95% 29%, #6c00ff0e, transparent 36%),
-    radial-gradient(ellipse at 0% 63%, #6c00ff1c, transparent 32%),
-    var(--bg);
+  background: var(--bg);
 }
 button,
 input,
@@ -311,9 +306,9 @@ textarea:focus-visible {
 .header .nav > a[aria-current="page"] { color: #e5d6ff; background: transparent; }
 .header .header-actions { flex-shrink: 0; }
 .header a { text-decoration: none; }
-.header .language { padding: 2px; background: #0002; border-color: #ffffff17; }
-.header .language button { min-width: 34px; min-height: 30px; transition: background .2s ease, color .2s ease; }
-.header .language button[aria-pressed="true"] { background: #ffffff12; }
+.header .language { padding: 0; gap: 4px; background: transparent; border: 0; border-radius: 0; }
+.header .language button { min-width: 34px; min-height: 36px; border-radius: 4px; transition: color .2s ease; }
+.header .language button[aria-pressed="true"] { background: transparent; color: var(--text); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 6px; }
 
 .wordmark {
   display: inline-flex;
@@ -459,12 +454,22 @@ textarea:focus-visible {
   text-transform: uppercase;
 }
 .hero-intro {
+  position: relative;
+  width: min(550px, 100%);
   max-width: 550px;
   margin-top: 16px;
   font-size: 16px;
   color: #beb3cf;
   line-height: 1.8;
   text-wrap: balance;
+}
+.typing-space { display: block; visibility: hidden; }
+.typing-copy { position: absolute; inset: 0; }
+.typing-caret { display: inline-block; width: 0; height: 1em; margin-left: 2px; border-right: 2px solid var(--accent); vertical-align: -.12em; animation: typing-caret .8s steps(1) infinite; }
+@keyframes typing-caret { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .typing-space { visibility: visible; }
+  .typing-copy { display: none; }
 }
 .hero-presence {
   display: flex;

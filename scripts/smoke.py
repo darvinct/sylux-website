@@ -234,6 +234,15 @@ async def main():
         moving = await motion.new_page()
         await moving.goto(BASE, wait_until='networkidle')
         await expect(moving.locator('main')).to_have_class('motion-page motion-ready')
+        full_intro = await moving.locator('.typing-space').text_content()
+        assert len(await moving.locator('.typing-copy').text_content()) < len(full_intro)
+        intro_height = (await moving.locator('.hero-intro').bounding_box())['height']
+        presence_y = await moving.locator('.hero-presence').evaluate('(e)=>e.offsetTop')
+        await expect(moving.locator('.typing-copy')).to_have_text(full_intro, timeout=6000)
+        await expect(moving.locator('.typing-caret')).to_have_count(0)
+        assert (await moving.locator('.hero-intro').bounding_box())['height'] == intro_height
+        assert await moving.locator('.hero-presence').evaluate('(e)=>e.offsetTop') == presence_y
+
         await expect(moving.locator('.faq-section > h2').first).to_have_css('opacity', '0')
         await moving.locator('.faq-section > h2').first.scroll_into_view_if_needed()
         await expect(moving.locator('.faq-section > h2').first).to_have_css('opacity', '1')
@@ -244,6 +253,13 @@ async def main():
         await moving.emulate_media(reduced_motion='reduce')
         await expect(moving.locator('main')).to_have_class('motion-page')
         await expect(moving.locator('.faq-section > h2').last).to_have_css('opacity', '1')
+        await moving.evaluate('scrollTo({top:0,behavior:"instant"})')
+        await moving.get_by_role('button',name='EN',exact=True).click()
+        await expect(moving.locator('.typing-space')).to_be_visible()
+        await expect(moving.locator('.typing-copy')).to_be_hidden()
+        await expect(moving.locator('.typing-space')).to_contain_text('A place to hang out')
+        await moving.get_by_role('button',name='ID',exact=True).click()
+
         await moving.emulate_media(reduced_motion='no-preference')
         await moving.goto(BASE + '/information', wait_until='networkidle')
         division_names = await moving.locator('.role-selector button').all_inner_texts()
@@ -262,7 +278,7 @@ async def main():
         await moving.get_by_role('button',name='Event Creative Staff',exact=True).click()
         await expect(moving.locator('.role-feature h3')).to_have_text('Event Creative Staff')
         await motion.close()
-        print('PASS: layouts, languages, team filters, modal keyboard, events, mobile navigation, removed tool routes and More menu, storage failures, direct routes' + (', statistics retry/success' if os.environ.get('TEST_STATS') else ''))
+        print('PASS: layouts, languages, team filters, modal keyboard, events, mobile navigation, stable typewriter and reduced motion, removed tool routes and More menu, storage failures, direct routes' + (', statistics retry/success' if os.environ.get('TEST_STATS') else ''))
         await browser.close()
 
 
