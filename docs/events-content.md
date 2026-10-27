@@ -10,6 +10,8 @@ Konsep tampil langsung di kartu dan dapat dibuka bersama rincian program pada mo
 
 Dokumentasi BOO! THE SHOW sudah diterima sebagai berkas PNG pada 27 Oktober 2026 dan dipasang tanpa perubahan di `public/images/boo-the-show-documentation.png`. Kartu dan modal memakai `imageKind: "documentation"`, warna asli, serta object-fit contain.
 
-Berkas dokumentasi LUXSTARS dan SYLUX GOT TALENT S2 belum tersedia. Kedua kartu tetap memakai `imageKind: "illustration"` dengan label Ilustrasi sementara sampai berkas aslinya diterima.
+Dokumentasi LUXSTARS diterima sebagai berkas PNG dan dipasang tanpa perubahan di `public/images/luxstars-documentation.png`. Kartu dan modal menampilkan warna asli dengan object-fit contain.
+
+Berkas dokumentasi SYLUX GOT TALENT S2 belum tersedia. Kartu tersebut tetap memakai `imageKind: "illustration"` dengan label Ilustrasi sementara sampai berkas aslinya diterima.
 
 Pengelola meminta perubahan terbaru diterapkan langsung ke produksi pada 27 Oktober 2026. Ilustrasi sementara tetap diberi label sampai berkas dokumentasi asli tersedia.

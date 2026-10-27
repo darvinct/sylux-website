@@ -26,9 +26,9 @@ export const events = [
       "Sharing session",
       "Spin wheel minigames"
     ],
-    "image": "/images/music.jpg",
-    "imageKind": "illustration",
-    "alt": "Ilustrasi kegiatan komunitas; bukan dokumentasi LUXSTARS"
+    "image": "/images/luxstars-documentation.png",
+    "imageKind": "documentation",
+    "alt": "Dokumentasi LUXSTARS: SYLUX RISING STARS di Discord Stage SYLUX, menampilkan pembicara dan audiens"
   },
   {
     "id": "sylux-got-talent-s2",
