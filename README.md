@@ -59,6 +59,8 @@ Hero terpusat menampilkan logo asli SYLUX dengan gradasi, avatar tim, dan jumlah
 
 ## Identitas dan konten
 
+Halaman publik `/information` memuat **Sentinel Divisions**, delapan tier **Levelling** (0–135), dan **Cyber Veteran** sebagai legacy recognition. Daftarnya mengikuti informasi dari pengelola SYLUX dan dapat disunting di `src/data/roles.ts`. Lihat [panduan halaman Informasi](docs/information.md). Halaman ini menjelaskan role tanpa memberikan role atau mengubah izin Discord.
+
 Identitas SYLUX menggunakan logo yang diberikan pengelola dan gradasi violet, ungu, serta biru berdasarkan poster referensi. Edit `src/data/site.ts` untuk tagline, undangan, Instagram, email kontak opsional, copy ID/EN, dan kegiatan. Kegiatan awal masih contoh; ubah sebelum mematikan `isDemo`. Tim diatur terpisah di `server/team.json`.
 
 Ubah metadata SEO dan Open Graph di `index.html`. Setelah mendapat domain, gunakan URL absolut gambar Open Graph. Gambar berada di `public/images/`, font di `public/fonts/`, dan token warna di `src/styles.css`. Sumber aset ada di `docs/assets.md`.

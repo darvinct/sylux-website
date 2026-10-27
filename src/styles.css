@@ -318,6 +318,7 @@ textarea:focus-visible {
 .nav a:hover {
   color: var(--text);
 }
+.nav a[aria-current="page"] { color: var(--accent); }
 .header-actions {
   display: flex;
   align-items: center;
@@ -533,6 +534,7 @@ textarea:focus-visible {
   transform: translateY(0);
   filter: blur(0);
 }
+.motion-ready .scroll-reveal:focus-within { transition-duration: 0s; transition-delay: 0s; }
 .reading-progress { display: none; }
 @supports (animation-timeline: scroll()) {
   .reading-progress {
@@ -1716,6 +1718,23 @@ textarea {
   .tool-panel {
     padding: 24px;
   }
+}
+@media (max-width: 1000px) {
+  .header .menu-button { display: flex; }
+  .header .nav {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 8px);
+    padding: 12px 20px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: 0 20px 40px #0005;
+  }
+  .header .nav.is-open { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+  .header .nav a { font-size: 15px; min-height: 48px; justify-content: space-between; }
 }
 @media (max-width: 767px) {
   .wrap {

@@ -59,6 +59,7 @@ export const events = [
 
 export const copy = {
   id: {
+    information: "Informasi",
     nav: ["Beranda", "Server Stats", "Team", "Portfolio"],
     join: "Gabung Discord",
     waiting: "Undangan segera hadir",
@@ -126,6 +127,7 @@ export const copy = {
     sampleTeam: "Contoh susunan tim",
   },
   en: {
+    information: "Information",
     nav: ["Home", "Server Stats", "Team", "Portfolio"],
     join: "Join Discord",
     waiting: "Invite coming soon",

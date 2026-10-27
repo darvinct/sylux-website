@@ -15,6 +15,7 @@ import "./styles.css";
 const Twibbon = lazy(() => import("./components/Twibbon"));
 const CommunityForm = lazy(() => import("./components/CommunityForm"));
 const Webhook = lazy(() => import("./components/Webhook"));
+const Information = lazy(() => import("./components/Information"));
 
 function App() {
   const [lang, setLang] = useState<Language>(() => {
@@ -33,7 +34,9 @@ function App() {
       /* Language still works when storage is blocked. */
     }
     const title =
-      path === "/twibbon"
+      path === "/information"
+        ? copy[lang].information
+        : path === "/twibbon"
         ? "Twibbon Studio"
         : path === "/forms/public"
           ? copy[lang].toolNames[1]
@@ -62,6 +65,8 @@ function App() {
           >
             {path === "/" ? (
               <Home lang={lang} />
+            ) : path === "/information" ? (
+              <Information lang={lang} />
             ) : path === "/twibbon" ? (
               <RequireLogin lang={lang}>
                 <Twibbon lang={lang} />

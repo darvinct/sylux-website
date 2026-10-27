@@ -15,3 +15,5 @@ Logo resolusi tinggi dibuat dari logo baru yang diberikan pengelola melalui pros
 Environment Preview tidak memerlukan salinan bot token untuk menampilkan tim: ketika token tidak tersedia, server membaca endpoint tim produksi yang memang sudah publik. Jumlah online tetap berasal dari public invite Discord. Login preview memerlukan konfigurasi OAuth tersendiri jika ingin diuji; perubahan ini berfokus pada tampilan dan scroll.
 
 Validasi: `npm run check`, `npm run build`, dan browser smoke termasuk observer pada konten yang dimuat/difilter, tampilan statis saat reduced-motion aktif, serta perubahan preferensi tersebut saat runtime.
+
+Pratinjau juga mencakup halaman `/information`, menggunakan daftar Sentinel Divisions dan Levelling yang dikirim pengelola. Pemilih divisi, kartu tier yang bisa digeser, dan badge legacy dapat ditinjau pada halaman tersebut. Rincian konten dan interaksi ada di `information.md`.

@@ -78,6 +78,9 @@ export function Header({
             {t.nav[i]}
           </a>
         ))}
+        <a href="/information" onClick={() => setOpen(false)} aria-current={window.location.pathname.replace(/\/$/, "") === "/information" ? "page" : undefined}>
+          {t.information}
+        </a>
         <a href="/twibbon" onClick={() => setOpen(false)}>
           Twibbon
           <ArrowUpRight size={12} />
@@ -117,6 +120,7 @@ export function Footer({ lang }: { lang: Language }) {
         </a>
         <p>{site.tagline}</p>
         <div className="footer-links">
+          <a href="/information">{t.information}</a>
           <a href="/twibbon">Twibbon</a>
           <a href="/forms/public">Form</a>
           <a href="/webhooks/editor">Webhook</a>
