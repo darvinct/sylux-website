@@ -21,7 +21,11 @@ export const sentinelDivisions = [
         "Partnership relations",
         "Cross-server collaboration"
       ]
-    }
+    },
+    "colors": [
+      "#ffad66",
+      "#ffd0a1"
+    ]
   },
   {
     "id": "event-creative",
@@ -45,7 +49,11 @@ export const sentinelDivisions = [
         "Event planning",
         "Creative direction"
       ]
-    }
+    },
+    "colors": [
+      "#c599ff",
+      "#ffb48e"
+    ]
   },
   {
     "id": "design-editor",
@@ -69,7 +77,11 @@ export const sentinelDivisions = [
         "Editing",
         "Creative assets"
       ]
-    }
+    },
+    "colors": [
+      "#ff7aaf",
+      "#ff99c7"
+    ]
   },
   {
     "id": "publication",
@@ -93,7 +105,11 @@ export const sentinelDivisions = [
         "Wording",
         "Information delivery"
       ]
-    }
+    },
+    "colors": [
+      "#a9efbc",
+      "#a4d9f4"
+    ]
   },
   {
     "id": "media",
@@ -117,7 +133,11 @@ export const sentinelDivisions = [
         "Media",
         "Community exposure"
       ]
-    }
+    },
+    "colors": [
+      "#6fdfc3",
+      "#a5f2dd"
+    ]
   },
   {
     "id": "game",
@@ -141,7 +161,11 @@ export const sentinelDivisions = [
         "Gaming events",
         "Gaming coordination"
       ]
-    }
+    },
+    "colors": [
+      "#72cfdf",
+      "#a0e4f2"
+    ]
   },
   {
     "id": "female",
@@ -163,7 +187,11 @@ export const sentinelDivisions = [
         "Female Community programs",
         "Female Community needs"
       ]
-    }
+    },
+    "colors": [
+      "#e2b8d7",
+      "#ffd7ef"
+    ]
   },
   {
     "id": "streamer",
@@ -185,7 +213,11 @@ export const sentinelDivisions = [
         "Streaming activities",
         "Live community programs"
       ]
-    }
+    },
+    "colors": [
+      "#ff808b",
+      "#ffb3ba"
+    ]
   },
   {
     "id": "medic",
@@ -207,7 +239,11 @@ export const sentinelDivisions = [
         "Community assistance",
         "Member support"
       ]
-    }
+    },
+    "colors": [
+      "#ecb87d",
+      "#ffd6a6"
+    ]
   },
   {
     "id": "payment",
@@ -231,7 +267,11 @@ export const sentinelDivisions = [
         "Rewards",
         "Transaction handling"
       ]
-    }
+    },
+    "colors": [
+      "#cbd6e8",
+      "#f4f7fc"
+    ]
   }
 ] as const;
 
@@ -244,7 +284,11 @@ export const levellingRoles = [
     "description": {
       "id": "Role awal untuk member baru. Langkah pertama dalam perjalananmu di SYLUX.",
       "en": "The starting role for new members. Your first step in the SYLUX journey."
-    }
+    },
+    "colors": [
+      "#9cb2c1",
+      "#c3d0da"
+    ]
   },
   {
     "id": "resident",
@@ -254,7 +298,11 @@ export const levellingRoles = [
     "description": {
       "id": "Tier resident aktif untuk anggota yang mulai membangun kehadiran di komunitas.",
       "en": "The active resident tier for members building their presence in the community."
-    }
+    },
+    "colors": [
+      "#76dfc6",
+      "#b2f5e3"
+    ]
   },
   {
     "id": "data-knight",
@@ -264,7 +312,11 @@ export const levellingRoles = [
     "description": {
       "id": "Tier komunitas yang sedang bertumbuh, selangkah lebih jauh dalam progresimu.",
       "en": "A growing community tier and the next stage of your progression."
-    }
+    },
+    "colors": [
+      "#67c0d2",
+      "#a7e5ed"
+    ]
   },
   {
     "id": "circuit-breaker",
@@ -274,7 +326,11 @@ export const levellingRoles = [
     "description": {
       "id": "Tier progresi aktif dalam perjalanan levelling SYLUX.",
       "en": "An active progression tier in the SYLUX levelling journey."
-    }
+    },
+    "colors": [
+      "#ba88f0",
+      "#ff86b4"
+    ]
   },
   {
     "id": "code-whisperer",
@@ -284,7 +340,11 @@ export const levellingRoles = [
     "description": {
       "id": "Tier untuk anggota yang telah membangun tempatnya dalam komunitas.",
       "en": "The established community tier for members who have found their place."
-    }
+    },
+    "colors": [
+      "#ffdf55",
+      "#ffed99"
+    ]
   },
   {
     "id": "neon-architect",
@@ -294,7 +354,11 @@ export const levellingRoles = [
     "description": {
       "id": "Tier progresi tinggi, melanjutkan perjalananmu bersama komunitas.",
       "en": "A high progression tier as your community journey continues."
-    }
+    },
+    "colors": [
+      "#d4b5c6",
+      "#ff829c"
+    ]
   },
   {
     "id": "quantum-shaper",
@@ -304,7 +368,11 @@ export const levellingRoles = [
     "description": {
       "id": "Tier progresi lanjutan dalam sistem levelling SYLUX.",
       "en": "An advanced progression tier in the SYLUX levelling system."
-    }
+    },
+    "colors": [
+      "#7cde91",
+      "#91b5ff"
+    ]
   },
   {
     "id": "glitched-crown",
@@ -314,7 +382,12 @@ export const levellingRoles = [
     "description": {
       "id": "Tier progresi tertinggi dalam daftar levelling SYLUX.",
       "en": "The highest progression tier in the SYLUX levelling guide."
-    }
+    },
+    "colors": [
+      "#e580ff",
+      "#9b9bff",
+      "#6bdfef"
+    ]
   }
 ] as const;
 
@@ -324,5 +397,11 @@ export const legacyRole = {
   "description": {
     "id": "Legacy recognition untuk para veteran SYLUX. Penghargaan ini ditampilkan terpisah dari tier dengan rentang level.",
     "en": "Legacy recognition for SYLUX veterans, presented separately from the level-based progression tiers."
-  }
+  },
+  "colors": [
+    "#aeb7ff",
+    "#e0d8ff"
+  ]
 } as const;
+
+// Colors follow the supplied Discord screenshots, lifted for dark-background readability.

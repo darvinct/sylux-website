@@ -12,6 +12,10 @@ Deskripsi disunting dan diterjemahkan dari fokus singkat yang diberikan pengelol
 
 Pemilih divisi mendukung klik/touch, tombol panah, Home, dan End. Panel detail mengikuti scroll di desktop; pilihan divisi menjadi baris yang bisa digeser pada layar kecil. Kartu level mendukung swipe, tombol sebelumnya/berikutnya, dan fokus keyboard. Tombol navigasi dinonaktifkan di ujung daftar.
 
+Saat motion aktif dan tinggi viewport minimal 640px, seluruh panel Sentinel ditahan menggunakan native CSS sticky. Sepuluh langkah scroll memilih divisi secara otomatis melalui IntersectionObserver; scroll naik mengembalikan urutannya. Klik atau keyboard tetap dapat langsung menuju divisi, dengan posisi scroll diselaraskan agar pilihan tidak saling menimpa. Tidak ada penangkapan wheel/touch atau listener scroll per frame. Viewport pendek dan reduced-motion memakai pilihan manual tanpa ruang scroll tambahan.
+
+Warna/gradient role mengikuti screenshot Discord yang dikirim pengelola. Warna gelap dicerahkan untuk keterbacaan web; seluruh stop warna yang dipakai diperiksa minimal 5:1 terhadap latar gelap pembanding `#392a3d`. Warna ini merupakan penyesuaian visual dari screenshot, bukan pembacaan HEX melalui API Discord.
+
 Animasi memakai hook observer yang sama dengan beranda, menghormati reduced-motion, dan menjaga fokus keyboard tetap terlihat. Halaman di-load terpisah agar konten/piktogramnya tidak membebani beranda. Validasi browser mencakup route langsung dengan trailing slash, pergantian bahasa, pilihan peran, navigasi keyboard, carousel, rentang level, legacy, dan lebar 320/390/768/1024/1440px.
 
 Perubahan tetap berada pada cabang pratinjau sampai pengelola meminta penerapan ke website utama.
