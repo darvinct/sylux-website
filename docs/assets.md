@@ -2,7 +2,7 @@
 
 - `public/images/sylux-logo-hd.png`: versi resolusi tinggi berdasarkan logo baru pengelola, dibersihkan dengan alat image generation. Dipakai pada cabang pratinjau; tampilan hitam-putih dirender sebagai mask gradasi/screen blend agar menyatu dengan latar website.
 
-- `public/images/sylux-logo.png`: logo asli yang diunggah pengelola, digunakan tanpa perubahan berkas pada navigasi, footer, kartu profil tim, webhook, dan bingkai Twibbon.
+- `public/images/sylux-logo.png`: logo asli yang diunggah pengelola, digunakan tanpa perubahan berkas pada navigasi, footer, kartu profil tim, dan webhook.
 - Latar hero dan warna website menggunakan gradasi CSS ungu/violet/biru, mengikuti poster SYLUX yang diberikan pengelola. Poster referensi tidak diterbitkan sebagai agenda atau kegiatan aktual.
 - Undangan default `https://discord.gg/sylux` mengikuti tautan yang tertulis pada poster. `VITE_DISCORD_INVITE` tetap dapat menggantinya.
 - `public/images/hero.webp`: aset hero lama yang dibuat untuk versi awal; tidak lagi dipakai di website.

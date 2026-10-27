@@ -116,8 +116,6 @@ export function noStore(res) {
 export function safeReturn(value) {
   return [
     "/",
-    "/twibbon",
-    "/forms/public",
     "/webhooks/editor",
     "/account",
   ].includes(value)

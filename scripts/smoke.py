@@ -27,15 +27,18 @@ async def main():
         page = await context.new_page()
         errors = []
         page.on('pageerror', lambda error: errors.append(str(error)))
-        await page.goto(BASE + '/twibbon', wait_until='networkidle')
+        await page.goto(BASE + '/webhooks/editor', wait_until='networkidle')
         await expect(page.get_by_role('heading', level=1)).to_contain_text('Masuk, lalu ikut ceritanya.')
         assert await page.locator('input[type=file]').count() == 0
-        assert '/api/auth/login?returnTo=%2Ftwibbon' in await page.locator('.login-card a').get_attribute('href')
+        assert '/api/auth/login?returnTo=%2Fwebhooks%2Feditor' in await page.locator('.login-card a').get_attribute('href')
         session.update(user=user, expiresAt=int(time.time() * 1000) + 3600000)
         await page.goto(BASE + '/account', wait_until='networkidle')
         await expect(page.locator('.account-card')).to_contain_text('session.user')
         await page.goto(BASE, wait_until='networkidle')
         await expect(page.locator('.member')).to_have_count(4)
+        await expect(page.locator('a[href="/twibbon"], a[href="/forms/public"]')).to_have_count(0)
+        await expect(page.locator('.tool-link')).to_have_count(1)
+        await expect(page.locator('.tool-link')).to_have_attribute('href', '/webhooks/editor')
         assert await page.locator('.member').filter(has_text='Session User').count() == 0
         await expect(page.get_by_role('heading', level=1)).to_contain_text('SYLUX')
         await expect(page.locator('.hero-tagline')).to_have_text('Ruangmu untuk bersinar.')
@@ -126,39 +129,10 @@ async def main():
         await page.locator('#main-nav a').nth(2).click()
         await expect(page.locator('#main-nav')).to_be_hidden()
 
-        await page.goto(BASE + '/forms/public', wait_until='networkidle')
-        await page.get_by_label('Nama panggilan', exact=True).fill('Tester')
-        await page.get_by_label('Username Discord').fill('tester_name')
-        await page.get_by_label('Apa yang ingin kamu bawa ke komunitas?').fill('Saya ingin membantu mengadakan kegiatan komunitas.')
-        await page.get_by_label('Kapan biasanya kamu tersedia?').fill('Jumat 20.00 WIB')
-        await page.get_by_role('button', name='Simpan draft').click()
-        await page.reload()
-        await expect(page.get_by_label('Nama panggilan', exact=True)).to_have_value('Tester')
-        await page.get_by_role('checkbox').check()
-        async with page.expect_download() as download_info:
-            await page.get_by_role('button', name='Unduh salinan').click()
-        download = await download_info.value
-        data = json.loads(Path(await download.path()).read_text())
-        assert data['nickname'] == 'Tester' and data['discord'] == 'tester_name'
-        await expect(page.get_by_role('status')).to_contain_text('belum dikirim')
-        await page.get_by_role('button', name='Hapus draft').click()
-        await page.reload()
-        await expect(page.get_by_label('Nama panggilan', exact=True)).to_have_value('Session User')
-
-        await page.goto(BASE + '/twibbon', wait_until='networkidle')
-        await expect(page.get_by_role('button', name='Unduh PNG')).to_be_disabled()
-        await page.locator('input[type=file]').set_input_files(ROOT / 'public/images/conversation.jpg')
-        await expect(page.get_by_role('button', name='Unduh PNG')).to_be_enabled()
-        await page.get_by_label('Namamu (opsional)').fill('Tester')
-        await page.get_by_label('Perbesar', exact=True).fill('1.5')
-        await page.get_by_label('Posisi horizontal').fill('20')
-        async with page.expect_download() as download_info:
-            await page.get_by_role('button', name='Unduh PNG').click()
-        download = await download_info.value
-        png = Path(await download.path()).read_bytes()
-        assert png[:8] == b'\x89PNG\r\n\x1a\n' and int.from_bytes(png[16:20], 'big') == 1080
-        await page.get_by_role('button', name='Reset', exact=True).click()
-        await expect(page.get_by_label('Perbesar', exact=True)).to_have_value('1')
+        for removed in ['/twibbon', '/forms/public']:
+            await page.goto(BASE + removed, wait_until='networkidle')
+            await expect(page.get_by_role('heading', level=1)).to_contain_text('Halaman belum ditemukan')
+            await expect(page.locator('a[href="/twibbon"], a[href="/forms/public"]')).to_have_count(0)
 
         await page.goto(BASE + '/webhooks/editor', wait_until='networkidle')
         await page.get_by_label('Judul').fill('<script>alert(1)</script>')
@@ -248,10 +222,10 @@ async def main():
         await blocked.route('https://cdn.discordapp.com/**', lambda route: route.fulfill(path=ROOT / 'public/images/conversation.jpg'))
         await blocked.add_init_script("Storage.prototype.getItem = () => { throw new Error('blocked') }; Storage.prototype.setItem = () => { throw new Error('blocked') };")
         blocked_page = await blocked.new_page()
-        await blocked_page.goto(BASE + '/forms/public', wait_until='networkidle')
-        await expect(blocked_page.get_by_role('heading', level=1)).to_contain_text('Form Komunitas')
-        await blocked_page.get_by_role('button', name='Simpan draft').click()
-        await expect(blocked_page.get_by_role('status')).to_contain_text('tidak mengizinkan')
+        await blocked_page.goto(BASE, wait_until='networkidle')
+        await expect(blocked_page.get_by_role('heading', level=1)).to_contain_text('SYLUX')
+        await blocked_page.get_by_role('button', name='EN', exact=True).click()
+        await expect(blocked_page.locator('.hero-tagline')).to_have_text('Find your people. Shine together.')
         await blocked.close()
         await page.goto(BASE + '/account', wait_until='networkidle')
         async def logout_response(route):
@@ -315,7 +289,7 @@ async def main():
         await moving.get_by_role('button',name='Event Creative Staff',exact=True).click()
         await expect(moving.locator('.role-feature h3')).to_have_text('Event Creative Staff')
         await motion.close()
-        print('PASS: layouts, languages, team filters, modal keyboard, events, mobile navigation, form persistence/export, Twibbon crop/PNG, webhook export, storage failures, direct routes' + (', statistics retry/success' if os.environ.get('TEST_STATS') else ''))
+        print('PASS: layouts, languages, team filters, modal keyboard, events, mobile navigation, removed tool routes, webhook export, storage failures, direct routes' + (', statistics retry/success' if os.environ.get('TEST_STATS') else ''))
         await browser.close()
 
 

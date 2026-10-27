@@ -1398,63 +1398,6 @@ textarea:focus-visible {
 .tool-panel > p {
   font-size: 14px;
 }
-.canvas-panel {
-  background: #100b1a;
-  padding: 18px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  min-width: 0;
-}
-.canvas-panel canvas {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 5px;
-}
-.canvas-caption {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: #abb1b4;
-  font-size: 12px;
-  padding-top: 16px;
-  padding-bottom: 2px;
-}
-.upload-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  position: relative;
-  border: 1px dashed #777f72;
-  border-radius: 8px;
-  background: #261b3c;
-  padding: 24px;
-  cursor: pointer;
-  color: #d6dfce;
-  overflow: hidden;
-  min-height: 76px;
-}
-.upload-button:hover {
-  background: #28163d;
-}
-.upload-button input {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-}
-.upload-button:focus-within {
-  outline: 2px solid var(--accent);
-  outline-offset: 4px;
-}
-.tool-panel > .upload-button + small {
-  margin-top: -12px;
-  font-size: 12px;
-}
 .field {
   display: flex;
   flex-direction: column;
@@ -1491,63 +1434,9 @@ textarea {
   font-size: 11px;
   color: #a8afb2;
 }
-.range-field {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  font-size: 13px;
-  color: #c0c5c7;
-}
-.range-field input {
-  width: 100%;
-  accent-color: var(--accent);
-  height: 24px;
-}
 .error {
   font-size: 14px;
   color: #ffc8bd;
-}
-.form-layout {
-  display: grid;
-  grid-template-columns: 0.8fr 1.2fr;
-  gap: 80px;
-}
-.form-aside {
-  padding-top: 12px;
-}
-.form-aside > h2 {
-  font-size: 46px;
-  line-height: 1.15;
-  white-space: pre-line;
-  margin-top: 24px;
-}
-.form-aside > p {
-  margin-top: 24px;
-  font-size: 15px;
-  max-width: 340px;
-}
-.form-aside .notice {
-  margin-top: 40px;
-}
-.form-two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-.checkbox-label {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  color: #c0c6c8;
-  font-size: 13px;
-  line-height: 1.65;
-}
-.checkbox-label input {
-  accent-color: var(--accent);
-  width: 18px;
-  height: 18px;
-  margin: 2px 0 0;
-  flex-shrink: 0;
 }
 .form-status {
   font-size: 13px;
@@ -1557,9 +1446,6 @@ textarea {
   gap: 8px;
   align-items: center;
   line-height: 1.6;
-}
-.community-form > .text-button {
-  align-self: flex-start;
 }
 .color-field > span {
   display: flex;
@@ -1760,9 +1646,6 @@ textarea {
   .event-1 h3,
   .event-2 h3 {
     font-size: 20px;
-  }
-  .form-layout {
-    gap: 40px;
   }
   .tool-grid {
     gap: 28px;
@@ -2157,28 +2040,6 @@ textarea {
   }
   .tool-panel h2 {
     font-size: 26px;
-  }
-  .canvas-panel {
-    max-width: 500px;
-  }
-  .form-layout {
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
-  .form-aside > h2 {
-    font-size: 36px;
-  }
-  .form-aside > p {
-    font-size: 14px;
-    margin-top: 18px;
-    max-width: none;
-  }
-  .form-aside .notice {
-    margin-top: 24px;
-  }
-  .form-two-col {
-    grid-template-columns: 1fr;
-    gap: 22px;
   }
   .button-row {
     gap: 10px;

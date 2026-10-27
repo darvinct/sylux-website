@@ -110,10 +110,6 @@ export function Header({
               {t.nav[i]}
             </a>
           ))}
-          <a href="/twibbon" onClick={closeMenus}>
-            Twibbon
-          </a>
-          <a href="/forms/public" onClick={closeMenus}>Form</a>
           <a href="/webhooks/editor" onClick={closeMenus}>Webhook</a>
           <details className="nav-more" ref={more}>
             <summary>{lang === "id" ? "Lainnya" : "More"}<CaretDown size={12} aria-hidden="true" /></summary>
@@ -162,8 +158,6 @@ export function Footer({ lang }: { lang: Language }) {
         <p>{site.tagline}</p>
         <div className="footer-links">
           <a href="/information">{t.information}</a>
-          <a href="/twibbon">Twibbon</a>
-          <a href="/forms/public">Form</a>
           <a href="/webhooks/editor">Webhook</a>
           {site.instagram && (
             <a href={site.instagram} target="_blank" rel="noreferrer">

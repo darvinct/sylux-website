@@ -3,12 +3,10 @@ import {
   ArrowUpRight,
   ChatCircleDots,
   Headphones,
-  ImageSquare,
   Microphone,
   PaintBrush,
   UsersThree,
   Waveform,
-  FileText,
   Code,
   ArrowClockwise,
 } from "@phosphor-icons/react";
@@ -26,7 +24,6 @@ export default function Home({ lang }: { lang: Language }) {
   const directory = useTeam();
   const page = useScrollReveal(".about-copy, .activity, .stats-intro, .stats-data, .section-heading, .event-card, .team-toolbar, .member, .tool-link, .faq-section > h2, .faq-list details, .closing > div:not(.closing-mark), .closing > .button");
   const activityIcons = [ChatCircleDots, Headphones, Microphone, PaintBrush];
-  const toolIcons = [ImageSquare, FileText, Code];
   return (
     <main ref={page} className="motion-page">
       <div className="reading-progress" aria-hidden="true" />
@@ -123,22 +120,14 @@ export default function Home({ lang }: { lang: Language }) {
           <p>{t.toolsBody}</p>
         </div>
         <div className="tools-list">
-          {toolIcons.map((Icon, i) => (
-            <a
-              key={i}
-              className="tool-link"
-              href={["/twibbon", "/forms/public", "/webhooks/editor"][i]}
-            >
-              <span className="tool-icon">
-                <Icon size={26} weight="light" />
-              </span>
-              <div>
-                <h3>{t.toolNames[i]}</h3>
-                <p>{t.toolBodies[i]}</p>
-              </div>
-              <ArrowUpRight size={25} />
-            </a>
-          ))}
+          <a className="tool-link" href="/webhooks/editor">
+            <span className="tool-icon"><Code size={26} weight="light" /></span>
+            <div>
+              <h3>{t.webhookName}</h3>
+              <p>{t.webhookBody}</p>
+            </div>
+            <ArrowUpRight size={25} />
+          </a>
         </div>
       </section>
       <section className="section wrap faq-section">

@@ -56,14 +56,14 @@ Hero terpusat menampilkan logo asli SYLUX dengan gradasi, avatar tim, dan jumlah
 - Website menyimpan profil dasar dalam cookie terenkripsi, HttpOnly, SameSite=Lax, dan Secure pada HTTPS. Sesi berakhir setelah 24 jam; login ulang untuk memperbarui profil akun.
 - Access token dan refresh token Discord dipakai sementara saat callback, tidak dipersistenkan dan tidak dikirim ke browser.
 - Logout memakai POST dengan pemeriksaan origin dan menghapus cookie browser. Tidak mencabut otorisasi aplikasi di pengaturan Discord. Sesi bersifat stateless; penghapusan cookie tidak mencabut salinan cookie lain sebelum masa berlakunya habis.
-- Beranda dan tim bersifat publik. Twibbon, form, dan editor webhook meminta login untuk membuka UI.
-- Alat tersebut masih bekerja lokal: Twibbon mengunduh PNG; form menyimpan draft per akun di perangkat dan mengekspor JSON; webhook hanya preview/ekspor JSON. Tidak ada database atau pengiriman formulir/webhook ke server. Jika menambahkan aksi server di masa depan, endpoint aksi tersebut juga harus memverifikasi sesi, bukan mengandalkan tampilan login.
+- Beranda dan tim bersifat publik. Editor webhook meminta login untuk membuka UI. Twibbon dan form komunitas sudah dihapus.
+- Editor webhook bekerja lokal untuk preview/ekspor JSON. Tidak ada database atau pengiriman webhook ke server. Jika menambahkan aksi server di masa depan, endpoint aksi tersebut juga harus memverifikasi sesi, bukan mengandalkan tampilan login.
 
 ## Identitas dan konten
 
 Halaman publik `/information` memuat **Sentinel Divisions**, delapan tier **Levelling** (0–135), dan **Cyber Veteran** sebagai legacy recognition. Daftarnya mengikuti informasi dari pengelola SYLUX dan dapat disunting di `src/data/roles.ts`. Lihat [panduan halaman Informasi](docs/information.md). Halaman ini menjelaskan role tanpa memberikan role atau mengubah izin Discord.
 
-Identitas SYLUX menggunakan logo yang diberikan pengelola dan gradasi violet, ungu, serta biru berdasarkan poster referensi. Edit `src/data/site.ts` untuk tagline, undangan, Instagram, email kontak opsional, copy ID/EN, dan kegiatan. Kegiatan awal masih contoh; ubah sebelum mematikan `isDemo`. Tim diatur terpisah di `server/team.json`.
+Identitas SYLUX menggunakan logo yang diberikan pengelola dan gradasi violet, ungu, serta biru berdasarkan poster referensi. Edit `src/data/site.ts` untuk tagline, undangan, Instagram, copy ID/EN, dan kegiatan. Kegiatan awal masih contoh; ubah sebelum mematikan `isDemo`. Tim diatur terpisah di `server/team.json`.
 
 Ubah metadata SEO dan Open Graph di `index.html`. Setelah mendapat domain, gunakan URL absolut gambar Open Graph. Gambar berada di `public/images/`, font di `public/fonts/`, dan token warna di `src/styles.css`. Sumber aset ada di `docs/assets.md`.
 
