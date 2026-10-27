@@ -1,11 +1,11 @@
 .information-page { --role-color: #c8adff; --role-gradient: var(--brand-gradient); background: #07060c; padding-bottom: 60px; }
 .information-shell { width: calc(100% - 80px); max-width: 1100px; margin-inline: auto; }
-.information-hero { position: relative; min-height: 640px; height: 100svh; background: #eeeaf4; color: #160e24; }
+.information-hero { position: relative; min-height: 640px; height: 100svh; background: var(--community-backdrop); color: var(--text); }
 .information-hero-stage { position: sticky; top: 0; display: grid; place-items: center; height: 100svh; min-height: 640px; overflow: hidden; padding: var(--nav-clearance) 24px 72px; }
 .information-hero-copy { width: 100%; text-align: center; }
-.information-hero-logo { display: block; width: min(760px, 86vw); height: clamp(140px, 25vw, 260px); margin-inline: auto; background: #160e24; mask: url('/images/sylux-logo-hd.png') center / contain no-repeat; mask-mode: luminance; }
+.information-hero-logo { display: block; width: min(760px, 86vw); height: clamp(140px, 25vw, 260px); margin-inline: auto; background: var(--brand-gradient); mask: url('/images/sylux-logo-hd.png') center / contain no-repeat; mask-mode: luminance; }
 .information-hero h1 { font-size: clamp(14px, 1.5vw, 20px); font-weight: 500; text-transform: uppercase; letter-spacing: .16em; margin-top: 24px; }
-.information-hero p { color: #645a73; font-size: 14px; margin-top: 14px; }
+.information-hero p { color: #c9bed8; font-size: 14px; margin-top: 14px; }
 .information-scroll-cue { position: absolute; bottom: 48px; display: flex; flex-direction: column; align-items: center; gap: 14px; font-size: 12px; }
 .information-hero-shade { position: absolute; inset: 0; background: #07060c; opacity: 0; pointer-events: none; }
 @supports (animation-timeline: view()) {
@@ -28,7 +28,7 @@
 .info-role-item button { padding: 8px 0; background: transparent; border: 0; text-align: left; font-size: clamp(24px, 2.5vw, 36px); line-height: 1.2; font-weight: 600; letter-spacing: -.7px; color: #f8f5ff; overflow-wrap: anywhere; }
 .info-role-item button[aria-pressed="true"] { color: var(--role-color); }
 .info-role-item p { font-size: 16px; max-width: 460px; line-height: 1.7; }
-.role-feature { position: sticky; top: max(calc(var(--nav-clearance) + 20px), calc(50svh - 160px)); width: 100%; max-width: 440px; height: 320px; padding: 36px; background: #111015; border: 1px solid #2a2530; border-radius: 16px; box-shadow: 0 10px 30px #0005; overflow: hidden; justify-self: end; }
+.role-feature { position: sticky; top: max(calc(var(--nav-clearance) + 20px), calc(50svh - 160px)); width: 100%; max-width: 440px; height: 320px; padding: 36px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px #0005; overflow: hidden; justify-self: end; }
 .role-watermark { position: absolute; top: 36px; right: 28px; opacity: .06; pointer-events: none; }
 .role-watermark .brand-logo { width: 130px; height: 44px; }
 .role-feature-content { position: relative; height: 100%; display: flex; flex-direction: column; justify-content: space-between; animation: role-detail-arrive .35s ease; }
@@ -39,9 +39,9 @@
 @keyframes role-detail-arrive { from { opacity: .2; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .community-roles-section { overflow: hidden; }
 .community-role-track { display: grid; grid-auto-flow: column; grid-auto-columns: 320px; align-items: stretch; gap: 24px; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; padding: 20px max(24px, calc((100% - 1100px) / 2)) 32px; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: #c8adff #201925; }
-.community-role { scroll-snap-align: center; border: 1px solid #2a2530; border-radius: 16px; overflow: hidden; background: #111015; transition: transform .3s ease, border-color .3s ease; }
+.community-role { scroll-snap-align: center; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--surface); transition: transform .3s ease, border-color .3s ease; }
 .community-role:hover { transform: translateY(-10px); border-color: var(--role-color); }
-.community-role-stage { display: grid; place-items: center; height: 150px; background: #19151e; border-bottom: 1px solid #2a2530; color: var(--role-color); }
+.community-role-stage { display: grid; place-items: center; height: 150px; background: #170d2b; border-bottom: 1px solid var(--border); color: var(--role-color); }
 .community-role-stage svg { filter: drop-shadow(0 8px 16px #0008); }
 .community-role-body { padding: 24px; }
 .level-range { display: block; color: var(--role-color); font-size: 11px; font-weight: 500; letter-spacing: .06em; margin-bottom: 10px; }
@@ -51,7 +51,7 @@
 @supports (background-clip: text) { .role-label { background: var(--role-gradient); background-clip: text; -webkit-text-fill-color: transparent; } }
 .community-role-controls { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 24px; font-size: 12px; color: var(--muted); }
 .community-role-controls > div { display: flex; gap: 8px; }
-.community-role-controls button { border: 1px solid #393040; background: #111015; }
+.community-role-controls button { border: 1px solid #393040; background: var(--surface); }
 .information-legacy { display: flex; align-items: center; justify-content: center; gap: 36px; padding-block: 100px; }
 .information-legacy > svg { flex-shrink: 0; color: var(--role-color); }
 .legacy-role h2 { font-size: clamp(28px, 3.2vw, 46px); line-height: 1.1; letter-spacing: -.8px; }

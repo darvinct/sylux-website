@@ -30,6 +30,11 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   --bg: #07060c;
+  --community-backdrop:
+    radial-gradient(ellipse 27% 90% at -6% 70%, #6c00fff2, #4b00c866 43%, transparent 76%),
+    radial-gradient(ellipse 27% 90% at 106% 70%, #6c00fff2, #4b00c866 43%, transparent 76%),
+    radial-gradient(ellipse 52% 45% at 24% 0%, #3100b380, transparent 85%),
+    linear-gradient(130deg, #130728, #07060c 52%, #0c0816);
   --surface: #100b1a;
   --raised: #1e1230;
   --text: #f8f5ff;
@@ -286,7 +291,7 @@ textarea:focus-visible {
   gap: 24px;
   border: 0;
   border-bottom: 1px solid #ffffff16;
-  background: linear-gradient(110deg, #242129f2, #111015f5 65%, #16121df2);
+  background: linear-gradient(110deg, #1b1029f2, #0e0816f5 65%, #160b25f2);
   backdrop-filter: blur(20px);
   border-radius: 0;
   padding: 0 clamp(20px, 3vw, 48px);
@@ -412,13 +417,8 @@ textarea:focus-visible {
   z-index: -2;
   pointer-events: none;
 }
-.hero-background {
-  background:
-    radial-gradient(ellipse 48% 85% at 103% -3%, #ead9ffdf, #b183ed80 32%, #6939b733 58%, transparent 78%),
-    radial-gradient(ellipse 27% 90% at -6% 70%, #6c00fff2, #4b00c866 43%, transparent 76%),
-    radial-gradient(ellipse 52% 45% at 24% 0%, #3100b380, transparent 85%),
-    linear-gradient(130deg, #130728, #07060c 52%, #0c0816);
-}
+.hero-background { background: var(--community-backdrop); }
+
 .hero-shade {
   z-index: -1;
   background: linear-gradient(0deg, var(--bg), transparent 36%);
