@@ -46,9 +46,9 @@ export const events = [
       "Talent showcase",
       "Season 2"
     ],
-    "image": "/images/conversation.jpg",
-    "imageKind": "illustration",
-    "alt": "Ilustrasi mikrofon; bukan dokumentasi SYLUX GOT TALENT S2"
+    "image": "/images/sylux-got-talent-s2-documentation.png",
+    "imageKind": "documentation",
+    "alt": "Dokumentasi SYLUX GOT TALENT S2 di Discord Stage pada sesi audisi, menampilkan pembicara dan audiens"
   },
   {
     "id": "boo-the-show",
