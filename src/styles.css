@@ -305,16 +305,11 @@ textarea:focus-visible {
 .header-content { display: flex; align-items: center; flex: 1; min-width: 0; }
 .header .wordmark { gap: 10px; flex-shrink: 0; }
 .header .brand-logo { width: 104px; height: 28px; object-fit: contain; mix-blend-mode: normal; mask: url('/images/sylux-logo-hd.png') center / contain no-repeat; mask-mode: luminance; }
-.nav-emblem { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
 .header .nav { justify-content: center; flex: 1; min-width: 0; }
 .header .nav > a { font-size: 12px; padding: 12px 9px; color: #c1b9cb; border-radius: 8px; }
 .header .nav > a:hover { color: #fff; background: #ffffff06; }
 .header .nav > a[aria-current="page"] { color: #e5d6ff; background: transparent; }
 .header .header-actions { flex-shrink: 0; }
-.header .account-control { border: 0; background: transparent; padding: 4px; min-height: 36px; max-width: 112px; font-size: 12px; color: #c1b9cb; }
-.header .login-control { min-height: 36px; padding: 6px 10px; border-color: #ffffff20; background: #ffffff04; }
-.header .account-control:hover, .header .login-control:hover { background: #ffffff0a; color: #fff; }
-.header .account-control > span, .header .login-control > span { max-width: 84px; opacity: 1; overflow: hidden; transition: max-width .35s cubic-bezier(.22, 1, .36, 1), opacity .18s ease; }
 .header a { text-decoration: none; }
 .header .language { padding: 2px; background: #0002; border-color: #ffffff17; }
 .header .language button { min-width: 34px; min-height: 30px; transition: background .2s ease, color .2s ease; }
@@ -1766,7 +1761,6 @@ textarea {
     width: 80px;
     height: 28px;
   }
-  .header .nav-emblem { display: none; }
   .header .wordmark > svg {
     display: none;
   }
@@ -2025,8 +2019,6 @@ textarea {
   .header .nav { display: flex; position: static; flex-direction: row; align-items: center; justify-content: safe center; width: 100%; gap: 2px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; border: 0; background: transparent; padding: 0; box-shadow: none; }
   .header .nav::-webkit-scrollbar { display: none; }
   .header .nav > a { flex-shrink: 0; font-size: 12px; min-height: 44px; padding: 0 10px; }
-  .header .account-control, .header .login-control { max-width: 104px; }
-  .header .account-control > span, .header .login-control > span { display: inline; max-width: 58px; }
 }
 @media (max-width: 550px) {
   .header .nav > a { font-size: 11px; padding-inline: 6px; }

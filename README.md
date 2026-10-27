@@ -56,7 +56,7 @@ Hero terpusat menampilkan logo asli SYLUX dengan gradasi, avatar tim, dan jumlah
 - Website menyimpan profil dasar dalam cookie terenkripsi, HttpOnly, SameSite=Lax, dan Secure pada HTTPS. Sesi berakhir setelah 24 jam; login ulang untuk memperbarui profil akun.
 - Access token dan refresh token Discord dipakai sementara saat callback, tidak dipersistenkan dan tidak dikirim ke browser.
 - Logout memakai POST dengan pemeriksaan origin dan menghapus cookie browser. Tidak mencabut otorisasi aplikasi di pengaturan Discord. Sesi bersifat stateless; penghapusan cookie tidak mencabut salinan cookie lain sebelum masa berlakunya habis.
-- Beranda, tim, dan informasi bersifat publik. Akun Discord dapat diakses langsung dari navbar. Twibbon, form komunitas, Webhook Studio, dan menu More sudah dihapus.
+- Beranda, tim, dan informasi bersifat publik. Navbar tidak menampilkan tombol login atau avatar akun; pengunjung bergabung lewat tombol Gabung Discord. Twibbon, form komunitas, Webhook Studio, dan menu More sudah dihapus.
 
 ## Identitas dan konten
 

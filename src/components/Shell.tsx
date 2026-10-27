@@ -7,8 +7,6 @@ import {
 } from "@phosphor-icons/react";
 import { copy, site, type Language } from "../data/site";
 import { inviteCode } from "../lib/utils";
-import { AuthControl } from "./Auth";
-import share from "../data/share.json";
 
 export function BrandLogo({ className = "" }: { className?: string }) {
   return <img className={`brand-logo ${className}`} src="/images/sylux-logo-hd.png" alt={site.name} width="2158" height="729" />;
@@ -79,7 +77,6 @@ export function Header({
   return (
     <header ref={header} className={`header${hidden ? " is-hidden" : ""}`} onFocusCapture={() => setHidden(false)}>
       <a className="wordmark" href="/" aria-label={`${site.name} home`}>
-        <img className="nav-emblem" src={share.thumbnail} alt="" width="28" height="28" />
         <BrandLogo />
       </a>
       <div className="header-content" id="header-content">
@@ -109,7 +106,6 @@ export function Header({
             ID
           </button>
         </div>
-        <AuthControl lang={lang} />
       </div>
     </header>
   );

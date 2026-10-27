@@ -16,7 +16,7 @@ Daftar divisi dan kartu detail tetap memakai struktur dua kolom di HP serta desk
 
 Pembuka menggunakan CSS scroll timeline untuk memperbesar logo dan menggelapkan bidang saat pengguna melanjutkan scroll. Browser yang belum mendukung scroll timeline mendapat pembuka statis. Reduced-motion menonaktifkan zoom/transisi dan merapatkan daftar role sehingga tidak ada ruang scroll ekstra untuk animasi.
 
-Navbar memakai daftar menu yang sama dan langsung terlihat di semua lebar: Beranda → Server Stats → Team → Portfolio → Informasi. Pada HP, menu berada di baris kedua; akun dan bahasa tetap di kanan baris pertama. Tidak ada hamburger atau drawer tersembunyi. Navbar tetap penuh dari kiri ke kanan dengan perilaku memudar saat scroll turun dan muncul saat scroll naik.
+Navbar memakai daftar menu yang sama dan langsung terlihat di semua lebar: Beranda → Server Stats → Team → Portfolio → Informasi. Pada HP, menu berada di baris kedua; pemilih bahasa tetap di kanan baris pertama. Navbar hanya memakai wordmark SYLUX, tanpa ikon server bulat, tombol login, atau avatar akun. Ajakan utama pengunjung adalah tombol Gabung Discord. Tidak ada hamburger atau drawer tersembunyi. Navbar tetap penuh dari kiri ke kanan dengan perilaku memudar saat scroll turun dan muncul saat scroll naik.
 
 Papan palet Figma: https://www.figma.com/design/NvrkOMIR7TDzEDIHLds2ni?node-id=2-2
 

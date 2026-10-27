@@ -48,7 +48,7 @@ async def main():
             assert await page.evaluate('document.documentElement.scrollWidth <= window.innerWidth'), f'Overflow at {width}px'
             navbar = await page.locator('.header').bounding_box()
             assert navbar['x'] == 0 and abs(navbar['width']-width) < 1, f'Navbar must span the viewport at {width}px'
-        await expect(page.locator('.header-actions .account-control')).to_be_visible()
+        await expect(page.locator('.header .account-control, .header .login-control, .header .nav-emblem')).to_have_count(0)
         await expect(page.locator('#main-nav .account-control, #main-nav .login-control')).to_have_count(0)
         assert await page.locator('#stats, #team, #portfolio').evaluate_all('(es)=>es.map(e=>e.id)') == ['stats','team','portfolio']
         await expect(page.locator('#main-nav a[href="/information"]')).to_be_visible()
