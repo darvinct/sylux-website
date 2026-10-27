@@ -24,19 +24,19 @@
 }
 :root {
   font-family: Outfit, Arial, sans-serif;
-  color: #f4f1ff;
-  background: #1d0225;
+  color: #f8f5ff;
+  background: #07060c;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  --bg: #1d0225;
-  --surface: #210b3e;
-  --raised: #29124f;
-  --text: #f4f1ff;
-  --muted: #bfc0df;
-  --accent: #a1a2fa;
-  --brand-gradient: linear-gradient(115deg, #a1a2fa, #68a2eb 58%, #8de0ff);
-  --border: #493478;
+  --bg: #07060c;
+  --surface: #100b1a;
+  --raised: #1e1230;
+  --text: #f8f5ff;
+  --muted: #bdb4cd;
+  --accent: #c8adff;
+  --brand-gradient: linear-gradient(115deg, #e1ccff, #c8adff 58%, #b488f5);
+  --border: #49365e;
   --radius: 12px;
   --button-radius: 8px;
   color-scheme: dark;
@@ -51,8 +51,8 @@ html {
 body {
   margin: 0;
   background:
-    radial-gradient(ellipse at 95% 29%, #c231c90e, transparent 36%),
-    radial-gradient(ellipse at 0% 63%, #4c5dd71c, transparent 32%),
+    radial-gradient(ellipse at 95% 29%, #6c00ff0e, transparent 36%),
+    radial-gradient(ellipse at 0% 63%, #6c00ff1c, transparent 32%),
     var(--bg);
 }
 button,
@@ -131,8 +131,8 @@ textarea:focus-visible {
   outline-offset: 2px;
 }
 ::selection {
-  background: #a1a2fa;
-  color: #1d0225;
+  background: #c8adff;
+  color: #07060c;
 }
 .wrap {
   max-width: 1280px;
@@ -197,10 +197,10 @@ textarea:focus-visible {
 }
 .primary {
   background: var(--brand-gradient);
-  color: #1d0225;
+  color: #07060c;
 }
 .primary:hover:not(:disabled) {
-  background: linear-gradient(115deg, #babaff, #91bcf3 58%, #b1ebff);
+  background: linear-gradient(115deg, #eee1ff, #dcc7ff 58%, #c9a4ff);
 }
 .secondary {
   background: var(--surface);
@@ -211,17 +211,17 @@ textarea:focus-visible {
   background: var(--raised);
 }
 .join-button {
-  background: #210b3e;
-  border-color: #8c8ed6;
+  background: #100b1a;
+  border-color: #9675bb;
   border-radius: 999px;
-  color: #f1f0ff;
+  color: #f5f0ff;
   padding-inline: 24px;
   box-shadow: inset 0 1px 0 #ffffff08;
 }
-.join-button > svg { color: #a1a2fa; }
+.join-button > svg { color: #c8adff; }
 .join-button:hover:not(:disabled) {
-  background: #29124f;
-  border-color: #a1a2fa;
+  background: #1e1230;
+  border-color: #c8adff;
 }
 .icon-button {
   display: inline-flex;
@@ -252,7 +252,7 @@ textarea:focus-visible {
 }
 .notice {
   padding: 18px 20px;
-  background: #29124f;
+  background: #1e1230;
   border: 1px solid var(--border);
   border-radius: 8px;
   font-size: 14px;
@@ -282,12 +282,12 @@ textarea:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  border: 1px solid #a1a2fa2b;
-  background: #1d0225f2;
+  border: 1px solid #c8adff2b;
+  background: #07060cf2;
   backdrop-filter: blur(20px);
   border-radius: 999px;
   padding: 0 16px 0 24px;
-  box-shadow: 0 8px 28px #1d022540;
+  box-shadow: 0 8px 28px #07060c40;
 }
 .wordmark {
   display: inline-flex;
@@ -338,7 +338,7 @@ textarea:focus-visible {
   color: var(--text);
   background: #ffffff0a;
 }
-.nav a[aria-current="page"] { color: #ebecff; background: #a1a2fa17; }
+.nav a[aria-current="page"] { color: #ebecff; background: #c8adff17; }
 .header-actions {
   display: flex;
   align-items: center;
@@ -363,7 +363,7 @@ textarea:focus-visible {
   min-width: 36px;
 }
 .language button[aria-pressed="true"] {
-  background: #3a2571;
+  background: #3a2154;
   color: #fff;
 }
 .nav-discord {
@@ -395,10 +395,10 @@ textarea:focus-visible {
 }
 .hero-background {
   background:
-    radial-gradient(ellipse at 19% 18%, #4c5dd75c, transparent 58%),
-    radial-gradient(ellipse at 84% 30%, #c231c92e, transparent 46%),
-    radial-gradient(ellipse at 52% 45%, #a1a2fa0d, transparent 40%),
-    linear-gradient(135deg, #1d0225, #260b68 52%, #1d0225);
+    radial-gradient(ellipse 48% 85% at 103% -3%, #ead9ffdf, #b183ed80 32%, #6939b733 58%, transparent 78%),
+    radial-gradient(ellipse 27% 90% at -6% 70%, #6c00fff2, #4b00c866 43%, transparent 76%),
+    radial-gradient(ellipse 52% 45% at 24% 0%, #3100b380, transparent 85%),
+    linear-gradient(130deg, #130728, #07060c 52%, #0c0816);
 }
 .hero-shade {
   z-index: -1;
@@ -420,15 +420,15 @@ textarea:focus-visible {
   display: block;
   width: min(480px, 100%);
   height: 140px;
-  background: linear-gradient(110deg, #4c5dd7 0%, #a1a2fa 48%, #8de0ff);
+  background: linear-gradient(110deg, #ffffff 0%, #eee1ff 52%, #c8adff);
   -webkit-mask: url('/images/sylux-logo-hd.png') center / 100% auto no-repeat;
   mask: url('/images/sylux-logo-hd.png') center / 100% auto no-repeat;
   mask-mode: luminance;
-  filter: drop-shadow(0 0 35px #68a2eb29);
+  filter: drop-shadow(0 0 35px #a06fff29);
 }
 .hero-tagline {
   color: var(--accent);
-  background: linear-gradient(100deg, #a1a2fa, #8de0ff);
+  background: linear-gradient(100deg, #f8f5ff, #c8adff);
   background-clip: text;
   -webkit-text-fill-color: transparent;
   font-size: clamp(28px, 3vw, 38px);
@@ -740,7 +740,7 @@ textarea:focus-visible {
   transition: background 0.2s;
 }
 .filter-row button[aria-pressed="true"] {
-  color: #1d0225;
+  color: #07060c;
   border-color: var(--accent);
   background: var(--accent);
 }
@@ -758,7 +758,7 @@ textarea:focus-visible {
   display: flex;
   flex-direction: column;
   text-align: left;
-  background: #210b3e;
+  background: #100b1a;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
@@ -864,7 +864,7 @@ textarea:focus-visible {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0 14px;
-  background: #1d0225;
+  background: #07060c;
   color: #969c9f;
 }
 .search input {
@@ -895,7 +895,7 @@ textarea:focus-visible {
   display: flex;
   align-items: center;
   gap: 13px;
-  background: #210b3e;
+  background: #100b1a;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 22px 16px;
@@ -906,7 +906,7 @@ textarea:focus-visible {
     border-color 0.2s;
 }
 .member:hover {
-  background: #29124f;
+  background: #1e1230;
   border-color: #9273cd;
 }
 .avatar {
@@ -918,7 +918,7 @@ textarea:focus-visible {
   justify-content: center;
   border: 1px solid #ffffff17;
   border-radius: 50%;
-  background: #2e1856;
+  background: #28163d;
   color: #d4d9ce;
   font-size: 15px;
   font-weight: 500;
@@ -1058,7 +1058,7 @@ textarea:focus-visible {
   padding-block: 70px;
   margin-top: 10px;
   overflow: hidden;
-  background: radial-gradient(ellipse at 70% 50%, #4c5dd72b, transparent 70%);
+  background: radial-gradient(ellipse at 70% 50%, #6c00ff2b, transparent 70%);
 }
 .closing h2 {
   font-size: clamp(44px, 5vw, 66px);
@@ -1124,7 +1124,7 @@ textarea:focus-visible {
 }
 .modal {
   border: 1px solid #675084;
-  background: #210b3e;
+  background: #100b1a;
   color: var(--text);
   border-radius: 16px;
   width: min(620px, calc(100% - 32px));
@@ -1165,7 +1165,7 @@ textarea:focus-visible {
 .member-profile-modal {
   width: min(460px, calc(100% - 32px));
   max-height: calc(100dvh - 32px);
-  background: #210b3e;
+  background: #100b1a;
   border-color: #49375f;
   border-radius: 20px;
   box-shadow: 0 24px 90px #0008;
@@ -1233,20 +1233,20 @@ textarea:focus-visible {
   inset: 0;
   width: 100%;
   height: 100%;
-  border: 6px solid #210b3e;
+  border: 6px solid #100b1a;
   border-radius: 50%;
   object-fit: cover;
-  background: #210b3e;
+  background: #100b1a;
 }
 .member-profile-initials {
   display: grid;
   place-items: center;
   width: 100%;
   height: 100%;
-  border: 6px solid #210b3e;
+  border: 6px solid #100b1a;
   border-radius: 50%;
-  background: #493478;
-  color: #f4f1ff;
+  background: #49365e;
+  color: #f8f5ff;
   font-size: 40px;
   font-weight: 650;
   text-transform: uppercase;
@@ -1294,7 +1294,7 @@ textarea:focus-visible {
   overflow-wrap: anywhere;
 }
 .member-profile-details {
-  border-top: 1px solid #493478;
+  border-top: 1px solid #49365e;
   margin: 24px 0;
   padding-top: 22px;
   display: grid;
@@ -1311,7 +1311,7 @@ textarea:focus-visible {
 .member-profile-details dd {
   margin: 0;
   font-size: 17px;
-  color: #f4f1ff;
+  color: #f8f5ff;
   overflow-wrap: anywhere;
 }
 .member-profile-open {
@@ -1351,7 +1351,7 @@ textarea:focus-visible {
   align-items: start;
 }
 .tool-panel {
-  background: #210b3e;
+  background: #100b1a;
   border: 1px solid var(--border);
   padding: 32px;
   border-radius: var(--radius);
@@ -1368,7 +1368,7 @@ textarea:focus-visible {
   font-size: 14px;
 }
 .canvas-panel {
-  background: #210b3e;
+  background: #100b1a;
   padding: 18px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -1406,7 +1406,7 @@ textarea:focus-visible {
   min-height: 76px;
 }
 .upload-button:hover {
-  background: #2e1856;
+  background: #28163d;
 }
 .upload-button input {
   position: absolute;
@@ -1575,7 +1575,7 @@ textarea {
   width: 40px;
   height: 40px;
   min-width: 40px;
-  background: #1d0225;
+  background: #07060c;
   border-radius: 50%;
   color: #d8e1d1;
 }
@@ -1637,7 +1637,7 @@ textarea {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 18px;
-  background: #1d0225;
+  background: #07060c;
 }
 .json-details summary {
   cursor: pointer;
@@ -1662,7 +1662,7 @@ textarea {
 .loading-block {
   height: 240px;
   border-radius: 12px;
-  background: #29124f;
+  background: #1e1230;
   animation: loading 1.5s ease-in-out infinite alternate;
 }
 .skeleton-text {
@@ -1794,7 +1794,7 @@ textarea {
     left: 0;
     right: 0;
     top: 74px;
-    background: #210b3e;
+    background: #100b1a;
     border: 1px solid #454b4e;
     border-radius: 12px;
     padding: 12px 20px;
@@ -2234,7 +2234,7 @@ textarea {
 }
 @media (prefers-reduced-transparency: reduce) {
   .header {
-    background: #1d0225;
+    background: #07060c;
     backdrop-filter: none;
   }
   .modal::backdrop {
@@ -2253,15 +2253,15 @@ textarea {
   min-height: 44px;
   padding: 9px 14px;
   border-radius: 999px;
-  background: #210b3e;
-  color: #f1f0ff;
+  background: #100b1a;
+  color: #f5f0ff;
   font-size: 12px;
   white-space: nowrap;
-  border: 1px solid #8c8ed6;
+  border: 1px solid #9675bb;
   max-width: 150px;
 }
 .account-control {
-  background: #29124f;
+  background: #1e1230;
   border-color: var(--border);
   padding: 4px 10px 4px 5px;
 }
@@ -2275,10 +2275,10 @@ textarea {
   text-overflow: ellipsis;
 }
 .login-control:hover {
-  background: #3a2571;
+  background: #3a2154;
 }
 .account-control:hover {
-  background: #2e1856;
+  background: #28163d;
 }
 .login-page .tool-heading {
   max-width: 780px;
@@ -2317,7 +2317,7 @@ textarea {
 .account-avatar {
   border-radius: 50%;
   object-fit: cover;
-  background: #493478;
+  background: #49365e;
   flex-shrink: 0;
 }
 .account-card h2 {
@@ -2453,7 +2453,7 @@ textarea {
     left: 0;
     right: 0;
     top: 82px;
-    background: #210b3e;
+    background: #100b1a;
     border: 1px solid #454b4e;
     border-radius: 12px;
     padding: 12px 20px;
