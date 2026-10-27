@@ -16,6 +16,7 @@ const Twibbon = lazy(() => import("./components/Twibbon"));
 const CommunityForm = lazy(() => import("./components/CommunityForm"));
 const Webhook = lazy(() => import("./components/Webhook"));
 const Information = lazy(() => import("./components/Information"));
+const SharePreview = lazy(() => import("./components/SharePreview"));
 
 function App() {
   const [lang, setLang] = useState<Language>(() => {
@@ -34,7 +35,9 @@ function App() {
       /* Language still works when storage is blocked. */
     }
     const title =
-      path === "/information"
+      path === "/preview-discord"
+        ? (lang === "id" ? "Pratinjau Discord" : "Discord preview")
+        : path === "/information"
         ? copy[lang].information
         : path === "/twibbon"
         ? "Twibbon Studio"
@@ -67,6 +70,8 @@ function App() {
               <Home lang={lang} />
             ) : path === "/information" ? (
               <Information lang={lang} />
+            ) : path === "/preview-discord" ? (
+              <SharePreview lang={lang} />
             ) : path === "/twibbon" ? (
               <RequireLogin lang={lang}>
                 <Twibbon lang={lang} />

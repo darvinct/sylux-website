@@ -1,0 +1,16 @@
+{
+  "siteName": "SYLUX",
+  "title": "SYLUX | Komunitas Discord",
+  "description": "Ruang untuk ngobrol, main bareng, dan menemukan teman satu frekuensi.",
+  "message": "Temukan tempatmu di SYLUX. Kenali tim, divisi Sentinel, dan perjalanan levelling komunitas.",
+  "accent": "#a78bfa",
+  "image": "/images/sylux-share-cover-v1.jpg",
+  "imageAlt": "Beranda SYLUX dengan logo gradasi ungu, tagline, dan tombol gabung Discord.",
+  "thumbnail": "/images/sylux-share-icon-v1.png",
+  "links": [
+    { "label": "Gabung Server", "href": "$invite" },
+    { "label": "Website", "href": "/" },
+    { "label": "Informasi", "href": "/information/" },
+    { "label": "Tim SYLUX", "href": "/#team" }
+  ]
+}
