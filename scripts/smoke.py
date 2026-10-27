@@ -53,6 +53,8 @@ async def main():
         await expect(page.locator('.nav-more-menu')).not_to_be_visible()
         await page.get_by_role('button', name='Ringkas navbar', exact=True).click()
         await expect(page.locator('.header-content')).not_to_be_visible()
+        await expect(page.get_by_role('button', name='EN', exact=True)).to_be_visible()
+        await expect(page.get_by_role('button', name='ID', exact=True)).to_be_visible()
         await page.get_by_role('button', name='Perluas navbar', exact=True).press('Enter')
         await expect(page.locator('.header-content')).to_be_visible()
         await page.get_by_role('button', name='EN', exact=True).click()
@@ -282,7 +284,8 @@ async def main():
                 await expect(moving.locator(f'.role-selector button[data-division="{index}"]')).to_have_attribute('aria-pressed','true')
                 if index > 0:
                     bounds = await moving.locator('.sentinel-stage').bounding_box()
-                    assert bounds['y'] >= 0 and bounds['y']+bounds['height'] <= height, f'Pinned division clipped at {width}x{height}'
+                    navbar = await moving.locator('.header').bounding_box()
+                    assert bounds['y'] >= navbar['y']+navbar['height'] and bounds['y']+bounds['height'] <= height, f'Pinned division clipped or covered at {width}x{height}'
             assert await moving.evaluate('document.documentElement.scrollWidth <= innerWidth')
         await moving.get_by_role('button',name='Payment Staff',exact=True).click()
         await expect(moving.locator('.role-feature h3')).to_have_text('Payment Staff')

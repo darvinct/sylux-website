@@ -80,7 +80,7 @@
 .role-selector button[aria-pressed="true"] .role-selector-arrow { opacity: 1; color: var(--role-color); }
 .role-feature {
   position: sticky;
-  top: 28px;
+  top: var(--nav-clearance);
   overflow: hidden;
   min-width: 0;
   min-height: 474px;
@@ -172,7 +172,7 @@
 .division-position > span { font-size: 12px; color: var(--muted); }
 .sentinel-steps { display: none; }
 .sentinel-scroll.is-scroll-driven { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; }
-.is-scroll-driven .sentinel-stage { grid-area: 1 / 1; align-self: start; position: sticky; top: 24px; z-index: 1; }
+.is-scroll-driven .sentinel-stage { grid-area: 1 / 1; align-self: start; position: sticky; top: var(--nav-clearance); z-index: 1; }
 .is-scroll-driven .sentinel-steps { display: block; grid-area: 1 / 1; pointer-events: none; }
 .sentinel-step { height: clamp(420px, 75svh, 680px); }
 .sentinel-tail { height: 50svh; }
@@ -191,7 +191,7 @@
   .role-selector-arrow { display: none; }
   .role-feature { min-height: 420px; position: relative; top: auto; }
   .sentinel-scroll.is-scroll-driven .role-selector { max-height: none; overflow-x: auto; overflow-y: hidden; }
-  .is-scroll-driven .sentinel-stage { top: 16px; }
+  .is-scroll-driven .sentinel-stage { top: var(--nav-clearance); }
   .is-scroll-driven .role-feature { padding: 20px; }
   .is-scroll-driven .role-feature-heading { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; align-items: center; }
   .is-scroll-driven .role-feature-icon { width: 44px; height: 44px; margin: 0; }
@@ -217,6 +217,9 @@
   .role-watermark { top: 40px; right: 18px; }
   .role-watermark .brand-logo { width: 130px; }
   .information-cta { align-items: flex-start; flex-direction: column; gap: 24px; }
+}
+@media (max-height: 740px) and (max-width: 900px) {
+  .is-scroll-driven .role-feature { min-height: 340px; }
 }
 @media (max-width: 550px) {
   .community-role-track { grid-auto-columns: min(85%, 340px); gap: 14px; }

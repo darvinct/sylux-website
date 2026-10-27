@@ -62,6 +62,8 @@ export function Header({
     more.current?.removeAttribute("open");
   };
   useEffect(() => {
+    const narrow = window.matchMedia("(max-width: 1023px)");
+    const expandOnMobile = () => { if (narrow.matches) setCollapsed(false); };
     const close = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
       if (more.current?.open) {
@@ -79,9 +81,11 @@ export function Header({
     };
     window.addEventListener("keydown", close);
     document.addEventListener("pointerdown", dismiss);
+    narrow.addEventListener("change", expandOnMobile);
     return () => {
       window.removeEventListener("keydown", close);
       document.removeEventListener("pointerdown", dismiss);
+      narrow.removeEventListener("change", expandOnMobile);
     };
   }, []);
   return (
@@ -90,7 +94,7 @@ export function Header({
         <img className="nav-emblem" src={share.thumbnail} alt="" width="28" height="28" />
         <BrandLogo />
       </a>
-      <div className="header-content" id="header-content">
+      <div className="header-content" id="header-content" inert={collapsed}>
         <nav
           className={open ? "nav is-open" : "nav"}
           aria-label={lang === "id" ? "Navigasi utama" : "Main navigation"}
@@ -119,26 +123,26 @@ export function Header({
             </div>
           </details>
         </nav>
-        <div className="header-actions">
-          <div className="language" aria-label={lang === "id" ? "Bahasa" : "Language"}>
-            <button aria-pressed={lang === "en"} onClick={() => setLang("en")}>
-              EN
-            </button>
-            <button aria-pressed={lang === "id"} onClick={() => setLang("id")}>
-              ID
-            </button>
-          </div>
-          <button
-            id="nav-menu-toggle"
-            className="icon-button menu-button"
-            onClick={() => { if (open) closeMenus(); else setOpen(true); }}
-            aria-label={open ? t.close : "Menu"}
-            aria-expanded={open}
-            aria-controls="main-nav"
-          >
-            {open ? <X size={23} /> : <List size={23} />}
+      </div>
+      <div className="header-actions">
+        <div className="language" aria-label={lang === "id" ? "Bahasa" : "Language"}>
+          <button aria-pressed={lang === "en"} onClick={() => setLang("en")}>
+            EN
+          </button>
+          <button aria-pressed={lang === "id"} onClick={() => setLang("id")}>
+            ID
           </button>
         </div>
+        <button
+          id="nav-menu-toggle"
+          className="icon-button menu-button"
+          onClick={() => { if (open) closeMenus(); else setOpen(true); }}
+          aria-label={open ? t.close : "Menu"}
+          aria-expanded={open}
+          aria-controls="main-nav"
+        >
+          {open ? <X size={23} /> : <List size={23} />}
+        </button>
       </div>
       <button className="icon-button nav-collapse" onClick={() => { closeMenus(); setCollapsed(!collapsed); }} aria-label={lang === "id" ? (collapsed ? "Perluas navbar" : "Ringkas navbar") : (collapsed ? "Expand navigation" : "Collapse navigation")} aria-expanded={!collapsed} aria-controls="header-content">
         <CaretLeft size={20} aria-hidden="true" />
