@@ -110,8 +110,8 @@ export default function Home({ lang }: { lang: Language }) {
         </div>
       </section>
       <Stats lang={lang} community={community} />
-      <Portfolio lang={lang} />
       <Team lang={lang} directory={directory} />
+      <Portfolio lang={lang} />
       <section className="section wrap faq-section">
         <h2>{t.faq}</h2>
         <div className="faq-list">

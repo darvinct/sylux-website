@@ -271,24 +271,24 @@ textarea:focus-visible {
   line-height: 1.5;
 }
 .header {
-  --nav-compact-width: 382px;
+  --nav-compact-width: 520px;
   position: fixed;
   z-index: 20;
-  top: 16px;
+  top: 12px;
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 80px);
-  max-width: 1200px;
+  max-width: 1120px;
   height: 68px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
   border: 1px solid #ffffff26;
-  background: linear-gradient(110deg, #302a37ef, #17131cf5 60%, #0d0b11f7);
+  background: linear-gradient(135deg, #2e2e2ef5, #121212f7);
   backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 0 18px 0 28px;
+  border-radius: 22px;
+  padding: 0 24px;
   box-shadow: 0 8px 28px #0005, inset 0 1px 0 #ffffff06;
   transition: max-width .5s cubic-bezier(.22, 1, .36, 1), box-shadow .25s ease;
 }
@@ -303,6 +303,11 @@ textarea:focus-visible {
 .nav-collapse { flex-shrink: 0; color: #aaa0b7; }
 .nav-collapse > svg { transition: transform .45s cubic-bezier(.22, 1, .36, 1); }
 .header .header-actions { flex-shrink: 0; }
+.header .account-control { border: 0; background: transparent; padding: 4px; min-height: 36px; max-width: 112px; font-size: 12px; color: #c1b9cb; }
+.header .login-control { min-height: 36px; padding: 6px 10px; border-color: #ffffff20; background: #ffffff04; }
+.header .account-control:hover, .header .login-control:hover { background: #ffffff0a; color: #fff; }
+.header .account-control > span, .header .login-control > span { max-width: 84px; opacity: 1; overflow: hidden; transition: max-width .35s cubic-bezier(.22, 1, .36, 1), opacity .18s ease; }
+.header a { text-decoration: none; }
 .header .language { padding: 2px; background: #0002; border-color: #ffffff17; }
 .header .language button { min-width: 34px; min-height: 30px; transition: background .2s ease, color .2s ease; }
 .header .language button[aria-pressed="true"] { background: #ffffff12; }
@@ -310,6 +315,7 @@ textarea:focus-visible {
   .header.is-collapsed { max-width: var(--nav-compact-width); }
   .header.is-collapsed .header-content { overflow: hidden; opacity: 0; visibility: hidden; pointer-events: none; transform: translateX(-10px); transition: opacity .14s ease, transform .3s ease, visibility 0s .14s; }
   .header.is-collapsed .nav-collapse > svg { transform: rotate(180deg); }
+  .header.is-collapsed .account-control > span, .header.is-collapsed .login-control > span { max-width: 0; opacity: 0; }
 }
 .wordmark {
   display: inline-flex;
@@ -1401,7 +1407,7 @@ textarea {
     width: calc(100% - 72px);
   }
   .header {
-    --nav-compact-width: 352px;
+    --nav-compact-width: 500px;
     width: calc(100% - 48px);
     padding-inline: 20px;
     gap: 16px;

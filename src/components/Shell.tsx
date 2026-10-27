@@ -95,7 +95,6 @@ export function Header({
             </a>
           ))}
           <a href="/information" onClick={closeMenus} aria-current={window.location.pathname.replace(/\/$/, "") === "/information" ? "page" : undefined}>{t.information}</a>
-          <AuthControl lang={lang} />
         </nav>
       </div>
       <div className="header-actions">
@@ -107,6 +106,7 @@ export function Header({
             ID
           </button>
         </div>
+        <AuthControl lang={lang} />
         <button
           id="nav-menu-toggle"
           className="icon-button menu-button"

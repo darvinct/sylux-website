@@ -46,7 +46,9 @@ async def main():
         for width in [320, 390, 768, 1024, 1440]:
             await page.set_viewport_size({'width': width, 'height': 900})
             assert await page.evaluate('document.documentElement.scrollWidth <= window.innerWidth'), f'Overflow at {width}px'
-        await expect(page.locator('#main-nav .account-control')).to_be_visible()
+        await expect(page.locator('.header-actions .account-control')).to_be_visible()
+        await expect(page.locator('#main-nav .account-control, #main-nav .login-control')).to_have_count(0)
+        assert await page.locator('#stats, #team, #portfolio').evaluate_all('(es)=>es.map(e=>e.id)') == ['stats','team','portfolio']
         await expect(page.locator('#main-nav a[href="/information"]')).to_be_visible()
         await page.get_by_role('button', name='Ringkas navbar', exact=True).click()
         await expect(page.locator('.header-content')).not_to_be_visible()
