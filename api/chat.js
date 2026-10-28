@@ -20,7 +20,8 @@ export default async function handler(req, res) {
         timestamp: m.timestamp,
       }));
     return json(res, 200, { messages });
-  } catch {
+  } catch (error) {
+    console.warn("Discord chat unavailable", { status: error.status || "configuration_or_network", code: error.providerCode || null });
     return json(res, 503, { error: "chat_unavailable" });
   }
 }
