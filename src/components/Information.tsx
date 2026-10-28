@@ -25,6 +25,31 @@ function roleStyle(colors: readonly string[]): CSSProperties {
 
 export default function Information({ lang }: { lang: Language }) {
   const id = lang === "id";
+  const hero = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const section = hero.current;
+    if (!section) return;
+    const logo = section.querySelector<HTMLElement>(".information-hero-logo");
+    const shade = section.querySelector<HTMLElement>(".information-hero-shade");
+    if (!logo || !shade) return;
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let frame = 0;
+    const render = () => {
+      frame = 0;
+      if (motion.matches) { logo.style.transform = ""; shade.style.opacity = ""; return; }
+      const rect = section.getBoundingClientRect();
+      const distance = Math.max(1, section.offsetHeight - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, -rect.top / distance));
+      logo.style.transform = `scale(${1 + 13 * progress})`;
+      shade.style.opacity = String(Math.min(1, Math.max(0, (progress - .4) / .45)));
+    };
+    const update = () => { if (!frame) frame = requestAnimationFrame(render); };
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    motion.addEventListener("change", update);
+    update();
+    return () => { window.removeEventListener("scroll", update); window.removeEventListener("resize", update); motion.removeEventListener("change", update); cancelAnimationFrame(frame); };
+  }, []);
   const [selected, setSelected] = useState(0);
   const list = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLDivElement>(null);
@@ -81,7 +106,7 @@ export default function Information({ lang }: { lang: Language }) {
   return (
     <main className="information-page motion-page" ref={page}>
       <div className="reading-progress" aria-hidden="true" />
-      <section className="information-hero" aria-labelledby="information-title">
+      <section ref={hero} className="information-hero" aria-labelledby="information-title">
         <div className="information-hero-stage">
           <div className="information-hero-copy">
             <span className="information-hero-logo" aria-hidden="true" />

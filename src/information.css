@@ -1,6 +1,6 @@
 .information-page { --role-color: #c8adff; --role-gradient: var(--brand-gradient); background: #07060c; padding-bottom: 60px; }
 .information-shell { width: calc(100% - 80px); max-width: 1100px; margin-inline: auto; }
-.information-hero { position: relative; min-height: 640px; height: 100svh; background: var(--community-backdrop); color: var(--text); }
+.information-hero { position: relative; min-height: 640px; height: 200svh; background: var(--community-backdrop); color: var(--text); }
 .information-hero-stage { position: sticky; top: 0; display: grid; place-items: center; height: 100svh; min-height: 640px; overflow: hidden; padding: var(--nav-clearance) 24px 72px; }
 .information-hero-copy { width: 100%; text-align: center; }
 .information-hero-logo { display: block; width: min(760px, 86vw); height: clamp(140px, 25vw, 260px); margin-inline: auto; background: var(--brand-gradient); mask: url('/images/sylux-logo-hd.png') center / contain no-repeat; mask-mode: luminance; }
@@ -8,13 +8,6 @@
 .information-hero p { color: #c9bed8; font-size: 14px; margin-top: 14px; }
 .information-scroll-cue { position: absolute; bottom: 48px; display: flex; flex-direction: column; align-items: center; gap: 14px; font-size: 12px; }
 .information-hero-shade { position: absolute; inset: 0; background: #07060c; opacity: 0; pointer-events: none; }
-@supports (animation-timeline: view()) {
-  .information-hero { height: 200svh; view-timeline-name: --information-hero; view-timeline-axis: block; view-timeline-inset: 0; }
-  .information-hero-logo { animation: information-logo-zoom linear both; animation-timeline: --information-hero; animation-range: contain 0% contain 100%; }
-  .information-hero-shade { animation: information-hero-darken linear both; animation-timeline: --information-hero; animation-range: contain 0% contain 100%; }
-}
-@keyframes information-logo-zoom { from { transform: scale(1); } to { transform: scale(14); } }
-@keyframes information-hero-darken { 0%, 40% { opacity: 0; } 85%, 100% { opacity: 1; } }
 .information-section { padding-block: 100px; }
 .information-section-title { text-align: center; max-width: 720px; margin: 0 auto 60px; }
 .information-kicker { display: block; color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: .13em; margin-bottom: 14px; }
