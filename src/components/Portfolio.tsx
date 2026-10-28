@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Pause, Play } from "@phosphor-icons/react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "@phosphor-icons/react";
 import { copy, events, type Language } from "../data/site";
 import { Modal } from "./Shell";
 import "../portfolio.css";
@@ -8,28 +8,57 @@ export function Portfolio({ lang }: { lang: Language }) {
   const t = copy[lang];
   const id = lang === "id";
   const [filter, setFilter] = useState("All");
-  const [activeId, setActiveId] = useState(events[0].id);
-  const [selected, setSelected] = useState<(typeof events)[number] | null>(null);
-  const [paused, setPaused] = useState(false);
-  const [inView, setInView] = useState(false);
-  const gallery = useRef<HTMLDivElement>(null);
-  const swipe = useRef<{ x: number; y: number } | null>(null);
-  const suppressClick = useRef(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [edges, setEdges] = useState({ start: true, end: true });
+  const track = useRef<HTMLDivElement>(null);
   const result = events.filter((event) => filter === "All" || event.category === filter);
-  const active = result.find((event) => event.id === activeId) || result[0];
+  const selected = result.find((event) => event.id === selectedId);
+  const selectedIndex = result.findIndex((event) => event.id === selectedId);
+  const closeModal = useCallback(() => setSelectedId(null), []);
+  const hasOverflow = !edges.start || !edges.end;
 
   useEffect(() => {
-    const element = gallery.current;
+    const element = track.current;
     if (!element) return;
-    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting));
+    function measure() {
+      if (!element) return;
+      const start = element.scrollLeft <= 2;
+      const end = element.scrollLeft + element.clientWidth >= element.scrollWidth - 2;
+      setEdges((previous) => previous.start === start && previous.end === end ? previous : { start, end });
+    }
+    element.scrollTo({ left: 0, behavior: "instant" });
+    measure();
+    const observer = new ResizeObserver(measure);
     observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
+    element.addEventListener("scroll", measure, { passive: true });
+    return () => { observer.disconnect(); element.removeEventListener("scroll", measure); };
+  }, [filter]);
 
-  function move(direction: number) {
-    const index = result.findIndex((event) => event.id === active.id);
-    setActiveId(result[(index + direction + result.length) % result.length].id);
-    setPaused(true);
+  useEffect(() => {
+    if (!selectedId) return;
+    // The keyboard gallery follows the same category filter as the card row.
+    const visible = events.filter((event) => filter === "All" || event.category === filter);
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.altKey || event.ctrlKey || event.metaKey || !["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+      event.preventDefault();
+      const index = visible.findIndex((item) => item.id === selectedId);
+      const direction = event.key === "ArrowRight" ? 1 : -1;
+      setSelectedId(visible[(index + direction + visible.length) % visible.length].id);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [selectedId, filter]);
+
+  function scrollRow(direction: number) {
+    const element = track.current;
+    const first = element?.firstElementChild as HTMLElement | null;
+    if (!element || !first) return;
+    const gap = parseFloat(getComputedStyle(element).columnGap) || 0;
+    element.scrollBy({ left: direction * (first.offsetWidth + gap), behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+  }
+
+  function movePhoto(direction: number) {
+    setSelectedId(result[(selectedIndex + direction + result.length) % result.length].id);
   }
 
   return (
@@ -45,77 +74,51 @@ export function Portfolio({ lang }: { lang: Language }) {
           </button>
         ))}
       </div>
-      <div ref={gallery} className={`event-orbit${paused || !inView || selected ? " is-paused" : ""}${result.length === 1 ? " is-single" : ""}`}>
-        <div className="event-orbit-stage" role="group" aria-label={id ? "Galeri dokumentasi event SYLUX" : "SYLUX event documentation gallery"}
-          onPointerDown={(event) => {
-            suppressClick.current = false;
-            if (event.pointerType === "touch") swipe.current = { x: event.clientX, y: event.clientY };
-          }}
-          onPointerUp={(event) => {
-            const start = swipe.current;
-            swipe.current = null;
-            if (!start) return;
-            const dx = event.clientX - start.x;
-            if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(event.clientY - start.y)) {
-              suppressClick.current = true;
-              move(dx < 0 ? 1 : -1);
-            }
-          }}
-          onPointerCancel={() => { swipe.current = null; }}
-          onClickCapture={(event) => {
-            if (suppressClick.current) { event.preventDefault(); event.stopPropagation(); suppressClick.current = false; }
-          }}>
-          <div className="event-orbit-items">
-            {result.map((event, index) => (
-              <button key={event.id} className={`event-orbit-item${active.id === event.id ? " is-active" : ""}`}
-                style={{
-                  "--slot": index,
-                  "--total": result.length,
-                  "--orbit-pos-x": Math.cos(index * Math.PI * 2 / result.length),
-                  "--orbit-pos-y": Math.sin(index * Math.PI * 2 / result.length),
-                } as CSSProperties}
-                aria-label={`${t.detail}: ${event.title}`} aria-haspopup="dialog" aria-describedby="event-orbit-hint"
-                onPointerEnter={(pointer) => { if (pointer.pointerType === "mouse") setActiveId(event.id); }}
-                onFocus={() => setActiveId(event.id)} onClick={() => setSelected(event)}>
-                <span className="event-orbit-photo">
-                  <img src={event.image} alt={event.alt} loading="lazy" width="1200" height="675" />
-                </span>
-                <span className="event-orbit-caption">{event.title}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="event-orbit-concept" aria-live="polite" aria-atomic="true">
-          <div className="event-orbit-copy" key={active.id}>
-            <span className="category">{active.category}</span>
-            <h3>{active.title}</h3>
-            <p>{active.concept[lang]}</p>
-            <button className="button event-orbit-open" onClick={() => setSelected(active)} aria-haspopup="dialog">
-              {t.detail}<ArrowUpRight size={18} aria-hidden="true" />
-            </button>
-          </div>
-        </div>
+      <div className="event-track" ref={track} role="group" aria-label={id ? "Galeri event SYLUX" : "SYLUX event gallery"}
+        onKeyDown={(event) => {
+          if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+          const cards = Array.from(track.current?.querySelectorAll<HTMLButtonElement>(".event-tile") || []);
+          const index = cards.indexOf(document.activeElement as HTMLButtonElement);
+          if (index < 0) return;
+          event.preventDefault();
+          const next = event.key === "Home" ? 0 : event.key === "End" ? cards.length - 1 : Math.max(0, Math.min(cards.length - 1, index + (event.key === "ArrowRight" ? 1 : -1)));
+          cards[next].focus({ preventScroll: true });
+          const element = track.current!;
+          element.scrollTo({ left: element.scrollLeft + cards[next].getBoundingClientRect().left - element.getBoundingClientRect().left, behavior: "instant" });
+        }}>
+        {result.map((event) => (
+          <button key={event.id} className="event-tile" aria-haspopup="dialog" aria-label={`${t.detail}: ${event.title}`} onClick={() => setSelectedId(event.id)}>
+            <div className="event-tile-image"><img src={event.image} alt={event.alt} loading="lazy" width="1200" height="675" /></div>
+            <div className="event-tile-copy">
+              <span className="category">{event.category}</span>
+              <h3>{event.title}</h3>
+              <p>{event.concept[lang]}</p>
+              <span className="event-tile-link">{t.detail}<ArrowUpRight size={18} aria-hidden="true" /></span>
+            </div>
+          </button>
+        ))}
       </div>
-      <div className="event-orbit-footer">
-        <p id="event-orbit-hint">
-          <span className="event-orbit-pointer-hint">{id ? "Sorot gambar untuk mengenal konsepnya. Klik untuk melihat dokumentasi." : "Hover over an image to explore its concept. Click to view the documentation."}</span>
-          <span className="event-orbit-touch-hint">{id ? "Geser untuk memilih event. Ketuk gambar untuk melihat dokumentasi." : "Swipe to choose an event. Tap an image to view its documentation."}</span>
-        </p>
-        <div className="event-orbit-controls" role="group" aria-label={id ? "Kontrol galeri event" : "Event gallery controls"}>
-          <button className="icon-button" disabled={result.length < 2} onClick={() => move(-1)} aria-label={id ? "Event sebelumnya" : "Previous event"}><ArrowLeft size={20} /></button>
-          <button className="icon-button event-orbit-pause" disabled={result.length < 2} aria-pressed={paused} onClick={() => setPaused((value) => !value)} aria-label={paused ? (id ? "Lanjutkan putaran galeri" : "Resume gallery rotation") : (id ? "Jeda putaran galeri" : "Pause gallery rotation")}>{paused ? <Play size={18} /> : <Pause size={18} />}</button>
-          <button className="icon-button" disabled={result.length < 2} onClick={() => move(1)} aria-label={id ? "Event berikutnya" : "Next event"}><ArrowRight size={20} /></button>
-        </div>
+      <div className="event-track-footer">
+        <p>{hasOverflow ? (id ? "Geser untuk melihat event lainnya. Klik foto untuk membuka dokumentasi." : "Swipe to see more events. Click a photo to open its documentation.") : (id ? "Klik foto untuk melihat dokumentasi dan konsep acara." : "Click a photo to view its documentation and event concept.")}</p>
+        {hasOverflow && <div className="event-track-controls" role="group" aria-label={id ? "Navigasi galeri event" : "Event gallery navigation"}>
+          <button className="icon-button" disabled={edges.start} onClick={() => scrollRow(-1)} aria-label={id ? "Geser ke event sebelumnya" : "Scroll to previous events"}><ArrowLeft size={20} /></button>
+          <button className="icon-button" disabled={edges.end} onClick={() => scrollRow(1)} aria-label={id ? "Geser ke event berikutnya" : "Scroll to next events"}><ArrowRight size={20} /></button>
+        </div>}
       </div>
-      {selected && (
-        <Modal title={selected.title} onClose={() => setSelected(null)}>
-          <img className="modal-image event-documentation" src={selected.image} alt={selected.alt} />
-          <h3>{id ? "Konsep acara" : "Event concept"}</h3>
-          <p>{selected.description[lang]}</p>
-          <h3>{id ? "Rangkaian acara" : "Program"}</h3>
-          <ul className="event-program">{selected.program.map((item) => <li key={item}>{item}</li>)}</ul>
-        </Modal>
-      )}
+      {selected && <Modal title={selected.title} onClose={closeModal} className="event-lightbox">
+        <div className="event-lightbox-photo">
+          <img src={selected.image} alt={selected.alt} width="1200" height="675" />
+          {result.length > 1 && <>
+            <button className="icon-button event-photo-previous" onClick={() => movePhoto(-1)} aria-label={id ? "Foto event sebelumnya" : "Previous event photo"}><ArrowLeft size={22} /></button>
+            <button className="icon-button event-photo-next" onClick={() => movePhoto(1)} aria-label={id ? "Foto event berikutnya" : "Next event photo"}><ArrowRight size={22} /></button>
+          </>}
+        </div>
+        <p className="event-lightbox-count" aria-live="polite">{selectedIndex + 1} / {result.length}</p>
+        <h3>{id ? "Konsep acara" : "Event concept"}</h3>
+        <p>{selected.description[lang]}</p>
+        <h3 className="event-program-heading">{id ? "Rangkaian acara" : "Program"}</h3>
+        <ul className="event-program">{selected.program.map((item) => <li key={item}>{item}</li>)}</ul>
+      </Modal>}
     </section>
   );
 }
