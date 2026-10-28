@@ -24,7 +24,7 @@ export default async function handler(req, res) {
       "Cache-Control",
       data.partial
         ? "no-store"
-        : "public, max-age=0, s-maxage=60, stale-while-revalidate=120",
+        : "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
     );
     return json(res, 200, data);
   } catch {

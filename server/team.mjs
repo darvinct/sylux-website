@@ -113,7 +113,7 @@ export async function cachedTeam() {
   if (!loading)
     loading = getTeam()
       .then((value) => {
-        cached = { value, until: Date.now() + 60000 };
+        cached = { value, until: Date.now() + 3600000 };
         return value;
       })
       .finally(() => {

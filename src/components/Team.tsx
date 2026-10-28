@@ -23,8 +23,17 @@ type Member = DiscordUser & {
   avatarDecoration?: string | null;
   guildTag?: string | null;
 };
+function cachedMembers(): Member[] {
+  try {
+    const data = JSON.parse(localStorage.getItem("sylux-team-cache-v1") || "null");
+    if (data && Date.now() - data.savedAt < 86400000 && Array.isArray(data.members) && data.members.length && data.members.every((m: Member) => typeof m.id === "string" && typeof m.name === "string" && typeof m.role === "string" && typeof m.handle === "string" && typeof m.avatar === "string")) return data.members;
+  } catch { /* Storage may be disabled. */ }
+  return [];
+}
+
 export function useTeam() {
-  const [members, setMembers] = useState<Member[]>([]);
+  const [members, setMembers] = useState<Member[]>(cachedMembers);
+  const hasCached = useRef(members.length > 0);
   const [state, setState] = useState<"loading" | "empty" | "error" | "success">(
     "loading",
   );
@@ -34,7 +43,7 @@ export function useTeam() {
     const controller = new AbortController();
     let active = true;
     const timeout = setTimeout(() => controller.abort(), 60000);
-    setState("loading");
+    setState(hasCached.current ? "success" : "loading");
     fetch("/api/team", { signal: controller.signal })
       .then(async (res) => {
         if (!res.ok) throw new Error();
@@ -43,13 +52,17 @@ export function useTeam() {
       .then((data) => {
         if (!Array.isArray(data.members)) throw new Error();
         if (active) {
-          setMembers(data.members);
+          if (!data.partial || !hasCached.current) setMembers(data.members);
+          hasCached.current = hasCached.current || data.members.length > 0;
+          if (!data.partial && data.members.length) {
+            try { localStorage.setItem("sylux-team-cache-v1", JSON.stringify({ savedAt: Date.now(), members: data.members })); } catch { /* Storage may be disabled. */ }
+          }
           setPartial(Boolean(data.partial));
           setState(data.members.length ? "success" : "empty");
         }
       })
       .catch(() => {
-        if (active) setState("error");
+        if (active && !hasCached.current) setState("error");
       })
       .finally(() => clearTimeout(timeout));
     return () => {
