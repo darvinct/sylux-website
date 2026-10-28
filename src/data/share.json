@@ -1,16 +1,28 @@
 {
   "siteName": "SYLUX",
-  "title": "SYLUX | Komunitas Discord",
-  "description": "Ruang untuk ngobrol, main bareng, dan menemukan teman satu frekuensi.",
-  "message": "Temukan tempatmu di SYLUX. Kenali tim, divisi Sentinel, dan perjalanan levelling komunitas.",
+  "title": "SYLUX | The luxury of psychology",
+  "description": "Elegance – Exclusivity – Credibility. Branding | Community | Esports | Event Creative",
+  "message": "Jelajahi komunitas SYLUX. Kenali tim, divisi Sentinel, dan perjalanan levelling komunitas.",
   "accent": "#C8ADFF",
-  "image": "/images/sylux-share-cover-v5.jpg",
-  "imageAlt": "Beranda SYLUX berlatar hitam dengan cahaya ungu elektrik di kiri dan lavender di kanan atas.",
+  "image": "/images/sylux-share-cover-v6.jpg",
+  "imageAlt": "Beranda SYLUX dengan logo, tagline The luxury of psychology, dan latar ungu gelap.",
   "thumbnail": "/images/sylux-share-icon-v3.png",
   "links": [
-    { "label": "Gabung Server", "href": "$invite" },
-    { "label": "Website", "href": "/" },
-    { "label": "Informasi", "href": "/information/" },
-    { "label": "Tim SYLUX", "href": "/#team" }
+    {
+      "label": "Gabung Server",
+      "href": "$invite"
+    },
+    {
+      "label": "Website",
+      "href": "/"
+    },
+    {
+      "label": "Informasi",
+      "href": "/information/"
+    },
+    {
+      "label": "Tim SYLUX",
+      "href": "/#team"
+    }
   ]
 }

@@ -5,9 +5,9 @@ import {
   PaintBrush, Receipt, Sword, UserCircle, UsersThree, VideoCamera,
 } from "@phosphor-icons/react";
 import { legacyRole, levellingRoles, sentinelDivisions } from "../data/roles";
-import { type Language } from "../data/site";
+import { copy, type Language } from "../data/site";
 import { useScrollReveal } from "../lib/useScrollReveal";
-import { BrandLogo } from "./Shell";
+import { BrandLogo, JoinButton } from "./Shell";
 import "../information.css";
 
 const icons = {
@@ -246,10 +246,13 @@ export default function Information({ lang }: { lang: Language }) {
         </div>
       </section>
       <p className="information-note information-shell">{id ? "Penamaan role dan akses mengikuti pengaturan serta pengumuman terbaru di server SYLUX." : "Role names and access follow the latest settings and announcements in the SYLUX server."}</p>
-      <section className="information-cta information-shell">
-        <BrandLogo />
-        <h2>{id ? "Temukan tempatmu di SYLUX." : "Find your place in SYLUX."}</h2>
-        <a className="button join-button" href="/#community"><UsersThree size={20} aria-hidden="true" />{id ? "Jelajahi komunitas" : "Explore the community"}<ArrowRight size={18} aria-hidden="true" /></a>
+      <section className="wrap community-showcase" aria-labelledby="information-join-title">
+        <div className="community-mascot-stage" aria-hidden="true"><img src="/images/sylux-community-mascot-blue.webp" width="1536" height="865" alt="" loading="lazy" /></div>
+        <div className="community-showcase-copy">
+          <h2 id="information-join-title"><span>Let’s go.</span>{id ? "Saatnya gabung SYLUX." : "Come join us at SYLUX."}</h2>
+          <p>{copy[lang].aboutBody}</p>
+          <JoinButton lang={lang} />
+        </div>
       </section>
     </main>
   );

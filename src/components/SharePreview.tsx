@@ -18,7 +18,7 @@ export default function SharePreview({ lang }: { lang: Language }) {
       <article className="discord-share-card" aria-label={id ? "Simulasi pratinjau tautan Discord" : "Simulated Discord link preview"}>
         <div className="discord-share-heading">
           <div>
-            <h2><a href="/">SYLUX</a> | Komunitas Discord</h2>
+            <h2><a href="/">SYLUX</a> | The luxury of psychology</h2>
             <p>{data.description}</p>
           </div>
           <img className="discord-share-thumbnail" src={data.thumbnail} alt="Logo SYLUX" width="80" height="80" />
@@ -33,7 +33,7 @@ export default function SharePreview({ lang }: { lang: Language }) {
             </a>
           ))}
         </div>
-        <p className="discord-share-footer">© {year} SYLUX Community. Ruangmu untuk bersinar.</p>
+        <p className="discord-share-footer">© {year} SYLUX Community. The luxury of psychology.</p>
       </article>
       <p className="share-preview-note">{id ? "Kartu mengambil identitas dan tautan dari konfigurasi website. Tidak memerlukan bot atau webhook." : "The card uses the website’s identity and links. No bot or webhook required."}</p>
     </main>

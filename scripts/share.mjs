@@ -22,7 +22,7 @@ export function buildShare(origin = DEFAULT_ORIGIN, invite = "https://discord.gg
   if (!inviteCode(invite)) throw new Error("Invalid public Discord invite");
   const absolute = (path) => new URL(path, origin).href;
   const year = new Intl.DateTimeFormat("en", { year: "numeric", timeZone: "Asia/Bangkok" }).format(new Date());
-  const footer = `© ${year} SYLUX Community. Ruangmu untuk bersinar.`;
+  const footer = `© ${year} SYLUX Community. The luxury of psychology.`;
   const buttons = data.links.map((link) => ({
     type: 2, style: 5, label: link.label,
     url: link.href === "$invite" ? invite : absolute(link.href),
@@ -32,7 +32,7 @@ export function buildShare(origin = DEFAULT_ORIGIN, invite = "https://discord.gg
       type: 17,
       accent_color: parseInt(data.accent.slice(1), 16),
       components: [
-        { type: 9, components: [{ type: 10, content: `## [SYLUX](${origin}/) | Komunitas Discord\n${data.description}` }], accessory: { type: 11, media: { url: absolute(data.thumbnail) }, description: "Logo SYLUX" } },
+        { type: 9, components: [{ type: 10, content: `## [SYLUX](${origin}/) | The luxury of psychology\n${data.description}` }], accessory: { type: 11, media: { url: absolute(data.thumbnail) }, description: "Logo SYLUX" } },
         { type: 12, items: [{ media: { url: absolute(data.image) }, description: data.imageAlt }] },
         { type: 14, spacing: 1 },
         { type: 10, content: data.message },
