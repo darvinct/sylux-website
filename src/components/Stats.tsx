@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowClockwise,
   DiscordLogo,
@@ -52,17 +52,38 @@ export function useCommunity() {
   return { state, counts, refresh: () => setRetry((n) => n + 1) };
 }
 
+function AnimatedCount({ value, lang }: { value: number; lang: Language }) {
+  const element = useRef<HTMLSpanElement>(null);
+  const [visible, setVisible] = useState(false);
+  const [shown, setShown] = useState(0);
+  useEffect(() => {
+    const node = element.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setVisible(true); observer.disconnect(); }
+    }, { threshold: 0.25 });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+  useEffect(() => {
+    if (!visible) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { setShown(value); return; }
+    let frame = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const progress = Math.min((now - start) / 1400, 1);
+      setShown(Math.round(value * (1 - Math.pow(1 - progress, 3))));
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [value, visible]);
+  return <span ref={element} aria-label={value.toLocaleString(lang === "id" ? "id-ID" : "en-US")}><span aria-hidden="true">{shown.toLocaleString(lang === "id" ? "id-ID" : "en-US")}</span></span>;
+}
+
 export function Stats({ lang, community }: { lang: Language; community: ReturnType<typeof useCommunity> }) {
   const { state, counts, refresh } = community;
   const t = copy[lang];
-  const values = [
-    state === "success" && counts
-      ? counts.total.toLocaleString(lang === "id" ? "id-ID" : "en-US")
-      : "···",
-    state === "success" && counts
-      ? counts.online.toLocaleString(lang === "id" ? "id-ID" : "en-US")
-      : "···",
-  ];
   return (
     <section className="stats-section section wrap" id="stats">
       <div className="stats-intro">
@@ -81,14 +102,14 @@ export function Stats({ lang, community }: { lang: Language; community: ReturnTy
         <div className="stat">
           <Users size={24} />
           <strong className={state === "loading" ? "skeleton-text" : ""}>
-            {values[0]}
+            {state === "success" && counts ? <AnimatedCount value={counts.total} lang={lang} /> : "···"}
           </strong>
           <span>{lang === "id" ? "Total anggota" : "Total members"}</span>
         </div>
         <div className="stat">
           <Waveform size={24} />
           <strong className={state === "loading" ? "skeleton-text" : ""}>
-            {values[1]}
+            {state === "success" && counts ? <AnimatedCount value={counts.online} lang={lang} /> : "···"}
           </strong>
           <span>{lang === "id" ? "Sedang online" : "Online now"}</span>
         </div>
