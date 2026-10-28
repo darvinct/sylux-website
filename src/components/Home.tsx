@@ -14,6 +14,7 @@ import { useScrollReveal } from "../lib/useScrollReveal";
 import { BrandLogo, JoinButton } from "./Shell";
 import { Portfolio } from "./Portfolio";
 import { Stats, useCommunity } from "./Stats";
+import { CommunityChat } from "./CommunityChat";
 import { Team, useTeam } from "./Team";
 
 function TypewriterIntro({ text }: { text: string }) {
@@ -141,6 +142,7 @@ export default function Home({ lang }: { lang: Language }) {
         </div>
       </section>
       <Stats lang={lang} community={community} />
+      <CommunityChat lang={lang} />
       <Team lang={lang} directory={directory} />
       <Portfolio lang={lang} />
       <section className="section wrap faq-section">
