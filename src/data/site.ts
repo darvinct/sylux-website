@@ -80,7 +80,7 @@ export const copy = {
     join: "Gabung Discord",
     waiting: "Undangan segera hadir",
     eyebrow: "KOMUNITAS DISCORD INDONESIA",
-    heroTagline: "Ruangmu untuk bersinar.",
+    heroTagline: "The luxury of psychology",
     intro:
       "Tempat singgah untuk ngobrol, berbagi musik, dan menemukan orang-orang yang satu frekuensi.",
     explore: "Jelajahi komunitas",
@@ -140,7 +140,7 @@ export const copy = {
     join: "Join Discord",
     waiting: "Invite coming soon",
     eyebrow: "INDONESIAN DISCORD COMMUNITY",
-    heroTagline: "Find your people. Shine together.",
+    heroTagline: "The luxury of psychology",
     intro:
       "A place to hang out, share music, and find people on your wavelength.",
     explore: "Explore the community",
