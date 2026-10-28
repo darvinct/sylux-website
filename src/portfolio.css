@@ -60,29 +60,78 @@
 .event-track-controls { display: flex; gap: 8px; flex-shrink: 0; }
 .event-track-controls .icon-button { width: 44px; height: 44px; border: 1px solid var(--border); border-radius: 50%; }
 .event-track-controls .icon-button:hover:not(:disabled) { background: var(--surface); border-color: var(--accent); }
-.event-lightbox { width: min(1120px, calc(100% - 32px)); max-height: calc(100dvh - 32px); }
-.event-lightbox .modal-content { padding: 28px; }
-.event-lightbox .modal-content > h2 { font-size: clamp(20px, 2.4vw, 28px); line-height: 1.2; padding-right: 36px; margin-bottom: 20px; }
-.event-lightbox-photo { position: relative; border-radius: var(--radius); background: #08060e; overflow: hidden; }
-.event-lightbox-photo > img { display: block; width: 100%; height: min(58dvh, 600px); object-fit: contain; }
-.event-lightbox-photo .icon-button { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border: 1px solid #9279b0; border-radius: 50%; background: #100b1ae8; }
-.event-lightbox-photo .icon-button:hover { background: #30203f; }
-.event-photo-previous { left: 12px; }
-.event-photo-next { right: 12px; }
-.event-lightbox .modal-content > .event-lightbox-count { color: var(--muted); font-size: 12px; margin: 12px 0 24px; text-align: center; }
-.event-lightbox .event-program-heading { margin-top: 24px; margin-bottom: 12px; }
-.event-program { margin: 0; padding-left: 20px; color: var(--muted); font-size: 14px; line-height: 1.8; }
+/* Scope above .modal so shared dialog rules cannot shrink the photo viewer. */
+.modal.event-lightbox {
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+.modal.event-lightbox::backdrop { background: #030209f2; backdrop-filter: none; }
+.event-lightbox .modal-content {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: max(64px, env(safe-area-inset-top)) max(64px, env(safe-area-inset-right)) max(64px, env(safe-area-inset-bottom)) max(64px, env(safe-area-inset-left));
+  pointer-events: none;
+  overflow: hidden;
+}
+.event-lightbox .modal-content > h2 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.event-lightbox-photo { width: 100%; height: 100%; min-width: 0; min-height: 0; display: flex; align-items: center; justify-content: center; }
+.event-lightbox-photo > img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: none;
+  image-rendering: auto;
+  pointer-events: auto;
+}
+.event-lightbox .icon-button {
+  position: fixed;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #9279b0;
+  border-radius: 50%;
+  background: #100b1ae8;
+  pointer-events: auto;
+}
+.event-lightbox .icon-button:hover { background: #30203f; }
+.event-lightbox .modal-close { top: max(16px, env(safe-area-inset-top)); right: max(16px, env(safe-area-inset-right)); }
+.event-lightbox .event-photo-previous { top: 50%; left: max(12px, env(safe-area-inset-left)); transform: translateY(-50%); }
+.event-lightbox .event-photo-next { top: 50%; right: max(12px, env(safe-area-inset-right)); transform: translateY(-50%); }
 @media (max-width: 1000px) { .event-track { grid-auto-columns: calc((100% - 20px) / 2); } }
 @media (max-width: 639px) {
   .event-track { grid-auto-columns: 88%; gap: 16px; }
   .event-tile-copy { padding: 20px; }
   .event-tile-copy h3 { font-size: 22px; }
   .event-track-footer { align-items: flex-start; padding-top: 12px; }
-  .event-lightbox .modal-content { padding: 20px 16px; }
-  .event-lightbox-photo > img { height: auto; aspect-ratio: 16 / 9; }
-  .event-lightbox-photo .icon-button { width: 40px; height: 40px; }
-  .event-photo-previous { left: 6px; }
-  .event-photo-next { right: 6px; }
+  .event-lightbox .modal-content { padding: max(64px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(80px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); }
+  .event-lightbox .event-photo-previous,
+  .event-lightbox .event-photo-next { top: auto; bottom: max(16px, env(safe-area-inset-bottom)); transform: none; }
+  .event-lightbox .event-photo-previous { left: calc(50% - 52px); }
+  .event-lightbox .event-photo-next { right: calc(50% - 52px); }
 }
 @media (prefers-reduced-motion: reduce) {
   .event-tile { transition: none; }

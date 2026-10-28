@@ -87,19 +87,19 @@ export function Portfolio({ lang }: { lang: Language }) {
           element.scrollTo({ left: element.scrollLeft + cards[next].getBoundingClientRect().left - element.getBoundingClientRect().left, behavior: "instant" });
         }}>
         {result.map((event) => (
-          <button key={event.id} className="event-tile" aria-haspopup="dialog" aria-label={`${t.detail}: ${event.title}`} onClick={() => setSelectedId(event.id)}>
+          <button key={event.id} className="event-tile" aria-haspopup="dialog" aria-label={`${id ? "Lihat foto" : "View photo"}: ${event.title}`} onClick={() => setSelectedId(event.id)}>
             <div className="event-tile-image"><img src={event.image} alt={event.alt} loading="lazy" width="1200" height="675" /></div>
             <div className="event-tile-copy">
               <span className="category">{event.category}</span>
               <h3>{event.title}</h3>
               <p>{event.concept[lang]}</p>
-              <span className="event-tile-link">{t.detail}<ArrowUpRight size={18} aria-hidden="true" /></span>
+              <span className="event-tile-link">{id ? "Lihat foto" : "View photo"}<ArrowUpRight size={18} aria-hidden="true" /></span>
             </div>
           </button>
         ))}
       </div>
       <div className="event-track-footer">
-        <p>{hasOverflow ? (id ? "Geser untuk melihat event lainnya. Klik foto untuk membuka dokumentasi." : "Swipe to see more events. Click a photo to open its documentation.") : (id ? "Klik foto untuk melihat dokumentasi dan konsep acara." : "Click a photo to view its documentation and event concept.")}</p>
+        <p>{hasOverflow ? (id ? "Geser untuk melihat event lainnya. Klik foto untuk memperbesar." : "Swipe to see more events. Click a photo to enlarge it.") : (id ? "Klik foto untuk memperbesar dokumentasi." : "Click a photo to enlarge the documentation.")}</p>
         {hasOverflow && <div className="event-track-controls" role="group" aria-label={id ? "Navigasi galeri event" : "Event gallery navigation"}>
           <button className="icon-button" disabled={edges.start} onClick={() => scrollRow(-1)} aria-label={id ? "Geser ke event sebelumnya" : "Scroll to previous events"}><ArrowLeft size={20} /></button>
           <button className="icon-button" disabled={edges.end} onClick={() => scrollRow(1)} aria-label={id ? "Geser ke event berikutnya" : "Scroll to next events"}><ArrowRight size={20} /></button>
@@ -109,15 +109,11 @@ export function Portfolio({ lang }: { lang: Language }) {
         <div className="event-lightbox-photo">
           <img src={selected.image} alt={selected.alt} width="1200" height="675" />
           {result.length > 1 && <>
-            <button className="icon-button event-photo-previous" onClick={() => movePhoto(-1)} aria-label={id ? "Foto event sebelumnya" : "Previous event photo"}><ArrowLeft size={22} /></button>
-            <button className="icon-button event-photo-next" onClick={() => movePhoto(1)} aria-label={id ? "Foto event berikutnya" : "Next event photo"}><ArrowRight size={22} /></button>
+            <button className="icon-button event-photo-previous" onClick={() => movePhoto(-1)} aria-label={id ? "Foto event sebelumnya" : "Previous event photo"}><ArrowLeft size={22} aria-hidden="true" /></button>
+            <button className="icon-button event-photo-next" onClick={() => movePhoto(1)} aria-label={id ? "Foto event berikutnya" : "Next event photo"}><ArrowRight size={22} aria-hidden="true" /></button>
           </>}
         </div>
-        <p className="event-lightbox-count" aria-live="polite">{selectedIndex + 1} / {result.length}</p>
-        <h3>{id ? "Konsep acara" : "Event concept"}</h3>
-        <p>{selected.description[lang]}</p>
-        <h3 className="event-program-heading">{id ? "Rangkaian acara" : "Program"}</h3>
-        <ul className="event-program">{selected.program.map((item) => <li key={item}>{item}</li>)}</ul>
+        <span className="sr-only" aria-live="polite">{selected.title}, {selectedIndex + 1} / {result.length}</span>
       </Modal>}
     </section>
   );
