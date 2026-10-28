@@ -705,29 +705,36 @@ textarea:focus-visible {
   font-size: 12px;
 }
 .stats-data {
+  container-type: inline-size;
+  min-width: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 40px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 32px;
   row-gap: 24px;
+  align-items: start;
 }
 .stat {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
+  min-width: 0;
+  display: grid;
+  grid-template-rows: 24px auto auto;
+  justify-items: start;
+  gap: 12px;
 }
 .stat > svg {
   color: #bfa8eb;
 }
 .stat > strong {
-  font-size: 54px;
+  font-size: clamp(32px, 13cqi, 54px);
   line-height: 1.1;
-  letter-spacing: -2px;
+  letter-spacing: -0.04em;
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 .stat > span {
   color: var(--muted);
   font-size: 13px;
+  line-height: 1.5;
 }
 .stats-message {
   grid-column: 1/-1;
@@ -1549,11 +1556,7 @@ textarea {
     font-size: 34px;
   }
   .stats-data {
-    column-gap: 32px;
-    row-gap: 26px;
-  }
-  .stat > strong {
-    font-size: 48px;
+    column-gap: 24px;
   }
   .stat > span {
     font-size: 12px;
