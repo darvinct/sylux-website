@@ -35,8 +35,9 @@ export async function getTeam(entries = configuredTeam, env = process.env) {
   for (let i = 0; i < ids.length; i += 5) {
     if (i) await new Promise((resolve) => setTimeout(resolve, 300));
     await Promise.all(ids.slice(i, i + 5).map(async (id) => {
+      const detailed = !env.DISCORD_GUILD_ID || entries.some((member) => member.id === id && ["Founder", "Owner"].includes(member.role));
       const result = await Promise.allSettled([
-        discordRequest(`/users/${id}`, authorization),
+        detailed ? discordRequest(`/users/${id}`, authorization) : Promise.resolve(null),
         env.DISCORD_GUILD_ID
           ? discordRequest(`/guilds/${env.DISCORD_GUILD_ID}/members/${id}`, authorization)
           : Promise.resolve(null),
@@ -51,7 +52,8 @@ export async function getTeam(entries = configuredTeam, env = process.env) {
       const guildId = env.DISCORD_GUILD_ID;
       const results = users.get(member.id);
       if (results.some((result) => result.status !== "fulfilled")) throw new Error("Discord profile unavailable");
-      const [profile, data] = results.map((result) => result.value);
+      const [details, data] = results.map((result) => result.value);
+      const profile = details || data?.user;
       if (guildId && data?.user?.id !== member.id)
         throw new Error("Mismatched Discord member");
       const user = publicUser(
