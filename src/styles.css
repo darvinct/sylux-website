@@ -2023,14 +2023,14 @@ textarea {
 
 
 /* The same navigation is always visible: one row on desktop, two on narrow screens. */
-@media (max-width: 1023px) {
+@media (max-width: 700px) {
   :root { --nav-clearance: 136px; }
   html { scroll-padding-top: 136px; }
   .header { height: 112px; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: 60px 44px; padding: 0 16px 8px; gap: 0 16px; }
   .header .wordmark { grid-column: 1; grid-row: 1; }
   .header .header-actions { grid-column: 2; grid-row: 1; gap: 6px; }
   .header-content { grid-column: 1 / -1; grid-row: 2; width: 100%; }
-  .header .nav { display: flex; position: static; flex-direction: row; align-items: center; justify-content: safe flex-end; width: 100%; gap: 2px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; border: 0; background: transparent; padding: 0; box-shadow: none; }
+  .header .nav { display: flex; position: static; flex-direction: row; align-items: center; justify-content: safe center; width: 100%; gap: 2px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; border: 0; background: transparent; padding: 0; box-shadow: none; }
   .header .nav::-webkit-scrollbar { display: none; }
   .header .nav > a { flex-shrink: 0; font-size: 12px; min-height: 44px; padding: 0 10px; }
 }
