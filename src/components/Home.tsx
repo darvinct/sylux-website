@@ -160,7 +160,7 @@ export default function Home({ lang }: { lang: Language }) {
         <SocialLinks lang={lang} />
       </section>
       <section className="wrap community-showcase" id="join" aria-labelledby="community-join-title">
-        <div className="community-mascot-stage" aria-hidden="true"><img src="/images/sylux-community-mascot.png" width="1672" height="941" alt="" loading="lazy" /></div>
+        <div className="community-mascot-stage" aria-hidden="true"><img src="/images/sylux-community-mascot-blue.webp" width="1536" height="865" alt="" loading="lazy" /></div>
         <div className="community-showcase-copy">
           <h2 id="community-join-title"><span>Let’s go.</span>{id ? "Saatnya gabung SYLUX." : "Come join us at SYLUX."}</h2>
           <p>{t.aboutBody}</p>
