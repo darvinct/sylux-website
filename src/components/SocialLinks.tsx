@@ -22,6 +22,7 @@ export function SocialLinks({ lang }: { lang: Language }) {
           onPointerEnter={(event) => { if (event.pointerType === "mouse") setFlipped(true); }}
           onPointerLeave={(event) => { if (event.pointerType === "mouse") setFlipped(false); }}
           onClick={(event) => { if (event.detail === 0 || window.matchMedia("(hover: none)").matches) setFlipped((value) => !value); }}>
+          {Array.from({ length: 25 }, (_, index) => <span key={index} className={`qr-pointer-zone qr-pointer-zone-${index + 1}`} aria-hidden="true" />)}
           <span className="social-flip-inner">
             <span className="social-flip-front" aria-hidden="true"><BrandLogo /><span>Find your people.</span></span>
             <span className="social-flip-back" aria-hidden="true"><img src="/images/sylux-join-qr.svg" width="180" height="180" loading="lazy" alt="" /><span>discord.gg/sylux</span></span>

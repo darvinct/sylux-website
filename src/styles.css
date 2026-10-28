@@ -2073,16 +2073,47 @@ textarea {
  .about .activity-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px 20px; }
 }
 
-.social-flip { display:block; width:210px; height:294px; padding:0; border:0; border-radius:18px; background:transparent; perspective:1000px; cursor:pointer; }
-.social-flip-inner { display:block; width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform .65s cubic-bezier(.2,.7,.2,1); }
-.social-flip.is-flipped .social-flip-inner { transform:rotateY(180deg); }
-.social-flip-front, .social-flip-back { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:20px; border-radius:18px; backface-visibility:hidden; -webkit-backface-visibility:hidden; overflow:hidden; box-shadow:0 14px 30px #0005; }
-.social-flip-front { border:1px solid #79539f; background:linear-gradient(145deg,#53247c,#260b4a 75%); color:#e5d6f6; }
+.social-flip { position:relative; display:grid; grid-template-columns:repeat(5,1fr); grid-template-rows:repeat(5,1fr); width:210px; height:294px; padding:0; border:0; border-radius:18px; background:transparent; perspective:800px; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.qr-pointer-zone { position:relative; z-index:2; }
+.social-flip-inner { position:absolute; inset:0; display:block; transform-style:preserve-3d; transform:rotateX(0) rotateY(0); transition:transform .7s ease; pointer-events:none; }
+.social-flip-front, .social-flip-back { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:20px; border-radius:18px; overflow:hidden; box-shadow:0 14px 30px #0005; transition:opacity .3s ease-in-out; }
+.social-flip-front { border:1px solid #79539f; background:linear-gradient(145deg,#53247c,#260b4a 75%); color:#e5d6f6; opacity:1; }
 .social-flip-front .brand-logo { width:152px; height:52px; }
 .social-flip-front > span { font-size:12px; }
-.social-flip-back { transform:rotateY(180deg); background:#fff; color:#29153e; gap:18px; }
+.social-flip-back { background:#fff; color:#29153e; gap:18px; opacity:0; }
+.social-flip.is-flipped .social-flip-front { opacity:0; }
+.social-flip.is-flipped .social-flip-back { opacity:1; }
+.social-flip:active .social-flip-inner { scale:.97; }
 .social-flip-hint { max-width:240px; line-height:1.5; text-align:center; }
+@media(hover:hover) and (pointer:fine) {
+ .qr-pointer-zone-1:hover ~ .social-flip-inner { transform:rotateX(20deg) rotateY(-10deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-2:hover ~ .social-flip-inner { transform:rotateX(20deg) rotateY(-5deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-3:hover ~ .social-flip-inner { transform:rotateX(20deg) rotateY(0deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-4:hover ~ .social-flip-inner { transform:rotateX(20deg) rotateY(5deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-5:hover ~ .social-flip-inner { transform:rotateX(20deg) rotateY(10deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-6:hover ~ .social-flip-inner { transform:rotateX(10deg) rotateY(-10deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-7:hover ~ .social-flip-inner { transform:rotateX(10deg) rotateY(-5deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-8:hover ~ .social-flip-inner { transform:rotateX(10deg) rotateY(0deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-9:hover ~ .social-flip-inner { transform:rotateX(10deg) rotateY(5deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-10:hover ~ .social-flip-inner { transform:rotateX(10deg) rotateY(10deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-11:hover ~ .social-flip-inner { transform:rotateX(0deg) rotateY(-10deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-12:hover ~ .social-flip-inner { transform:rotateX(0deg) rotateY(-5deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-13:hover ~ .social-flip-inner { transform:rotateX(0deg) rotateY(0deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-14:hover ~ .social-flip-inner { transform:rotateX(0deg) rotateY(5deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-15:hover ~ .social-flip-inner { transform:rotateX(0deg) rotateY(10deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-16:hover ~ .social-flip-inner { transform:rotateX(-10deg) rotateY(-10deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-17:hover ~ .social-flip-inner { transform:rotateX(-10deg) rotateY(-5deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-18:hover ~ .social-flip-inner { transform:rotateX(-10deg) rotateY(0deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-19:hover ~ .social-flip-inner { transform:rotateX(-10deg) rotateY(5deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-20:hover ~ .social-flip-inner { transform:rotateX(-10deg) rotateY(10deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-21:hover ~ .social-flip-inner { transform:rotateX(-20deg) rotateY(-10deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-22:hover ~ .social-flip-inner { transform:rotateX(-20deg) rotateY(-5deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-23:hover ~ .social-flip-inner { transform:rotateX(-20deg) rotateY(0deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-24:hover ~ .social-flip-inner { transform:rotateX(-20deg) rotateY(5deg); transition:transform 125ms ease-in-out; }
+ .qr-pointer-zone-25:hover ~ .social-flip-inner { transform:rotateX(-20deg) rotateY(10deg); transition:transform 125ms ease-in-out; }
+}
 @media(prefers-reduced-motion:reduce) {
- .social-flip-inner, .social-card { transition:none; }
- .social-card:hover, .social-card:focus-within { transform:none; }
+ .social-flip-inner, .social-flip-front, .social-flip-back, .social-card { transition:none; }
+ .qr-pointer-zone:hover ~ .social-flip-inner, .social-card:hover, .social-card:focus-within { transform:none; }
+ .social-flip:active .social-flip-inner { scale:1; }
 }
