@@ -108,7 +108,7 @@ export function Stats({ lang, community }: { lang: Language; community: ReturnTy
           </strong>
           <span>{lang === "id" ? "Sedang Aktif" : "Currently Active"}</span>
         </div>
-        <div className="stats-message">
+        {state !== "success" && <div className="stats-message">
           {state === "loading" ? (
             lang === "id" ? (
               "Menghubungkan ke Discord…"
@@ -128,12 +128,8 @@ export function Stats({ lang, community }: { lang: Language; community: ReturnTy
                 {lang === "id" ? "Coba lagi" : "Retry"}
               </button>
             </>
-          ) : lang === "id" ? (
-            "Perkiraan dari Discord, diperbarui setiap menit."
-          ) : (
-            "Approximate Discord counts, refreshed every minute."
-          )}
-        </div>
+          ) : null}
+        </div>}
       </div>
     </section>
   );
