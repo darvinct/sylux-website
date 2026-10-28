@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowClockwise,
-  DiscordLogo,
   Users,
   Waveform,
 } from "@phosphor-icons/react";
@@ -89,10 +88,6 @@ export function Stats({ lang, community }: { lang: Language; community: ReturnTy
       <div className="stats-intro">
         <h2 className="line-break">{t.stats}</h2>
         <p>{t.statsBody}</p>
-        <span className="source-label">
-          <DiscordLogo size={16} />
-          Discord community
-        </span>
       </div>
       <div
         className="stats-data"
