@@ -96,10 +96,10 @@ export default function Home({ lang }: { lang: Language }) {
             </span>
           </div>
           <div className="hero-buttons">
-            <JoinButton lang={lang} />
-            <a className="hero-secondary" href="#community">
+            <a className="button join-button" href="#community">
+              <UsersThree size={20} aria-hidden="true" />
               {t.explore}
-              <ArrowRight size={18} />
+              <ArrowRight size={18} aria-hidden="true" />
             </a>
           </div>
         </div>
