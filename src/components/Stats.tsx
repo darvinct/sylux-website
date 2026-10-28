@@ -106,7 +106,7 @@ export function Stats({ lang, community }: { lang: Language; community: ReturnTy
           <strong className={state === "loading" ? "skeleton-text" : ""}>
             {state === "success" && counts ? <AnimatedCount value={counts.online} lang={lang} /> : "···"}
           </strong>
-          <span>{lang === "id" ? "Sedang online" : "Online now"}</span>
+          <span>{lang === "id" ? "Sedang Aktif" : "Currently Active"}</span>
         </div>
         <div className="stats-message">
           {state === "loading" ? (

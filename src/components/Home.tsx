@@ -81,7 +81,7 @@ export default function Home({ lang }: { lang: Language }) {
                 <>
                   <span className={`presence-dot${community.counts.online === 0 ? " is-quiet" : ""}`} aria-hidden="true" />
                   <strong>{community.counts.online.toLocaleString(id ? "id-ID" : "en-US")}</strong>
-                  {id ? "sedang online" : "online now"}
+                  {id ? "Sedang Aktif" : "Currently Active"}
                 </>
               ) : community.state === "loading" ? (
                 id ? "Menghubungkan ke Discord…" : "Connecting to Discord…"
