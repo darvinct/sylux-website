@@ -285,22 +285,21 @@ textarea:focus-visible {
   align-items: center;
   gap: 24px;
   border: 0;
-  border-bottom: 1px solid #ffffff16;
-  background: linear-gradient(110deg, #1b1029f2, #0e0816f5 65%, #160b25f2);
-  backdrop-filter: blur(20px);
+  background: linear-gradient(180deg, #090511c9, #09051180);
+  backdrop-filter: blur(12px);
   border-radius: 0;
   padding: 0 clamp(20px, 3vw, 48px);
-  box-shadow: 0 8px 28px #0005, inset 0 1px 0 #ffffff06;
+  box-shadow: none;
   opacity: 1;
   transition: transform .5s cubic-bezier(.22, 1, .36, 1), opacity .4s ease, background .25s ease;
 }
 .header.is-hidden { transform: translateY(-110%); opacity: 0; pointer-events: none; }
 .header:has(:focus-visible) { transform: translateY(0); opacity: 1; pointer-events: auto; }
-.header::after { content: ""; position: absolute; inset: auto 0 -1px; height: 1px; background: linear-gradient(90deg, transparent, #c8adff70 50%, transparent); pointer-events: none; }
+
 .header-content { display: flex; align-items: center; flex: 1; min-width: 0; }
 .header .wordmark { gap: 10px; flex-shrink: 0; }
 .header .brand-logo { width: 104px; height: 28px; object-fit: contain; mix-blend-mode: normal; mask: url('/images/sylux-logo-hd.png') center / contain no-repeat; mask-mode: luminance; }
-.header .nav { justify-content: center; flex: 1; min-width: 0; }
+.header .nav { justify-content: flex-end; flex: 1; min-width: 0; }
 .header .nav > a { font-size: 12px; padding: 12px 9px; color: #c1b9cb; border-radius: 8px; }
 .header .nav > a:hover { color: #fff; background: #ffffff06; }
 .header .nav > a[aria-current="page"] { color: #e5d6ff; background: transparent; }
@@ -2031,7 +2030,7 @@ textarea {
   .header .wordmark { grid-column: 1; grid-row: 1; }
   .header .header-actions { grid-column: 2; grid-row: 1; gap: 6px; }
   .header-content { grid-column: 1 / -1; grid-row: 2; width: 100%; }
-  .header .nav { display: flex; position: static; flex-direction: row; align-items: center; justify-content: safe center; width: 100%; gap: 2px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; border: 0; background: transparent; padding: 0; box-shadow: none; }
+  .header .nav { display: flex; position: static; flex-direction: row; align-items: center; justify-content: safe flex-end; width: 100%; gap: 2px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; border: 0; background: transparent; padding: 0; box-shadow: none; }
   .header .nav::-webkit-scrollbar { display: none; }
   .header .nav > a { flex-shrink: 0; font-size: 12px; min-height: 44px; padding: 0 10px; }
 }
