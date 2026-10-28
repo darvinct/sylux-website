@@ -407,7 +407,17 @@ textarea:focus-visible {
   z-index: -2;
   pointer-events: none;
 }
-.hero-background { background: var(--community-backdrop); }
+.hero-background {
+  background:
+    radial-gradient(circle at 16% 23%, #d9bdffbb 0 1px, transparent 2px),
+    radial-gradient(circle at 31% 39%, #b889ff99 0 1px, transparent 2px),
+    radial-gradient(circle at 73% 19%, #e0caffaa 0 1px, transparent 2px),
+    radial-gradient(circle at 84% 44%, #b889ff99 0 1px, transparent 2px),
+    radial-gradient(circle at 66% 63%, #d9bdff88 0 1px, transparent 2px),
+    radial-gradient(ellipse 45% 40% at 50% 26%, #7033bd66, transparent 75%),
+    radial-gradient(ellipse 68% 60% at 45% 12%, #260b6899, transparent 80%),
+    var(--bg);
+}
 
 .hero-shade {
   z-index: -1;
