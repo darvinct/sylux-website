@@ -33,7 +33,7 @@ export function useTeam() {
   useEffect(() => {
     const controller = new AbortController();
     let active = true;
-    const timeout = setTimeout(() => controller.abort(), 12000);
+    const timeout = setTimeout(() => controller.abort(), 60000);
     setState("loading");
     fetch("/api/team", { signal: controller.signal })
       .then(async (res) => {

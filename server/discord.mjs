@@ -180,6 +180,7 @@ export async function discordFailure(response) {
       : null;
   return Object.assign(new Error("Discord request failed"), {
     status: response.status,
+    retryAfter: response.status === 429 ? Number(response.headers.get("retry-after")) || 1 : 0,
     providerCode,
     detail,
   });

@@ -32,14 +32,23 @@ export async function getTeam(entries = configuredTeam, env = process.env) {
   const users = new Map();
   const ids = [...new Set(entries.map((member) => member.id))];
   const authorization = `Bot ${env.DISCORD_BOT_TOKEN}`;
+  async function requestWithRetry(path) {
+    for (let attempt = 0; ; attempt++) {
+      try { return await discordRequest(path, authorization); }
+      catch (error) {
+        if (error.status !== 429 || attempt >= 3) throw error;
+        await new Promise((resolve) => setTimeout(resolve, Math.min(Math.max(error.retryAfter, 1), 10) * 1000 + 100));
+      }
+    }
+  }
   for (let i = 0; i < ids.length; i += 5) {
     if (i) await new Promise((resolve) => setTimeout(resolve, 300));
     await Promise.all(ids.slice(i, i + 5).map(async (id) => {
       const detailed = !env.DISCORD_GUILD_ID || entries.some((member) => member.id === id && ["Founder", "Owner"].includes(member.role));
       const result = await Promise.allSettled([
-        detailed ? discordRequest(`/users/${id}`, authorization) : Promise.resolve(null),
+        detailed ? requestWithRetry(`/users/${id}`) : Promise.resolve(null),
         env.DISCORD_GUILD_ID
-          ? discordRequest(`/guilds/${env.DISCORD_GUILD_ID}/members/${id}`, authorization)
+          ? requestWithRetry(`/guilds/${env.DISCORD_GUILD_ID}/members/${id}`)
           : Promise.resolve(null),
       ]);
       users.set(id, result);
