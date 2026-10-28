@@ -2042,10 +2042,9 @@ textarea {
 }
 
 /* Official community accounts, with introduction and invitation on the left. */
-.about { display:block; }
 .social-layout { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); gap:clamp(40px,6vw,80px); align-items:start; margin-bottom:64px; }
 .social-eyebrow { color:var(--accent); font-size:13px; font-weight:600; margin-bottom:16px; }
-.about .social-intro h2 { font-size:clamp(30px,3vw,42px); line-height:1.15; letter-spacing:-.035em; max-width:470px; }
+.social-intro h2 { font-size:clamp(30px,3vw,42px); line-height:1.15; letter-spacing:-.035em; max-width:470px; }
 .social-description { color:var(--muted); margin-top:24px; font-size:16px; line-height:1.75; max-width:450px; }
 .social-qr { display:flex; flex-direction:column; align-items:center; width:fit-content; margin:36px auto 0; gap:14px; font-size:12px; color:var(--muted); }
 .social-qr .social-invite-link { display:inline-flex; align-items:center; gap:6px; color:var(--muted); text-underline-offset:4px; }
@@ -2063,7 +2062,7 @@ textarea {
 .social-card-description { color:var(--muted); line-height:1.65; margin-top:18px; font-size:15px; }
 .social-visit { display:inline-flex; align-items:center; gap:8px; min-height:40px; margin-top:18px; padding:8px 12px; border:1px solid var(--border); border-radius:6px; color:var(--text); text-decoration:none; font-size:13px; }
 .social-visit:hover { background:#c8adff16; border-color:var(--accent); }
-.about .activity-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:28px; }
+
 @media(max-width:767px) {
  .social-layout { grid-template-columns:1fr; gap:36px; margin-bottom:48px; }
  .social-card { padding:22px; }
@@ -2117,3 +2116,29 @@ textarea {
  .qr-pointer-zone:hover ~ .social-flip-inner, .social-card:hover, .social-card:focus-within { transform:none; }
  .social-flip:active .social-flip-inner { scale:1; }
 }
+
+/* Community invitation: one mascot, clear type and the existing SYLUX palette. */
+.community-showcase { position: relative; isolation: isolate; text-align: center; overflow: hidden; padding: 20px 0 56px; margin-bottom: 56px; background: radial-gradient(ellipse 42% 44% at 50% 30%, #3d186c55, transparent 80%); color: var(--text); }
+.community-mascot-stage { display:flex; justify-content:center; align-items:center; height:440px; overflow:hidden; }
+.community-mascot-stage img { flex-shrink:0; width:760px; max-width:none; height:auto; }
+.community-showcase-copy { position:relative; max-width:760px; margin:12px auto 0; padding:0 20px; }
+.community-showcase h2 { font-size:clamp(32px,4.2vw,56px); line-height:1.15; font-weight:600; letter-spacing:-.035em; }
+.community-showcase h2 span { display:block; color:var(--muted); font-size:.58em; font-weight:400; letter-spacing:-.02em; margin-bottom:10px; }
+.community-showcase p { color:var(--muted); max-width:510px; margin:24px auto 28px; line-height:1.7; font-size:16px; }
+.community-showcase .join-button { text-decoration:none; }
+
+@media(max-width:767px) {
+  .community-showcase { padding-top:0; padding-bottom:40px; margin-bottom:36px; background:radial-gradient(ellipse 70% 42% at 50% 28%, #3d186c55, transparent 80%); }
+  .community-mascot-stage { height:330px; }
+  .community-mascot-stage img { width:580px; }
+  .community-showcase-copy { padding-inline:4px; margin-top:12px; }
+  .community-showcase h2 { font-size:clamp(29px,7vw,42px); }
+  .community-showcase p { font-size:14px; margin-block:20px 24px; }
+
+}
+
+.social-section .social-layout { margin-bottom:0; }
+
+/* Keep native page scrolling while hiding only the outer vertical scrollbar. */
+html { scrollbar-width:none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display:none; width:0; }

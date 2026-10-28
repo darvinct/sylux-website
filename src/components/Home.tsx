@@ -11,7 +11,7 @@ import {
 } from "@phosphor-icons/react";
 import { copy, site, type Language } from "../data/site";
 import { useScrollReveal } from "../lib/useScrollReveal";
-import { BrandLogo, JoinButton } from "./Shell";
+import { JoinButton } from "./Shell";
 import { Portfolio } from "./Portfolio";
 import { Stats, useCommunity } from "./Stats";
 import { Team, useTeam } from "./Team";
@@ -124,7 +124,11 @@ export default function Home({ lang }: { lang: Language }) {
         </span>
       </div>
       <section className="section wrap about" id="community">
-        <SocialLinks lang={lang} />
+        <div className="about-copy">
+          <span className="small-brand">SYLUX IS A PLACE TO BELONG.</span>
+          <h2 className="line-break">{t.about}</h2>
+          <p>{t.aboutBody}</p>
+        </div>
         <div className="activity-grid">
           {activityIcons.map((Icon, i) => (
             <article className="activity" key={i}>
@@ -152,13 +156,16 @@ export default function Home({ lang }: { lang: Language }) {
           ))}
         </div>
       </section>
-      <section className="closing wrap">
-        <div className="closing-mark" aria-hidden="true"><BrandLogo /></div>
-        <div>
-          <h2 className="line-break">{t.closing}</h2>
-          <p>{t.closingBody}</p>
+      <section className="section wrap social-section" id="social" aria-label={id ? "Media sosial resmi SYLUX" : "SYLUX official social media"}>
+        <SocialLinks lang={lang} />
+      </section>
+      <section className="wrap community-showcase" id="join" aria-labelledby="community-join-title">
+        <div className="community-mascot-stage" aria-hidden="true"><img src="/images/sylux-community-mascot.png" width="1672" height="941" alt="" loading="lazy" /></div>
+        <div className="community-showcase-copy">
+          <h2 id="community-join-title"><span>Let’s go.</span>{id ? "Saatnya gabung SYLUX." : "Come join us at SYLUX."}</h2>
+          <p>{t.aboutBody}</p>
+          <JoinButton lang={lang} />
         </div>
-        <JoinButton lang={lang} />
       </section>
     </main>
   );
