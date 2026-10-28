@@ -29,7 +29,7 @@ function TypewriterIntro({ text }: { text: string }) {
       const type = () => {
         position += 1;
         setLength(position);
-        if (position < text.length) timer = window.setTimeout(type, 28);
+        if (position < text.length) timer = window.setTimeout(type, 45);
       };
       timer = window.setTimeout(type, 300);
     };
