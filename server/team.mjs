@@ -30,17 +30,26 @@ export async function getTeam(entries = configuredTeam, env = process.env) {
   )
     throw new Error("Missing Discord configuration");
   const users = new Map();
+  const ids = [...new Set(entries.map((member) => member.id))];
+  const authorization = `Bot ${env.DISCORD_BOT_TOKEN}`;
+  for (let i = 0; i < ids.length; i += 5) {
+    if (i) await new Promise((resolve) => setTimeout(resolve, 300));
+    await Promise.all(ids.slice(i, i + 5).map(async (id) => {
+      const result = await Promise.allSettled([
+        discordRequest(`/users/${id}`, authorization),
+        env.DISCORD_GUILD_ID
+          ? discordRequest(`/guilds/${env.DISCORD_GUILD_ID}/members/${id}`, authorization)
+          : Promise.resolve(null),
+      ]);
+      users.set(id, result);
+    }));
+  }
   const profiles = await Promise.allSettled(
     entries.map(async (member) => {
       const guildId = env.DISCORD_GUILD_ID;
-      const authorization = `Bot ${env.DISCORD_BOT_TOKEN}`;
-      if (!users.has(member.id)) users.set(member.id, Promise.all([
-        discordRequest(`/users/${member.id}`, authorization),
-        guildId
-          ? discordRequest(`/guilds/${guildId}/members/${member.id}`, authorization)
-          : Promise.resolve(null),
-      ]));
-      const [profile, data] = await users.get(member.id);
+      const results = users.get(member.id);
+      if (results.some((result) => result.status !== "fulfilled")) throw new Error("Discord profile unavailable");
+      const [profile, data] = results.map((result) => result.value);
       if (guildId && data?.user?.id !== member.id)
         throw new Error("Mismatched Discord member");
       const user = publicUser(
