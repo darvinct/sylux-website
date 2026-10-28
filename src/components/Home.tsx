@@ -15,6 +15,7 @@ import { BrandLogo, JoinButton } from "./Shell";
 import { Portfolio } from "./Portfolio";
 import { Stats, useCommunity } from "./Stats";
 import { Team, useTeam } from "./Team";
+import { SocialLinks } from "./SocialLinks";
 
 function TypewriterIntro({ text }: { text: string }) {
   const [length, setLength] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches ? text.length : 0);
@@ -123,14 +124,7 @@ export default function Home({ lang }: { lang: Language }) {
         </span>
       </div>
       <section className="section wrap about" id="community">
-        <div className="community-showcase">
-          <div className="community-mascot-stage" aria-hidden="true"><img src="/images/sylux-community-mascot.png" width="1672" height="941" alt="" loading="lazy" /></div>
-          <div className="community-showcase-copy">
-            <h2><span>Let’s go.</span>{id ? "Saatnya gabung SYLUX." : "Come join us at SYLUX."}</h2>
-            <p>{t.aboutBody}</p>
-            <JoinButton lang={lang} />
-          </div>
-        </div>
+        <SocialLinks lang={lang} />
         <div className="activity-grid">
           {activityIcons.map((Icon, i) => (
             <article className="activity" key={i}>
