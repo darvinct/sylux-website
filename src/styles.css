@@ -2041,22 +2041,23 @@ textarea {
   .header { padding-inline: 12px; gap: 0 12px; }
 }
 
-/* Large community invitation, matching the supplied mascot composition. */
+/* Community invitation: one mascot, clear type and the existing SYLUX palette. */
 .about { display: block; }
-.community-showcase { position: relative; overflow: hidden; background: #f5f3f0; color: #08070b; min-height: 710px; margin-bottom: 56px; isolation: isolate; }
-.community-mascot-video { position: absolute; top: -80px; left: 50%; transform: translateX(-50%); width: 1180px; max-width: none; height: 670px; object-fit: cover; z-index: -2; }
-.community-showcase::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, #f5f3f099 54%, #f5f3f0 78%); z-index: -1; pointer-events: none; }
-.community-showcase-copy { position: relative; text-align: center; padding: 420px 24px 40px; }
-.about .community-showcase h2 { font-size: clamp(36px, 5.8vw, 76px); line-height: 1.1; font-weight: 700; letter-spacing: -.04em; }
-.community-showcase h2 span { background: #6c3ca0; color: #fff; padding: 0 .12em; border-radius: 3px; }
-.community-showcase p { color: #4d4561; max-width: 620px; margin: 24px auto; line-height: 1.7; }
-.community-showcase .join-button { color: #fff; background: #593184; border-color: #593184; }
-.about .activity-grid { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 28px; }
+.community-showcase { position: relative; isolation: isolate; text-align: center; overflow: hidden; padding: 20px 0 56px; margin-bottom: 56px; background: radial-gradient(ellipse 42% 44% at 50% 30%, #3d186c55, transparent 80%); color: var(--text); }
+.community-mascot-stage { display:flex; justify-content:center; align-items:center; height:440px; overflow:hidden; }
+.community-mascot-stage img { flex-shrink:0; width:760px; max-width:none; height:auto; }
+.community-showcase-copy { position:relative; max-width:760px; margin:12px auto 0; padding:0 20px; }
+.about .community-showcase h2 { font-size:clamp(32px,4.2vw,56px); line-height:1.15; font-weight:600; letter-spacing:-.035em; }
+.community-showcase h2 span { display:block; color:var(--muted); font-size:.58em; font-weight:400; letter-spacing:-.02em; margin-bottom:10px; }
+.community-showcase p { color:var(--muted); max-width:510px; margin:24px auto 28px; line-height:1.7; font-size:16px; }
+.community-showcase .join-button { text-decoration:none; }
+.about .activity-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:28px; }
 @media(max-width:767px) {
-  .community-showcase { min-height: 580px; margin-bottom: 40px; }
-  .community-mascot-video { width: 850px; height: 480px; top: -45px; }
-  .community-showcase-copy { padding: 300px 16px 32px; }
-  .about .community-showcase h2 { font-size: clamp(30px,7vw,48px); }
-  .community-showcase p { font-size: 14px; }
-  .about .activity-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap:28px 20px; }
+  .community-showcase { padding-top:0; padding-bottom:40px; margin-bottom:36px; background:radial-gradient(ellipse 70% 42% at 50% 28%, #3d186c55, transparent 80%); }
+  .community-mascot-stage { height:330px; }
+  .community-mascot-stage img { width:580px; }
+  .community-showcase-copy { padding-inline:4px; margin-top:12px; }
+  .about .community-showcase h2 { font-size:clamp(29px,7vw,42px); }
+  .community-showcase p { font-size:14px; margin-block:20px 24px; }
+  .about .activity-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px 20px; }
 }

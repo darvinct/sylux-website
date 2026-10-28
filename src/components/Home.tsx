@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowRight,
   ChatCircleDots,
@@ -44,17 +44,6 @@ function TypewriterIntro({ text }: { text: string }) {
       <span className="typing-copy" aria-hidden="true">{text.slice(0, length)}{length < text.length && <span className="typing-caret" />}</span>
     </p>
   );
-}
-
-function CommunityMascot() {
-  const video = useRef<HTMLVideoElement>(null);
-  useEffect(() => {
-    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => { if (preference.matches) video.current?.pause(); else void video.current?.play().catch(() => {}); };
-    update(); preference.addEventListener("change", update);
-    return () => preference.removeEventListener("change", update);
-  }, []);
-  return <video ref={video} className="community-mascot-video" src="/images/sylux-community-mascot.mp4" muted loop playsInline preload="auto" aria-hidden="true" tabIndex={-1} />;
 }
 
 export default function Home({ lang }: { lang: Language }) {
@@ -135,9 +124,9 @@ export default function Home({ lang }: { lang: Language }) {
       </div>
       <section className="section wrap about" id="community">
         <div className="community-showcase">
-          <CommunityMascot />
+          <div className="community-mascot-stage" aria-hidden="true"><img src="/images/sylux-community-mascot.png" width="1672" height="941" alt="" loading="lazy" /></div>
           <div className="community-showcase-copy">
-            <h2>Let's go<br />{id ? "Saatnya " : "Time for "}<span>{id ? "Kamu" : "You"}</span>{id ? " Join!!" : " to Join!!"}</h2>
+            <h2><span>Let’s go.</span>{id ? "Saatnya gabung SYLUX." : "Come join us at SYLUX."}</h2>
             <p>{t.aboutBody}</p>
             <JoinButton lang={lang} />
           </div>
