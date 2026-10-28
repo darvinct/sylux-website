@@ -665,6 +665,17 @@ textarea:focus-visible {
   margin-top: 20px;
   font-size: 15px;
 }
+.about-portfolio-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin-top: 20px;
+  color: var(--accent);
+  font-size: 14px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
 .activity-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

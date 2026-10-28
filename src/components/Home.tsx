@@ -112,22 +112,23 @@ export default function Home({ lang }: { lang: Language }) {
       >
         <span>
           <ChatCircleDots size={18} />
-          Good conversations
+          {t.communityHighlights[0]}
         </span>
         <span>
           <Waveform size={18} />
-          Late night company
+          {t.communityHighlights[1]}
         </span>
         <span>
           <UsersThree size={18} />
-          Your kind of people
+          {t.communityHighlights[2]}
         </span>
       </div>
       <section className="section wrap about" id="community">
         <div className="about-copy">
-          <span className="small-brand">SYLUX IS A PLACE TO BELONG.</span>
+          <span className="small-brand">{t.aboutLabel}</span>
           <h2 className="line-break">{t.about}</h2>
           <p>{t.aboutBody}</p>
+          <a className="about-portfolio-link" href="#portfolio">{t.portfolioLink}<ArrowRight size={18} aria-hidden="true" /></a>
         </div>
         <div className="activity-grid">
           {activityIcons.map((Icon, i) => (
@@ -163,7 +164,7 @@ export default function Home({ lang }: { lang: Language }) {
         <div className="community-mascot-stage" aria-hidden="true"><img src="/images/sylux-community-mascot-blue.webp" width="1536" height="865" alt="" loading="lazy" /></div>
         <div className="community-showcase-copy">
           <h2 id="community-join-title"><span>Let’s go.</span>{id ? "Saatnya gabung SYLUX." : "Come join us at SYLUX."}</h2>
-          <p>{t.aboutBody}</p>
+          <p>{t.joinBody}</p>
           <JoinButton lang={lang} />
         </div>
       </section>
