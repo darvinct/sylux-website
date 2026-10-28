@@ -13,6 +13,10 @@ export const events = [
     "id": "luxstars",
     "category": "Sharing",
     "title": "LUXSTARS",
+    "concept": {
+      "id": "Sharing session untuk berbagi pengalaman, dilanjutkan spin wheel minigames bersama anggota.",
+      "en": "A sharing session for personal stories and experiences, followed by spin wheel minigames."
+    },
     "subtitle": {
       "id": "Cerita, kenangan, dan momen bersama.",
       "en": "Stories, memories, and shared moments."
@@ -33,6 +37,10 @@ export const events = [
     "id": "sylux-got-talent-s2",
     "category": "Talent",
     "title": "SYLUX GOT TALENT S2",
+    "concept": {
+      "id": "Panggung bagi anggota untuk menunjukkan bakat, termasuk yang belum sempat tampil pada musim pertama.",
+      "en": "A stage for members to share their talents, including those who missed the first season."
+    },
     "subtitle": {
       "id": "Kesempatan baru untuk menunjukkan bakatmu.",
       "en": "A new chance to let your talent speak."
@@ -53,6 +61,10 @@ export const events = [
     "id": "boo-the-show",
     "category": "Horror",
     "title": "BOO! THE SHOW: A NIGHT OF FRIGHTS",
+    "concept": {
+      "id": "Podcast, cerita horor, minigames interaktif, dan penampilan dalam satu acara bertema horor.",
+      "en": "Podcasts, horror stories, interactive minigames, and performances in one horror-themed event."
+    },
     "subtitle": {
       "id": "Satu malam horor, penuh interaksi dan kejutan.",
       "en": "A night of horror, interaction, and surprises."
