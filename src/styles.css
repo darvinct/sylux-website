@@ -665,6 +665,7 @@ textarea:focus-visible {
   margin-top: 20px;
   font-size: 15px;
 }
+.about-wumpus { display: block; width: clamp(145px, 16vw, 210px); height: auto; margin-top: 22px; filter: drop-shadow(0 14px 28px #260b6855); }
 .activity-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1527,6 +1528,7 @@ textarea {
     font-size: 14px;
     max-width: 340px;
   }
+  .about-wumpus { width: 150px; margin-top: 18px; }
   .activity-grid {
     gap: 28px 20px;
   }

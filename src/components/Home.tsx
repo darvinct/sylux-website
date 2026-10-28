@@ -129,6 +129,7 @@ export default function Home({ lang }: { lang: Language }) {
           </span>
           <h2 className="line-break">{t.about}</h2>
           <p>{t.aboutBody}</p>
+          <img className="about-wumpus" src="/images/sylux-wumpus.png" alt="" aria-hidden="true" width="1247" height="1261" loading="lazy" />
         </div>
         <div className="activity-grid">
           {activityIcons.map((Icon, i) => (
