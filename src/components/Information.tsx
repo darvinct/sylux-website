@@ -7,7 +7,7 @@ import {
 import { legacyRole, levellingRoles, sentinelDivisions } from "../data/roles";
 import { type Language } from "../data/site";
 import { useScrollReveal } from "../lib/useScrollReveal";
-import { BrandLogo, JoinButton } from "./Shell";
+import { BrandLogo } from "./Shell";
 import "../information.css";
 
 const icons = {
@@ -53,6 +53,49 @@ export default function Information({ lang }: { lang: Language }) {
   const [selected, setSelected] = useState(0);
   const list = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLDivElement>(null);
+  const roleScene = useRef<HTMLElement>(null);
+  const roleRange = useRef<HTMLInputElement>(null);
+  const dragging = useRef<{ x: number; left: number } | null>(null);
+  useEffect(() => {
+    const scene = roleScene.current;
+    const element = track.current;
+    if (!scene || !element) return;
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let frame = 0;
+    const draw = () => {
+      frame = 0;
+      if (!window.matchMedia("(min-width: 900px)").matches || motion.matches) return;
+      const rect = scene.getBoundingClientRect();
+      const progress = Math.min(1, Math.max(0, -rect.top / Math.max(1, scene.offsetHeight - window.innerHeight)));
+      element.scrollLeft = progress * (element.scrollWidth - element.clientWidth);
+    };
+    const update = () => { if (!frame) frame = requestAnimationFrame(draw); };
+    const sync = () => {
+      const progress = element.scrollLeft / Math.max(1, element.scrollWidth - element.clientWidth);
+      if (roleRange.current) roleRange.current.value = String(Math.round(progress * 1000));
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    element.addEventListener("scroll", sync, { passive: true });
+    motion.addEventListener("change", update);
+    update(); sync();
+    return () => { cancelAnimationFrame(frame); window.removeEventListener("scroll", update); window.removeEventListener("resize", update); element.removeEventListener("scroll", sync); motion.removeEventListener("change", update); };
+  }, []);
+  function moveCommunity(progress: number) {
+    const element = track.current;
+    const scene = roleScene.current;
+    if (!element || !scene) return;
+    const clamped = Math.min(1, Math.max(0, progress));
+    element.scrollLeft = clamped * (element.scrollWidth - element.clientWidth);
+    if (window.matchMedia("(min-width: 900px)").matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      window.scrollTo({ top: window.scrollY + scene.getBoundingClientRect().top + clamped * (scene.offsetHeight - window.innerHeight), behavior: "instant" });
+    }
+  }
+  function stepCommunity(direction: number) {
+    const element = track.current;
+    if (element) moveCommunity((element.scrollLeft + direction * element.clientWidth * .8) / Math.max(1, element.scrollWidth - element.clientWidth));
+  }
+
   const [edges, setEdges] = useState({ start: true, end: false });
   useEffect(() => {
     if (!window.IntersectionObserver) return;
@@ -102,7 +145,7 @@ export default function Information({ lang }: { lang: Language }) {
   }
   const role = sentinelDivisions[selected];
   const Icon = icons[role.id];
-  const page = useScrollReveal(".information-section-title, .community-role, .information-note, .information-cta");
+  const page = useScrollReveal(".information-section-title, .information-note, .information-cta");
   return (
     <main className="information-page motion-page" ref={page}>
       <div className="reading-progress" aria-hidden="true" />
@@ -149,13 +192,26 @@ export default function Information({ lang }: { lang: Language }) {
         </div>
       </section>
 
-      <section className="information-section community-roles-section" aria-labelledby="community-roles-title">
+      <section ref={roleScene} className="information-section community-roles-section" aria-labelledby="community-roles-title">
+        <div className="community-roles-stage">
         <header className="information-section-title information-shell">
           <span className="information-kicker">COMMUNITY ROLES</span>
           <h2 id="community-roles-title">{id ? "Roles Komunitas" : "Community Roles"}</h2>
           <p>{id ? "Delapan tier levelling, dari Outsider sampai The Glitched Crown." : "Eight levelling tiers, from Outsider to The Glitched Crown."}</p>
         </header>
-        <div className="community-role-track" id="community-role-track" ref={track} role="region" aria-label={id ? "Tier levelling SYLUX" : "SYLUX levelling tiers"} tabIndex={0}>
+        <div className="community-role-track" id="community-role-track" ref={track}
+          onPointerDown={(event) => {
+            if (event.pointerType !== "mouse") return;
+            dragging.current = { x: event.clientX, left: event.currentTarget.scrollLeft };
+            event.currentTarget.setPointerCapture(event.pointerId);
+          }}
+          onPointerMove={(event) => {
+            if (!dragging.current) return;
+            const element = event.currentTarget;
+            moveCommunity((dragging.current.left + dragging.current.x - event.clientX) / Math.max(1, element.scrollWidth - element.clientWidth));
+          }}
+          onPointerUp={() => { dragging.current = null; }} onPointerCancel={() => { dragging.current = null; }}
+          role="region" aria-label={id ? "Tier levelling SYLUX" : "SYLUX levelling tiers"} tabIndex={0}>
           {levellingRoles.map((item) => {
             const ItemIcon = icons[item.id];
             return (
@@ -170,12 +226,14 @@ export default function Information({ lang }: { lang: Language }) {
             );
           })}
         </div>
+        <div className="community-role-slider information-shell"><input ref={roleRange} type="range" min="0" max="1000" defaultValue="0" aria-label={id ? "Geser daftar role komunitas" : "Scroll community roles"} aria-controls="community-role-track" onChange={(event) => moveCommunity(Number(event.target.value) / 1000)} /></div>
         <div className="community-role-controls information-shell">
           <span>{id ? "Geser untuk melihat setiap tier." : "Swipe to explore every tier."}</span>
           <div>
-            <button className="icon-button" disabled={edges.start} aria-controls="community-role-track" aria-label={id ? "Role komunitas sebelumnya" : "Previous community role"} onClick={() => track.current?.scrollBy({ left: -track.current.clientWidth * .8, behavior: "auto" })}><ArrowLeft size={21} /></button>
-            <button className="icon-button" disabled={edges.end} aria-controls="community-role-track" aria-label={id ? "Role komunitas berikutnya" : "Next community role"} onClick={() => track.current?.scrollBy({ left: track.current.clientWidth * .8, behavior: "auto" })}><ArrowRight size={21} /></button>
+            <button className="icon-button" disabled={edges.start} aria-controls="community-role-track" aria-label={id ? "Role komunitas sebelumnya" : "Previous community role"} onClick={() => stepCommunity(-1)}><ArrowLeft size={21} /></button>
+            <button className="icon-button" disabled={edges.end} aria-controls="community-role-track" aria-label={id ? "Role komunitas berikutnya" : "Next community role"} onClick={() => stepCommunity(1)}><ArrowRight size={21} /></button>
           </div>
+        </div>
         </div>
       </section>
 
@@ -191,7 +249,7 @@ export default function Information({ lang }: { lang: Language }) {
       <section className="information-cta information-shell">
         <BrandLogo />
         <h2>{id ? "Temukan tempatmu di SYLUX." : "Find your place in SYLUX."}</h2>
-        <JoinButton lang={lang} />
+        <a className="button join-button" href="/#community"><UsersThree size={20} aria-hidden="true" />{id ? "Jelajahi komunitas" : "Explore the community"}<ArrowRight size={18} aria-hidden="true" /></a>
       </section>
     </main>
   );

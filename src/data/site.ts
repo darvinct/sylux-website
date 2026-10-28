@@ -82,7 +82,7 @@ export const copy = {
     eyebrow: "KOMUNITAS DISCORD INDONESIA",
     heroTagline: "The luxury of psychology",
     intro:
-      "Tempat singgah untuk ngobrol, berbagi musik, dan menemukan orang-orang yang satu frekuensi.",
+      "Elegance – Exclusivity – Credibility. Branding | Community | Esports | Event Creative",
     explore: "Jelajahi komunitas",
     about: "Datang sebagai orang baru.\nPulang sebagai teman.",
     aboutBody:
@@ -142,7 +142,7 @@ export const copy = {
     eyebrow: "INDONESIAN DISCORD COMMUNITY",
     heroTagline: "The luxury of psychology",
     intro:
-      "A place to hang out, share music, and find people on your wavelength.",
+      "Elegance – Exclusivity – Credibility. Branding | Community | Esports | Event Creative",
     explore: "Explore the community",
     about: "Arrive as a stranger.\nLeave as a friend.",
     aboutBody:

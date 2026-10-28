@@ -15,7 +15,7 @@
 .information-section-title p { font-size: 16px; margin-top: 18px; }
 .management-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: 60px; }
 .role-selector { min-width: 0; }
-.info-role-item { min-height: clamp(360px, 60svh, 580px); display: flex; flex-direction: column; justify-content: center; gap: 18px; opacity: .65; transition: opacity .45s ease, transform .45s ease; }
+.info-role-item { min-height: clamp(360px, 60svh, 580px); display: flex; flex-direction: column; justify-content: center; gap: 18px; opacity: .4; transition: opacity .45s ease, transform .45s ease; }
 .info-role-item.is-active { opacity: 1; transform: translateX(6px); }
 .info-role-item h3 { line-height: 1.2; }
 .info-role-item button { padding: 8px 0; background: transparent; border: 0; text-align: left; font-size: clamp(24px, 2.5vw, 36px); line-height: 1.2; font-weight: 600; letter-spacing: -.7px; color: #f8f5ff; overflow-wrap: anywhere; }
@@ -24,13 +24,13 @@
 .role-feature { position: sticky; top: max(calc(var(--nav-clearance) + 20px), calc(50svh - 160px)); width: 100%; max-width: 440px; height: 320px; padding: 36px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px #0005; overflow: hidden; justify-self: end; }
 .role-watermark { position: absolute; top: 36px; right: 28px; opacity: .06; pointer-events: none; }
 .role-watermark .brand-logo { width: 130px; height: 44px; }
-.role-feature-content { position: relative; height: 100%; display: flex; flex-direction: column; justify-content: space-between; animation: role-detail-arrive .35s ease; }
+.role-feature-content { position: relative; height: 100%; display: flex; flex-direction: column; justify-content: space-between; animation: role-detail-arrive .5s ease; }
 .role-feature-icon { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 12px; background: color-mix(in srgb, var(--role-color) 12%, transparent); color: var(--role-color); }
 .role-category { font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--role-color); }
 .role-feature h3 { font-size: 28px; line-height: 1.15; letter-spacing: -.6px; margin-top: 10px; overflow-wrap: anywhere; }
 .division-position { display: block; font-size: 11px; color: #aaa2b5; font-variant-numeric: tabular-nums; margin-top: 14px; }
 @keyframes role-detail-arrive { from { opacity: .2; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.community-roles-section { overflow: hidden; }
+.community-roles-section { position:relative; }
 .community-role-track { display: grid; grid-auto-flow: column; grid-auto-columns: 320px; align-items: stretch; gap: 24px; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; padding: 20px max(24px, calc((100% - 1100px) / 2)) 32px; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: #c8adff #201925; }
 .community-role { scroll-snap-align: center; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--surface); transition: transform .3s ease, border-color .3s ease; }
 .community-role:hover { transform: translateY(-10px); border-color: var(--role-color); }
@@ -87,3 +87,26 @@
   .info-role-item { min-height: 0; padding-block: 36px; }
 }
 @media (forced-colors: active) { .role-label { background: none; color: CanvasText; -webkit-text-fill-color: CanvasText; } }
+
+/* Scroll story and accessible horizontal controls, following the supplied video. */
+.role-feature-content::after { content:""; position:absolute; inset:-36px; background:#e4d5f7; pointer-events:none; transform:translateX(115%); animation:role-wipe .5s cubic-bezier(.2,.65,.2,1); }
+@keyframes role-wipe { from { transform:translateX(0); } to { transform:translateX(115%); } }
+.community-role-track { scroll-behavior:auto; cursor:grab; user-select:none; scrollbar-width:none; }
+.community-role-track:active { cursor:grabbing; }
+.community-role-track::-webkit-scrollbar { display:none; }
+.community-role-slider { margin-top:20px; max-width:840px; }
+.community-role-slider input { display:block; width:100%; height:44px; cursor:ew-resize; accent-color:var(--accent); }
+@media(min-width:900px) and (prefers-reduced-motion:no-preference) {
+ .community-roles-section { height:260svh; padding-block:0; }
+ .community-roles-stage { position:sticky; top:0; min-height:100svh; display:flex; flex-direction:column; justify-content:center; padding:calc(var(--nav-clearance) + 12px) 0 32px; }
+ .community-roles-stage .information-section-title { margin-bottom:24px; }
+ .community-role-track { flex-shrink:0; scroll-snap-type:none; }
+ .community-role-controls { margin-top:0; }
+}
+@media(prefers-reduced-motion:reduce) { .role-feature-content::after { animation:none; display:none; } }
+.community-role-slider input { appearance:none; -webkit-appearance:none; background:transparent; }
+.community-role-slider input::-webkit-slider-runnable-track { height:16px; border-radius:99px; background:#e5daf4; border:2px solid #e5daf4; }
+.community-role-slider input::-webkit-slider-thumb { appearance:none; -webkit-appearance:none; width:110px; height:12px; border-radius:99px; background:#543078; }
+.community-role-slider input::-moz-range-track { height:12px; border-radius:99px; background:#e5daf4; border:2px solid #e5daf4; }
+.community-role-slider input::-moz-range-thumb { width:110px; height:12px; border:0; border-radius:99px; background:#543078; }
+.information-cta .brand-logo { width:min(760px,86vw); height:clamp(140px,25vw,260px); }
