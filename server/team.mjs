@@ -44,6 +44,8 @@ export async function getTeam(entries = configuredTeam, env = process.env) {
       users.set(id, result);
     }));
   }
+  const failed = [...users.values()].flat().filter((result) => result.status === "rejected");
+  if (failed.length) console.warn("Discord team profile failures", failed.reduce((counts, result) => { const status = result.reason?.status || "network"; counts[status] = (counts[status] || 0) + 1; return counts; }, {}));
   const profiles = await Promise.allSettled(
     entries.map(async (member) => {
       const guildId = env.DISCORD_GUILD_ID;
