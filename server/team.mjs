@@ -8,7 +8,7 @@ let loading = null;
 export async function getTeam(entries = configuredTeam, env = process.env) {
   if (
     !Array.isArray(entries) ||
-    entries.length > 30 ||
+    entries.length > 100 ||
     entries.some(
       (m) =>
         !snowflake(m.id) ||
@@ -19,7 +19,7 @@ export async function getTeam(entries = configuredTeam, env = process.env) {
         (m.division != null &&
           (typeof m.division !== "string" || !m.division.trim() || m.division.length > 60)),
     ) ||
-    new Set(entries.map((m) => m.id)).size !== entries.length
+    new Set(entries.map((m) => `${m.id}:${m.role.trim()}`)).size !== entries.length
   )
     throw new Error("Invalid team configuration");
   if (!entries.length)
@@ -29,16 +29,18 @@ export async function getTeam(entries = configuredTeam, env = process.env) {
     (env.DISCORD_GUILD_ID && !snowflake(env.DISCORD_GUILD_ID))
   )
     throw new Error("Missing Discord configuration");
+  const users = new Map();
   const profiles = await Promise.allSettled(
     entries.map(async (member) => {
       const guildId = env.DISCORD_GUILD_ID;
       const authorization = `Bot ${env.DISCORD_BOT_TOKEN}`;
-      const [profile, data] = await Promise.all([
+      if (!users.has(member.id)) users.set(member.id, Promise.all([
         discordRequest(`/users/${member.id}`, authorization),
         guildId
           ? discordRequest(`/guilds/${guildId}/members/${member.id}`, authorization)
           : Promise.resolve(null),
-      ]);
+      ]));
+      const [profile, data] = await users.get(member.id);
       if (guildId && data?.user?.id !== member.id)
         throw new Error("Mismatched Discord member");
       const user = publicUser(

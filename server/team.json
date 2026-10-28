@@ -1,13 +1,262 @@
 [
-  { "id": "630879324655976454", "role": "Founder", "bio": "" },
-  { "id": "1287114575182823439", "role": "Founder", "bio": "" },
-  { "id": "1362991830815211633", "role": "Owner", "bio": "" },
-  { "id": "726709324197527552", "role": "Developer", "bio": "" },
-  { "id": "624961857345814540", "role": "Developer", "bio": "" },
-  { "id": "797707098456719409", "role": "Developer", "bio": "" },
-  { "id": "1427193570871345232", "role": "Developer", "bio": "" },
-  { "id": "245906109402054656", "role": "Developer", "bio": "" },
-  { "id": "591965665347371009", "role": "Developer", "bio": "" },
-  { "id": "1547609916410306693", "role": "Developer", "bio": "" },
-  { "id": "852846392816566302", "role": "Developer", "bio": "" }
+  {
+    "id": "630879324655976454",
+    "role": "Founder",
+    "bio": ""
+  },
+  {
+    "id": "1287114575182823439",
+    "role": "Founder",
+    "bio": ""
+  },
+  {
+    "id": "1362991830815211633",
+    "role": "Owner",
+    "bio": ""
+  },
+  {
+    "id": "494899873154334740",
+    "role": "Head Staff",
+    "bio": ""
+  },
+  {
+    "id": "726709324197527552",
+    "role": "Developer",
+    "bio": ""
+  },
+  {
+    "id": "624961857345814540",
+    "role": "Developer",
+    "bio": ""
+  },
+  {
+    "id": "797707098456719409",
+    "role": "Developer",
+    "bio": ""
+  },
+  {
+    "id": "1427193570871345232",
+    "role": "Developer",
+    "bio": ""
+  },
+  {
+    "id": "245906109402054656",
+    "role": "Developer",
+    "bio": ""
+  },
+  {
+    "id": "591965665347371009",
+    "role": "Developer",
+    "bio": ""
+  },
+  {
+    "id": "1547609916410306693",
+    "role": "Developer",
+    "bio": ""
+  },
+  {
+    "id": "852846392816566302",
+    "role": "Developer",
+    "bio": ""
+  },
+  {
+    "id": "481407375891234817",
+    "role": "Partner Manager",
+    "bio": ""
+  },
+  {
+    "id": "472692627435945994",
+    "role": "Partner Manager",
+    "bio": ""
+  },
+  {
+    "id": "1452520635720007700",
+    "role": "Partner Manager",
+    "bio": ""
+  },
+  {
+    "id": "435001470098604033",
+    "role": "Partner Manager",
+    "bio": ""
+  },
+  {
+    "id": "970926171288113182",
+    "role": "Partner Manager",
+    "bio": ""
+  },
+  {
+    "id": "1379306158954905671",
+    "role": "Partner Manager",
+    "bio": ""
+  },
+  {
+    "id": "395630978724265994",
+    "role": "Partner Manager",
+    "bio": ""
+  },
+  {
+    "id": "643657580819906560",
+    "role": "Partner Manager",
+    "bio": ""
+  },
+  {
+    "id": "1045699222395166720",
+    "role": "Event Organizer",
+    "bio": ""
+  },
+  {
+    "id": "966736452807430155",
+    "role": "Event Organizer",
+    "bio": ""
+  },
+  {
+    "id": "371895533931069442",
+    "role": "Event Organizer",
+    "bio": ""
+  },
+  {
+    "id": "576455907580575744",
+    "role": "Event Organizer",
+    "bio": ""
+  },
+  {
+    "id": "825965291107778570",
+    "role": "Event Organizer",
+    "bio": ""
+  },
+  {
+    "id": "715986763025350746",
+    "role": "Event Organizer",
+    "bio": ""
+  },
+  {
+    "id": "747687130930610247",
+    "role": "Event Organizer",
+    "bio": ""
+  },
+  {
+    "id": "481407375891234817",
+    "role": "Event Organizer",
+    "bio": ""
+  },
+  {
+    "id": "988339632334848003",
+    "role": "Event Organizer",
+    "bio": ""
+  },
+  {
+    "id": "852846392816566302",
+    "role": "Event Organizer",
+    "bio": ""
+  },
+  {
+    "id": "854909832134131712",
+    "role": "Designer",
+    "bio": ""
+  },
+  {
+    "id": "1324471675437322362",
+    "role": "Designer",
+    "bio": ""
+  },
+  {
+    "id": "1035348234723401738",
+    "role": "Designer",
+    "bio": ""
+  },
+  {
+    "id": "508450520663326730",
+    "role": "Designer",
+    "bio": ""
+  },
+  {
+    "id": "1026513111534026792",
+    "role": "Publication Staff",
+    "bio": ""
+  },
+  {
+    "id": "1411729441708707881",
+    "role": "Publication Staff",
+    "bio": ""
+  },
+  {
+    "id": "576455907580575744",
+    "role": "Publication Staff",
+    "bio": ""
+  },
+  {
+    "id": "1432029414601916677",
+    "role": "Publication Staff",
+    "bio": ""
+  },
+  {
+    "id": "1179037313079185453",
+    "role": "Media Staff",
+    "bio": ""
+  },
+  {
+    "id": "777798730799644672",
+    "role": "Media Staff",
+    "bio": ""
+  },
+  {
+    "id": "435001470098604033",
+    "role": "Game Staff",
+    "bio": ""
+  },
+  {
+    "id": "777765130901258251",
+    "role": "Game Staff",
+    "bio": ""
+  },
+  {
+    "id": "481407375891234817",
+    "role": "Game Staff",
+    "bio": ""
+  },
+  {
+    "id": "472692627435945994",
+    "role": "Game Staff",
+    "bio": ""
+  },
+  {
+    "id": "970926171288113182",
+    "role": "Game Staff",
+    "bio": ""
+  },
+  {
+    "id": "1457751020741464238",
+    "role": "Female Staff",
+    "bio": ""
+  },
+  {
+    "id": "1040120654030176266",
+    "role": "Female Staff",
+    "bio": ""
+  },
+  {
+    "id": "1035348234723401738",
+    "role": "Female Staff",
+    "bio": ""
+  },
+  {
+    "id": "777765130901258251",
+    "role": "Female Staff",
+    "bio": ""
+  },
+  {
+    "id": "982311596393123941",
+    "role": "Female Staff",
+    "bio": ""
+  },
+  {
+    "id": "966736452807430155",
+    "role": "Streamer Staff",
+    "bio": ""
+  },
+  {
+    "id": "494899873154334740",
+    "role": "Payment Staff",
+    "bio": ""
+  }
 ]

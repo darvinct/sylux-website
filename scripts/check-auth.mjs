@@ -405,7 +405,7 @@ try {
   );
   assert.deepEqual(
     requestedIds.sort(),
-    configuredTeam.map((member) => member.id).sort(),
+    [...new Set(configuredTeam.map((member) => member.id))].sort(),
   );
   assert.equal(
     (await invoke(teamHandler, "/api/team", { method: "POST" })).statusCode,

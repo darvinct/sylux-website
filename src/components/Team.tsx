@@ -96,7 +96,7 @@ export function Team({ lang, directory }: { lang: Language; directory: ReturnTyp
         <p>{t.teamBody}</p>
         <span className="source-label">
           <DiscordLogo size={16} />
-          {state === "success" ? `${members.length} ${id ? "profil Discord" : "Discord profiles"}` : (id ? "Profil terhubung ke Discord" : "Profiles connected to Discord")}
+          {state === "success" ? `${new Set(members.map((member) => member.id)).size} ${id ? "profil Discord" : "Discord profiles"}` : (id ? "Profil terhubung ke Discord" : "Profiles connected to Discord")}
         </span>
       </div>
       <div id="team-directory" hidden={!expanded}>
