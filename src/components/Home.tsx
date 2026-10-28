@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   ChatCircleDots,
@@ -44,6 +44,17 @@ function TypewriterIntro({ text }: { text: string }) {
       <span className="typing-copy" aria-hidden="true">{text.slice(0, length)}{length < text.length && <span className="typing-caret" />}</span>
     </p>
   );
+}
+
+function CommunityMascot() {
+  const video = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => { if (preference.matches) video.current?.pause(); else void video.current?.play().catch(() => {}); };
+    update(); preference.addEventListener("change", update);
+    return () => preference.removeEventListener("change", update);
+  }, []);
+  return <video ref={video} className="community-mascot-video" src="/images/sylux-community-mascot.mp4" muted loop playsInline preload="auto" aria-hidden="true" tabIndex={-1} />;
 }
 
 export default function Home({ lang }: { lang: Language }) {
@@ -123,13 +134,13 @@ export default function Home({ lang }: { lang: Language }) {
         </span>
       </div>
       <section className="section wrap about" id="community">
-        <div className="about-copy">
-          <span className="small-brand">
-            {site.name.toUpperCase()} IS A PLACE TO BELONG.
-          </span>
-          <h2 className="line-break">{t.about}</h2>
-          <p>{t.aboutBody}</p>
-          <img className="about-wumpus" src="/images/sylux-wumpus.png" alt="" aria-hidden="true" width="1247" height="1261" loading="lazy" />
+        <div className="community-showcase">
+          <CommunityMascot />
+          <div className="community-showcase-copy">
+            <h2>Let's go<br />{id ? "Saatnya " : "Time for "}<span>{id ? "Kamu" : "You"}</span>{id ? " Join!!" : " to Join!!"}</h2>
+            <p>{t.aboutBody}</p>
+            <JoinButton lang={lang} />
+          </div>
         </div>
         <div className="activity-grid">
           {activityIcons.map((Icon, i) => (

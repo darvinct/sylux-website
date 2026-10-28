@@ -665,7 +665,6 @@ textarea:focus-visible {
   margin-top: 20px;
   font-size: 15px;
 }
-.about-wumpus { display: block; width: clamp(145px, 16vw, 210px); height: auto; margin-top: 22px; filter: drop-shadow(0 14px 28px #260b6855); }
 .activity-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1528,7 +1527,6 @@ textarea {
     font-size: 14px;
     max-width: 340px;
   }
-  .about-wumpus { width: 150px; margin-top: 18px; }
   .activity-grid {
     gap: 28px 20px;
   }
@@ -2041,4 +2039,24 @@ textarea {
 }
 @media (max-width: 359px) {
   .header { padding-inline: 12px; gap: 0 12px; }
+}
+
+/* Large community invitation, matching the supplied mascot composition. */
+.about { display: block; }
+.community-showcase { position: relative; overflow: hidden; background: #f5f3f0; color: #08070b; min-height: 710px; margin-bottom: 56px; isolation: isolate; }
+.community-mascot-video { position: absolute; top: -80px; left: 50%; transform: translateX(-50%); width: 1180px; max-width: none; height: 670px; object-fit: cover; z-index: -2; }
+.community-showcase::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, #f5f3f099 54%, #f5f3f0 78%); z-index: -1; pointer-events: none; }
+.community-showcase-copy { position: relative; text-align: center; padding: 420px 24px 40px; }
+.about .community-showcase h2 { font-size: clamp(36px, 5.8vw, 76px); line-height: 1.1; font-weight: 700; letter-spacing: -.04em; }
+.community-showcase h2 span { background: #6c3ca0; color: #fff; padding: 0 .12em; border-radius: 3px; }
+.community-showcase p { color: #4d4561; max-width: 620px; margin: 24px auto; line-height: 1.7; }
+.community-showcase .join-button { color: #fff; background: #593184; border-color: #593184; }
+.about .activity-grid { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 28px; }
+@media(max-width:767px) {
+  .community-showcase { min-height: 580px; margin-bottom: 40px; }
+  .community-mascot-video { width: 850px; height: 480px; top: -45px; }
+  .community-showcase-copy { padding: 300px 16px 32px; }
+  .about .community-showcase h2 { font-size: clamp(30px,7vw,48px); }
+  .community-showcase p { font-size: 14px; }
+  .about .activity-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap:28px 20px; }
 }
