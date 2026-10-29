@@ -9,7 +9,7 @@ import { copy, site, type Language } from "../data/site";
 import { inviteCode } from "../lib/utils";
 
 export function BrandLogo({ className = "" }: { className?: string }) {
-  return <img className={`brand-logo ${className}`} src="/images/sylux-logo-hd.png" alt={site.name} width="2158" height="729" />;
+  return <img className={`brand-logo ${className}`} src="/images/sylux-logo.webp" alt={site.name} width="2158" height="729" />;
 }
 
 export function JoinButton({

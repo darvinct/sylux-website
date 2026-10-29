@@ -87,8 +87,8 @@ export function Portfolio({ lang }: { lang: Language }) {
           element.scrollTo({ left: element.scrollLeft + cards[next].getBoundingClientRect().left - element.getBoundingClientRect().left, behavior: "instant" });
         }}>
         {result.map((event) => (
-          <button key={event.id} className="event-tile" aria-haspopup="dialog" aria-label={`${id ? "Lihat foto" : "View photo"}: ${event.title}`} onClick={() => setSelectedId(event.id)}>
-            <div className="event-tile-image"><img src={event.image} alt={event.alt} loading="lazy" width="1200" height="675" /></div>
+          <button key={event.id} className="event-tile" aria-haspopup="dialog" onClick={() => setSelectedId(event.id)}>
+            <div className="event-tile-image"><img src={event.image} alt="" loading="lazy" width="1200" height="675" /></div>
             <div className="event-tile-copy">
               <span className="category">{event.category}</span>
               <h3>{event.title}</h3>

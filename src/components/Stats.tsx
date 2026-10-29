@@ -77,7 +77,7 @@ function AnimatedCount({ value, lang }: { value: number; lang: Language }) {
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
   }, [value, visible]);
-  return <span ref={element} aria-label={value.toLocaleString(lang === "id" ? "id-ID" : "en-US")}><span aria-hidden="true">{shown.toLocaleString(lang === "id" ? "id-ID" : "en-US")}</span></span>;
+  return <span ref={element}><span className="sr-only">{value.toLocaleString(lang === "id" ? "id-ID" : "en-US")}</span><span aria-hidden="true">{shown.toLocaleString(lang === "id" ? "id-ID" : "en-US")}</span></span>;
 }
 
 export function Stats({ lang, community }: { lang: Language; community: ReturnType<typeof useCommunity> }) {

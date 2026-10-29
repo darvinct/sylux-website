@@ -23,6 +23,8 @@ type Member = DiscordUser & {
   avatarDecoration?: string | null;
   guildTag?: string | null;
 };
+const leadershipRoles = new Set(["Founder", "Owner", "Head Staff"]);
+
 function cachedMembers(): Member[] {
   try {
     const data = JSON.parse(localStorage.getItem("sylux-team-cache-v1") || "null");
@@ -35,7 +37,7 @@ export function useTeam() {
   const [members, setMembers] = useState<Member[]>(cachedMembers);
   const hasCached = useRef(members.length > 0);
   const [state, setState] = useState<"loading" | "empty" | "error" | "success">(
-    "loading",
+    members.length ? "success" : "loading",
   );
   const [partial, setPartial] = useState(false);
   const [retry, setRetry] = useState(0);
@@ -52,13 +54,17 @@ export function useTeam() {
       .then((data) => {
         if (!Array.isArray(data.members)) throw new Error();
         if (active) {
-          if (!data.partial || !hasCached.current) setMembers(data.members);
-          hasCached.current = hasCached.current || data.members.length > 0;
-          if (!data.partial && data.members.length) {
-            try { localStorage.setItem("sylux-team-cache-v1", JSON.stringify({ savedAt: Date.now(), members: data.members })); } catch { /* Storage may be disabled. */ }
+          const keepingCached = Boolean(data.partial && hasCached.current);
+          if (!keepingCached) setMembers(data.members);
+          hasCached.current = keepingCached || data.members.length > 0;
+          if (!data.partial) {
+            try {
+              if (data.members.length) localStorage.setItem("sylux-team-cache-v1", JSON.stringify({ savedAt: Date.now(), members: data.members }));
+              else localStorage.removeItem("sylux-team-cache-v1");
+            } catch { /* Storage may be disabled. */ }
           }
           setPartial(Boolean(data.partial));
-          setState(data.members.length ? "success" : "empty");
+          setState(keepingCached || data.members.length ? "success" : "empty");
         }
       })
       .catch(() => {
@@ -82,13 +88,14 @@ export function Team({ lang, directory }: { lang: Language; directory: ReturnTyp
   const [sorted, setSorted] = useState(false);
   const [selected, setSelected] = useState<Member | null>(null);
   const [expanded, setExpanded] = useState(true);
-  const [collapsedRoles, setCollapsedRoles] = useState<string[]>([]);
+  const [roleVisibility, setRoleVisibility] = useState<Record<string, boolean>>({});
   const search = useRef<HTMLInputElement>(null);
   const { members, state, partial, reload } = directory;
   const result = filterMembers(members, query, role, sorted);
   const groups = [...new Set(members.map((member) => member.role))]
     .map((name) => ({ name, members: result.filter((member) => member.role === name) }))
     .filter((group) => group.members.length > 0);
+  const roleIsOpen = (name: string, visibility = roleVisibility) => visibility[name] ?? (Boolean(query.trim() || role) || leadershipRoles.has(name));
   useEffect(() => {
     const shortcut = (event: KeyboardEvent) => {
       const target = event.target;
@@ -123,14 +130,14 @@ export function Team({ lang, directory }: { lang: Language; directory: ReturnTyp
                 type="search"
                 placeholder={t.search}
                 value={query}
-                onChange={(e) => { setQuery(e.target.value); setCollapsedRoles([]); }}
+                onChange={(e) => { setQuery(e.target.value); setRoleVisibility({}); }}
               />
               <kbd aria-hidden="true">/</kbd>
             </label>
             <div className="team-controls">
               <label>
                 <span className="sr-only">{t.all}</span>
-                <select value={role} onChange={(e) => { setRole(e.target.value); setCollapsedRoles([]); }}>
+                <select value={role} onChange={(e) => { setRole(e.target.value); setRoleVisibility({}); }}>
                   <option value="">{t.all}</option>
                   {[...new Set(members.map((m) => m.role))].map((r) => (
                     <option key={r}>{r}</option>
@@ -187,21 +194,20 @@ export function Team({ lang, directory }: { lang: Language; directory: ReturnTyp
                       <h3>
                         <button
                           className="team-role-toggle"
-                          aria-expanded={!collapsedRoles.includes(group.name)}
+                          aria-expanded={roleIsOpen(group.name)}
                           aria-controls={`team-branch-${index}`}
-                          onClick={() => setCollapsedRoles((previous) => previous.includes(group.name)
-                            ? previous.filter((name) => name !== group.name)
-                            : [...previous, group.name])}
+                          onClick={() => setRoleVisibility((previous) => ({ ...previous, [group.name]: !roleIsOpen(group.name, previous) }))}
                         >
                           <span className="team-role-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                           <span className="team-role-title">{group.name}</span>
                           <CaretDown size={14} aria-hidden="true" />
                         </button>
                       </h3>
-                      <ul className="team-branch" id={`team-branch-${index}`} hidden={collapsedRoles.includes(group.name)}>
+                      <ul className="team-branch" id={`team-branch-${index}`} hidden={!roleIsOpen(group.name)}>
                         {group.members.map((member) => (
                           <li className="team-node" key={member.id}>
-                            <button className="member" aria-label={`${id ? "Lihat profil" : "View profile"} ${member.name}, ${member.handle}, ${member.role}`} aria-haspopup="dialog" onClick={() => setSelected(member)}>
+                            <button className="member" aria-haspopup="dialog" onClick={() => setSelected(member)}>
+                              <span className="sr-only">{id ? "Lihat profil" : "View Profile"}</span>
                               <span className="member-backdrop" aria-hidden="true">
                                 {member.banner && ["Founder", "Owner"].includes(group.name) && <img src={member.banner.replace(".gif?", ".webp?")} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} />}
                               </span>
@@ -221,8 +227,8 @@ export function Team({ lang, directory }: { lang: Language; directory: ReturnTyp
                                 <small>{member.handle}</small>
                                 <span>{member.division || member.role}</span>
                               </span>
-                              <ArrowUpRight size={19} className="member-arrow" />
-                              <span className="member-profile-cta" aria-hidden="true"><Eye size={15} />View Profile</span>
+                              <ArrowUpRight size={19} className="member-arrow" aria-hidden="true" />
+                              <span className="member-profile-cta" aria-hidden="true"><Eye size={15} />{id ? "Lihat profil" : "View Profile"}</span>
                             </button>
                           </li>
                         ))}
@@ -248,7 +254,7 @@ export function Team({ lang, directory }: { lang: Language; directory: ReturnTyp
                 onClick={() => {
                   setQuery("");
                   setRole("");
-                  setCollapsedRoles([]);
+                  setRoleVisibility({});
                 }}
               >
                 {t.reset}

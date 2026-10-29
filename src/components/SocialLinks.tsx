@@ -18,7 +18,7 @@ export function SocialLinks({ lang }: { lang: Language }) {
       <p className="social-description">{id ? "Tetap terhubung dengan komunitas SYLUX melalui berbagai platform media sosial resmi kami." : "Stay connected with the SYLUX community across our official social platforms."}</p>
       <div className="social-qr">
         <span>{id ? "Scan untuk gabung" : "Scan to join"}</span>
-        <button className={`social-flip${flipped ? " is-flipped" : ""}`} aria-label={id ? "Tampilkan atau sembunyikan kode QR Discord SYLUX" : "Show or hide the SYLUX Discord QR code"} aria-pressed={flipped}
+        <button className={`social-flip${flipped ? " is-flipped" : ""}`} aria-label={`Find your people. discord.gg/sylux. ${id ? "Tampilkan atau sembunyikan kode QR Discord SYLUX" : "Show or hide the SYLUX Discord QR code"}`} aria-describedby="social-qr-instructions" aria-pressed={flipped}
           onPointerEnter={(event) => { if (event.pointerType === "mouse") setFlipped(true); }}
           onPointerLeave={(event) => { if (event.pointerType === "mouse") setFlipped(false); }}
           onClick={(event) => { if (event.detail === 0 || window.matchMedia("(hover: none)").matches) setFlipped((value) => !value); }}>
@@ -28,7 +28,7 @@ export function SocialLinks({ lang }: { lang: Language }) {
             <span className="social-flip-back" aria-hidden="true"><img src="/images/sylux-join-qr.svg" width="180" height="180" loading="lazy" alt="" /><span>discord.gg/sylux</span></span>
           </span>
         </button>
-        <span className="social-flip-hint">{id ? "Arahkan kursor atau ketuk untuk melihat QR" : "Hover or tap to reveal the QR code"}</span>
+        <span className="social-flip-hint" id="social-qr-instructions">{id ? "Arahkan kursor atau ketuk untuk melihat QR" : "Hover or tap to reveal the QR code"}</span>
         <a className="social-invite-link" href={site.discordInvite} target="_blank" rel="noreferrer">discord.gg/sylux <ArrowUpRight size={13} aria-hidden="true" /></a>
       </div>
     </div>
