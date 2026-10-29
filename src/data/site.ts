@@ -135,6 +135,31 @@ export const events = [
     "image": "/images/spooktacular-beyond-the-dark-documentation.png",
     "imageKind": "documentation",
     "alt": "Dokumentasi SPOOKTACULAR: BEYOND THE DARK di Discord Stage SYLUX, menampilkan pembicara dan audiens"
+  },
+  {
+    "id": "bolehkah-pikiranku-istirahat",
+    "category": "Sharing",
+    "title": "BOLEHKAH PIKIRANKU ISTIRAHAT?",
+    "concept": {
+      "id": "Memahami pola overthinking dan dampaknya, serta belajar mengelolanya dengan lebih sehat bersama narasumber profesional.",
+      "en": "Understanding overthinking and its impact, and learning healthier ways to manage it with a professional speaker."
+    },
+    "subtitle": {
+      "id": "Memberi pikiran ruang untuk beristirahat.",
+      "en": "Giving your mind room to rest."
+    },
+    "description": {
+      "id": "Pernah nggak, kita terlalu sibuk memikirkan berbagai kemungkinan sampai lupa menghadapi apa yang sebenarnya ada di depan mata? Terkadang, yang membuat kita lelah bukan situasinya, melainkan berbagai skenario yang terus kita bangun di kepala.\n\nBersama narasumber profesional, kita akan membahas bagaimana memahami pola pikir berlebihan, mengenali dampaknya, serta belajar mengelolanya dengan lebih sehat.",
+      "en": "Have you ever been so busy thinking about every possibility that you forget to face what is actually in front of you? Sometimes, it is not the situation that wears us out, but the scenarios we keep building in our heads.\n\nTogether with a professional speaker, we will explore how to understand patterns of overthinking, recognize their impact, and learn healthier ways to manage them."
+    },
+    "program": [
+      "Understanding overthinking",
+      "Recognizing its impact",
+      "Healthier thought management"
+    ],
+    "image": "/images/bolehkah-pikiranku-istirahat-documentation.png",
+    "imageKind": "documentation",
+    "alt": "Dokumentasi BOLEHKAH PIKIRANKU ISTIRAHAT? di Discord Stage SYLUX, menampilkan narasumber dan audiens"
   }
 ];
 
