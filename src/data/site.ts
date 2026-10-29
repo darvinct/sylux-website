@@ -108,6 +108,33 @@ export const events = [
     "image": "/images/jealousy-documentation.png",
     "imageKind": "documentation",
     "alt": "Dokumentasi JEALOUSY: Jamming Area in Fabulous SYLUX di Discord Stage, menampilkan performer dan audiens"
+  },
+  {
+    "id": "spooktacular-beyond-the-dark",
+    "category": "Horror",
+    "title": "SPOOKTACULAR: BEYOND THE DARK",
+    "concept": {
+      "id": "Perayaan Halloween dengan pengumuman pemenang SPOOKCONTEST, cosplay, podcast horor, minigames interaktif, dan bintang tamu spesial.",
+      "en": "Halloween celebrations with SPOOKCONTEST winners, cosplay, a spooky podcast, interactive minigames, and a special guest star."
+    },
+    "subtitle": {
+      "id": "Ketika kreativitas bertemu suasana horor.",
+      "en": "Where creativity meets the creepy."
+    },
+    "description": {
+      "id": "SPOOKTACULAR menghadirkan malam Halloween penuh keseruan, kejutan menyeramkan, dan kegiatan menarik! Ikuti pengumuman pemenang SPOOKCONTEST, cosplay showcase, podcast horor, dan minigames interaktif. Dari percakapan menyeramkan hingga aktivitas seru, ada banyak kegiatan yang bisa kalian nikmati!\n\nMalam ini juga akan semakin spesial dengan kehadiran bintang tamu istimewa yang tidak ingin kalian lewatkan. Kumpulkan keberanian, ajak teman-teman, dan bersiaplah untuk malam ketika kreativitas bertemu suasana horor dan setiap sudut menyimpan kejutan!",
+      "en": "SPOOKTACULAR is bringing you a night of Halloween fun, spooky surprises, and exciting activities! Join us for the SPOOKCONTEST winners announcement, cosplay showcase, a spooky podcast, and interactive minigames. From creepy conversations to fun-filled activities, we’ve got plenty of fun activities for you!\n\nAnd guess what? The night gets even more special! Get ready to welcome our special guest star, for an extra treat you won't want to miss. So gather your courage, bring your friends, and prepare yourself for a night where creativity meets the creepy and every corner holds a surprise!"
+    },
+    "program": [
+      "SPOOKCONTEST winners announcement",
+      "Cosplay showcase",
+      "Spooky podcast",
+      "Interactive minigames",
+      "Special guest star"
+    ],
+    "image": "/images/spooktacular-beyond-the-dark-documentation.png",
+    "imageKind": "documentation",
+    "alt": "Dokumentasi SPOOKTACULAR: BEYOND THE DARK di Discord Stage SYLUX, menampilkan pembicara dan audiens"
   }
 ];
 
