@@ -83,6 +83,31 @@ export const events = [
     "image": "/images/boo-the-show-documentation.png",
     "imageKind": "documentation",
     "alt": "Dokumentasi BOO! THE SHOW: A NIGHT OF FRIGHTS di Discord Stage SYLUX, menampilkan pembicara dan audiens"
+  },
+  {
+    "id": "jealousy",
+    "category": "Music",
+    "title": "JEALOUSY: Jamming Area in Fabulous SYLUX",
+    "concept": {
+      "id": "Jamming bersama performer bersuara emas, dari lembut hingga cool, dengan hadiah menarik untuk penonton.",
+      "en": "A jamming session with golden-voiced performers, from soft to cool, with exciting prizes for the audience."
+    },
+    "subtitle": {
+      "id": "Musik untuk para jomblo dan bucin.",
+      "en": "Music for singles and the lovestruck."
+    },
+    "description": {
+      "id": "JEALOUSY (Jamming Area in Fabulous SYLUX) akan menghadirkan para performer dengan suara emas, lembut, cool, dan pastinya luar biasa baguss! Kalian para kaum jomblo dan bucin pasti suka bangett!! Ada hadiah menarik juga loh untuk kalian.",
+      "en": "JEALOUSY (Jamming Area in Fabulous SYLUX) brings you performers with golden, soft, cool, and truly amazing voices! Whether you're single or lovestruck, you'll love it. There are exciting prizes for you too!"
+    },
+    "program": [
+      "Jamming session",
+      "Live performances",
+      "Prizes"
+    ],
+    "image": "/images/jealousy-documentation.png",
+    "imageKind": "documentation",
+    "alt": "Dokumentasi JEALOUSY: Jamming Area in Fabulous SYLUX di Discord Stage, menampilkan performer dan audiens"
   }
 ];
 
