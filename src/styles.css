@@ -1086,24 +1086,6 @@ textarea:focus-visible {
   height: 90px;
 }
 .footer { border-top: 1px solid var(--border); background: var(--bg); }
-.footer-technology { position: relative; padding: 48px 0 64px; overflow: hidden; border-bottom: 1px solid var(--border); }
-.footer-technology-heading { text-align: center; padding-inline: 24px; }
-.footer-technology-heading p { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
-.footer-technology-heading h2 { font-size: 23px; letter-spacing: -.4px; }
-.footer-technology-window { margin-top: 32px; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
-.footer-technology-track { display: flex; width: max-content; animation: footer-logos 36s linear infinite; }
-.footer-technology-group { display: flex; flex-shrink: 0; align-items: center; justify-content: space-around; min-width: 100vw; gap: clamp(40px, 6vw, 100px); padding: 8px clamp(20px, 3vw, 50px); margin: 0; list-style: none; }
-.footer-technology-group li { display: flex; align-items: center; justify-content: center; gap: 12px; min-width: 140px; color: var(--muted); font-size: 23px; font-weight: 600; letter-spacing: -.5px; white-space: nowrap; }
-.footer-technology-group img { flex-shrink: 0; width: 34px; height: 34px; filter: invert(1); opacity: .7; }
-.footer-motion-toggle { position: absolute; bottom: 8px; right: max(16px, calc((100vw - 1280px) / 2)); color: var(--muted); background: transparent; }
-.footer-technology:is(:hover, :focus-within, .is-paused) .footer-technology-track { animation-play-state: paused; }
-@keyframes footer-logos { to { transform: translateX(-50%); } }
-@media (prefers-reduced-motion: reduce) {
-  .footer-technology-track { animation: none; width: 100%; }
-  .footer-technology-group { flex-wrap: wrap; min-width: 0; width: 100%; gap: 24px; }
-  .footer-technology-group[aria-hidden="true"], .footer-motion-toggle { display: none; }
-  .footer-technology-window { mask-image: none; }
-}
 .footer-top { display: grid; grid-template-columns: 1.55fr .85fr .85fr 1.2fr; align-items: start; gap: clamp(28px, 5vw, 72px); padding-top: 48px; padding-bottom: 40px; }
 .footer-brand { min-width: 0; }
 .footer-brand .brand-logo { width: 120px; height: 42px; object-fit: contain; }

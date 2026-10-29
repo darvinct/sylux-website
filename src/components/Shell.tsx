@@ -4,8 +4,6 @@ import {
   ArrowUpRight,
   DiscordLogo,
   InstagramLogo,
-  Pause,
-  Play,
   TiktokLogo,
   X,
 } from "@phosphor-icons/react";
@@ -118,15 +116,6 @@ export function Header({
 export function Footer({ lang }: { lang: Language }) {
   const t = copy[lang];
   const id = lang === "id";
-  const [paused, setPaused] = useState(false);
-  const technologies = [
-    { name: "React", logo: "react" },
-    { name: "TypeScript", logo: "typescript" },
-    { name: "Vite", logo: "vite" },
-    { name: "Vercel", logo: "vercel" },
-    { name: "Discord", logo: "discord" },
-    { name: "GitHub", logo: "github" },
-  ];
   const socials = [
     { name: "Discord", href: site.discordInvite, Icon: DiscordLogo },
     { name: "Instagram", href: site.instagram, Icon: InstagramLogo },
@@ -134,22 +123,6 @@ export function Footer({ lang }: { lang: Language }) {
   ];
   return (
     <footer className="footer">
-      <section className={`footer-technology${paused ? " is-paused" : ""}`} aria-labelledby="footer-built-with">
-        <div className="footer-technology-heading">
-          <p>SYLUX Development</p>
-          <h2 id="footer-built-with">Built with</h2>
-        </div>
-        <div className="footer-technology-window">
-          <div className="footer-technology-track">
-            {[0, 1].map((copyIndex) => <ul className="footer-technology-group" key={copyIndex} aria-hidden={copyIndex === 1 ? true : undefined}>
-              {technologies.map(({ name, logo }) => <li key={name}><img src={`/images/technology/${logo}.svg`} width="36" height="36" alt="" loading="lazy" /><span>{name}</span></li>)}
-            </ul>)}
-          </div>
-        </div>
-        <button className="icon-button footer-motion-toggle" aria-pressed={paused} aria-label={id ? "Jeda animasi logo" : "Pause logo animation"} onClick={() => setPaused(!paused)}>
-          {paused ? <Play size={17} aria-hidden="true" /> : <Pause size={17} aria-hidden="true" />}
-        </button>
-      </section>
       <div className="footer-top wrap">
         <div className="footer-brand">
           <a href="/" className="wordmark" aria-label={`${site.name} home`}><BrandLogo /></a>
