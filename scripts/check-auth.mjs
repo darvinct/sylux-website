@@ -347,6 +347,19 @@ try {
     !JSON.stringify(team).includes("private-role") &&
       !JSON.stringify(team).includes(profile.email),
   );
+  requestedPaths.length = 0;
+  const headTeam = await getTeam([
+    { id: profile.id, role: "Head Staff" },
+    { id: profile.id, role: "Payment Staff" },
+  ], {
+    DISCORD_BOT_TOKEN: "test-only-bot-token",
+    DISCORD_GUILD_ID: "323456789012345678",
+  });
+  assert.deepEqual(headTeam.members.map((member) => member.role), ["Head Staff", "Payment Staff"]);
+  assert.equal(headTeam.members[0].banner, team.members[0].banner);
+  assert.equal(headTeam.members[1].banner, headTeam.members[0].banner);
+  assert.equal(requestedPaths.filter((path) => path.endsWith(`/users/${profile.id}`)).length, 1);
+  assert.equal(requestedPaths.length, 2, "Shared Head Staff and Payment Staff profile must be fetched once");
   assert.deepEqual(await getTeam([], {}), {
     configured: false,
     members: [],

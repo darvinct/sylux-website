@@ -209,7 +209,7 @@ export function Team({ lang, directory }: { lang: Language; directory: ReturnTyp
                             <button className="member" aria-haspopup="dialog" onClick={() => setSelected(member)}>
                               <span className="sr-only">{id ? "Lihat profil" : "View Profile"}</span>
                               <span className="member-backdrop" aria-hidden="true">
-                                {member.banner && ["Founder", "Owner"].includes(group.name) && <img src={member.banner.replace(".gif?", ".webp?")} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} />}
+                                {member.banner && <img src={member.banner.replace(".gif?", ".webp?")} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.visibility = "hidden"; }} />}
                               </span>
                               <img
                                 className="avatar discord-avatar"

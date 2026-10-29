@@ -37,7 +37,7 @@
 #team .member { position: relative; isolation: isolate; width: 100%; min-height: 116px; display: grid; grid-template-columns: 44px minmax(0, 1fr) 14px; align-items: center; gap: 13px; padding: 20px 16px; background: #110d1b; border: 1px solid #c8adff27; border-radius: 14px; text-align: left; }
 #team .member:hover { border-color: #c8adff90; translate: 0; }
 .member-backdrop { position: absolute; inset: 0; z-index: -1; overflow: hidden; border-radius: inherit; pointer-events: none; background: radial-gradient(ellipse at 100% 0, #7035b611, transparent 70%); }
-.member-backdrop > img { width: 100%; height: 100%; object-fit: cover; opacity: .55; }
+.member-backdrop > img { width: 100%; height: 100%; object-fit: cover; opacity: .85; }
 .member-backdrop::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, #0d0919fa 0%, #0d091994 48%, #0d09191a); }
 #team .member .avatar { width: 44px; height: 44px; min-width: 44px; border: 2px solid #d8c2ff33; box-shadow: 0 4px 18px #0004; }
 #team .member-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
@@ -63,11 +63,12 @@
 #team .team-group[data-role="founder"] .member-info > small { font-size: 13px; }
 #team .team-group[data-role="founder"] .member-info > span { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; }
 #team .team-group[data-role="founder"] .member-arrow { position: absolute; right: 28px; top: 28px; width: 22px; height: 22px; }
-.team-group[data-role="owner"] .team-branch { grid-template-columns: minmax(0, 1fr); }
-#team .team-group[data-role="owner"] .member { min-height: 150px; grid-template-columns: 76px minmax(0, 1fr) 22px; padding: 26px 32px; gap: 24px; }
-#team .team-group[data-role="owner"] .avatar { width: 76px; height: 76px; min-width: 76px; }
-#team .team-group[data-role="owner"] .member-info > strong { font-size: 28px; letter-spacing: -.5px; }
-#team .team-group[data-role="owner"] .member-backdrop { mask-image: linear-gradient(90deg, transparent 25%, #000 100%); }
+.team-group:is([data-role="owner"], [data-role="head staff"]) .team-branch { grid-template-columns: minmax(0, 1fr); }
+#team .team-group:is([data-role="owner"], [data-role="head staff"]) .member { min-height: 150px; grid-template-columns: 76px minmax(0, 1fr) 22px; padding: 26px 32px; gap: 24px; }
+#team .team-group:is([data-role="owner"], [data-role="head staff"]) .avatar { width: 76px; height: 76px; min-width: 76px; }
+#team .team-group:is([data-role="owner"], [data-role="head staff"]) .member-info > strong { font-size: 28px; letter-spacing: -.5px; }
+#team .team-group:is([data-role="owner"], [data-role="head staff"]) .member-backdrop { mask-image: linear-gradient(90deg, transparent 25%, #000 100%); }
+#team .team-group:is([data-role="owner"], [data-role="head staff"]) .member-backdrop::after { background: linear-gradient(90deg, #0d0919e6, #0d091933); }
 #team .team-skeleton { min-height: 116px; }
 #team .team-partial { margin-top: 24px; color: var(--muted); font-size: 12px; }
 @media (max-width: 1100px) { .team-branch { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
@@ -89,9 +90,9 @@
   #team .team-group[data-role="founder"] .member-info > strong { font-size: 20px; letter-spacing: -.3px; gap: 4px; }
   #team .team-group[data-role="founder"] .member-info > small { font-size: 10px; }
   #team .team-group[data-role="founder"] .member-arrow { top: 16px; right: 16px; width: 18px; height: 18px; }
-  #team .team-group[data-role="owner"] .member { min-height: 126px; grid-template-columns: 56px minmax(0, 1fr) 16px; padding: 20px; gap: 14px; }
-  #team .team-group[data-role="owner"] .avatar { width: 56px; height: 56px; min-width: 56px; }
-  #team .team-group[data-role="owner"] .member-info > strong { font-size: 23px; }
+  #team .team-group:is([data-role="owner"], [data-role="head staff"]) .member { min-height: 126px; grid-template-columns: 56px minmax(0, 1fr) 16px; padding: 20px; gap: 14px; }
+  #team .team-group:is([data-role="owner"], [data-role="head staff"]) .avatar { width: 56px; height: 56px; min-width: 56px; }
+  #team .team-group:is([data-role="owner"], [data-role="head staff"]) .member-info > strong { font-size: 23px; }
   #team .team-group[data-role="developer"] .member { display: flex; flex-direction: column; align-items: flex-start; min-height: 150px; padding: 16px; gap: 12px; }
   #team .team-group[data-role="developer"] .member-arrow { position: absolute; right: 16px; top: 16px; }
   #team .team-group[data-role="developer"] .member-info { width: 100%; }

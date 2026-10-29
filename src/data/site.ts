@@ -4,7 +4,8 @@ export const site = {
   name: "SYLUX",
   tagline: "Find your people.",
   discordInvite: import.meta.env.VITE_DISCORD_INVITE || "https://discord.gg/sylux",
-  instagram: "",
+  instagram: "https://www.instagram.com/syluxcommunity_/",
+  tiktok: "https://www.tiktok.com/@syluxcommunity_",
   isDemo: false,
 };
 

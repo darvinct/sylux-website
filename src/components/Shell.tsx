@@ -3,6 +3,10 @@ import {
   ArrowLeft,
   ArrowUpRight,
   DiscordLogo,
+  InstagramLogo,
+  Pause,
+  Play,
+  TiktokLogo,
   X,
 } from "@phosphor-icons/react";
 import { copy, site, type Language } from "../data/site";
@@ -113,32 +117,70 @@ export function Header({
 
 export function Footer({ lang }: { lang: Language }) {
   const t = copy[lang];
+  const id = lang === "id";
+  const [paused, setPaused] = useState(false);
+  const technologies = [
+    { name: "React", logo: "react" },
+    { name: "TypeScript", logo: "typescript" },
+    { name: "Vite", logo: "vite" },
+    { name: "Vercel", logo: "vercel" },
+    { name: "Discord", logo: "discord" },
+    { name: "GitHub", logo: "github" },
+  ];
+  const socials = [
+    { name: "Discord", href: site.discordInvite, Icon: DiscordLogo },
+    { name: "Instagram", href: site.instagram, Icon: InstagramLogo },
+    { name: "TikTok", href: site.tiktok, Icon: TiktokLogo },
+  ];
   return (
-    <footer className="footer wrap">
-      <div className="footer-top">
-        <a href="/" className="wordmark" aria-label={`${site.name} home`}>
-          <BrandLogo />
-        </a>
-        <p>{site.tagline}</p>
-        <div className="footer-links">
+    <footer className="footer">
+      <section className={`footer-technology${paused ? " is-paused" : ""}`} aria-labelledby="footer-built-with">
+        <div className="footer-technology-heading">
+          <p>SYLUX Development</p>
+          <h2 id="footer-built-with">Built with</h2>
+        </div>
+        <div className="footer-technology-window">
+          <div className="footer-technology-track">
+            {[0, 1].map((copyIndex) => <ul className="footer-technology-group" key={copyIndex} aria-hidden={copyIndex === 1 ? true : undefined}>
+              {technologies.map(({ name, logo }) => <li key={name}><img src={`/images/technology/${logo}.svg`} width="36" height="36" alt="" loading="lazy" /><span>{name}</span></li>)}
+            </ul>)}
+          </div>
+        </div>
+        <button className="icon-button footer-motion-toggle" aria-pressed={paused} aria-label={id ? "Jeda animasi logo" : "Pause logo animation"} onClick={() => setPaused(!paused)}>
+          {paused ? <Play size={17} aria-hidden="true" /> : <Pause size={17} aria-hidden="true" />}
+        </button>
+      </section>
+      <div className="footer-top wrap">
+        <div className="footer-brand">
+          <a href="/" className="wordmark" aria-label={`${site.name} home`}><BrandLogo /></a>
+          <p>{id ? "Ruang untuk bertukar pengalaman, mengembangkan bakat, dan mewujudkan ide bersama." : "Share experiences, develop your talents, and bring ideas to life together."}</p>
+          <div className="footer-socials" role="group" aria-label={id ? "Media sosial SYLUX" : "SYLUX social media"}>
+            {socials.map(({ name, href, Icon }) => <a key={name} href={href} target="_blank" rel="noreferrer" aria-label={`${name} SYLUX`}><Icon size={21} aria-hidden="true" /></a>)}
+          </div>
+        </div>
+        <nav className="footer-column" aria-label={id ? "Halaman situs" : "Site pages"}>
+          <h2>{id ? "Halaman" : "Pages"}</h2>
+          {["home", "stats", "team", "portfolio"].map((anchor, index) => <a key={anchor} href={`/#${anchor}`}>{t.nav[index]}</a>)}
           <a href="/information">{t.information}</a>
-          {site.instagram && (
-            <a href={site.instagram} target="_blank" rel="noreferrer">
-              Instagram
-              <ArrowUpRight size={13} />
-            </a>
-          )}
+        </nav>
+        <nav className="footer-column" aria-label={id ? "Tautan komunitas" : "Community links"}>
+          <h2>{id ? "Tautan" : "Links"}</h2>
+          {socials.map(({ name, href }) => <a key={name} href={href} target="_blank" rel="noreferrer">{name === "Discord" ? "Discord Server" : name}</a>)}
+        </nav>
+        <div className="footer-column footer-community">
+          <h2>{id ? "Kolaborasi" : "Collaborate"}</h2>
+          <p>{id ? "Punya ide kegiatan? Mari bicarakan bersama." : "Have an idea for an event? Let's talk about it."}</p>
+          <a className="footer-contact" href={site.discordInvite} target="_blank" rel="noreferrer"><DiscordLogo size={17} aria-hidden="true" />{id ? "Diskusi di Discord" : "Talk on Discord"}</a>
+          <h2>{t.team}</h2>
+          <a href="/#team">{id ? "Kenali anggota dan divisi" : "Meet the people and divisions"}</a>
         </div>
       </div>
-      {site.isDemo && <p className="demo-note">{t.demo}</p>}
-      <div className="footer-bottom">
-        <span>
-          © {new Date().getFullYear()} {site.name}.
-        </span>
-        <span>{t.rights}</span>
-        <a href="/#home">
-          {lang === "id" ? "Kembali ke atas" : "Back to top"} ↑
-        </a>
+      {site.isDemo && <p className="demo-note wrap">{t.demo}</p>}
+      <div className="footer-base">
+        <div className="footer-bottom wrap">
+          <span>© {new Date().getFullYear()} {site.name} Community.</span>
+          <a href="/#home">{id ? "Kembali ke atas" : "Back to top"}<ArrowUpRight size={15} aria-hidden="true" /></a>
+        </div>
       </div>
     </footer>
   );

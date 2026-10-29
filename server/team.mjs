@@ -44,7 +44,7 @@ export async function getTeam(entries = configuredTeam, env = process.env) {
   for (let i = 0; i < ids.length; i += 5) {
     if (i) await new Promise((resolve) => setTimeout(resolve, 300));
     await Promise.all(ids.slice(i, i + 5).map(async (id) => {
-      const detailed = !env.DISCORD_GUILD_ID || entries.some((member) => member.id === id && ["Founder", "Owner"].includes(member.role));
+      const detailed = !env.DISCORD_GUILD_ID || entries.some((member) => member.id === id && ["Founder", "Owner", "Head Staff"].includes(member.role));
       const result = await Promise.allSettled([
         detailed ? requestWithRetry(`/users/${id}`) : Promise.resolve(null),
         env.DISCORD_GUILD_ID

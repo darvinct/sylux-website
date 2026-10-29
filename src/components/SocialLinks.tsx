@@ -7,8 +7,8 @@ export function SocialLinks({ lang }: { lang: Language }) {
   const id = lang === "id";
   const [flipped, setFlipped] = useState(false);
   const accounts = [
-    { name: "Instagram", handle: "@syluxcommunity_", href: "https://www.instagram.com/syluxcommunity_/", Icon: InstagramLogo, className: "instagram", description: id ? "Kabar, dokumentasi, dan momen komunitas SYLUX." : "Updates, photos, and moments from the SYLUX community." },
-    { name: "TikTok", handle: "@syluxcommunity_", href: "https://www.tiktok.com/@syluxcommunity_", Icon: TiktokLogo, className: "tiktok", description: id ? "Cuplikan kegiatan dan cerita seru dari SYLUX." : "Community highlights and stories from SYLUX." },
+    { name: "Instagram", handle: "@syluxcommunity_", href: site.instagram, Icon: InstagramLogo, className: "instagram", description: id ? "Kabar, dokumentasi, dan momen komunitas SYLUX." : "Updates, photos, and moments from the SYLUX community." },
+    { name: "TikTok", handle: "@syluxcommunity_", href: site.tiktok, Icon: TiktokLogo, className: "tiktok", description: id ? "Cuplikan kegiatan dan cerita seru dari SYLUX." : "Community highlights and stories from SYLUX." },
     { name: "Discord", handle: "discord.gg/sylux", href: site.discordInvite, Icon: DiscordLogo, className: "discord", description: id ? "Tempat ngobrol, berbagi musik, dan ikut kegiatan bersama." : "Join conversations, share music, and take part in community events." },
   ];
   return <div className="social-layout">
