@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, ArrowUpRight } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Pause, Play } from "@phosphor-icons/react";
 import { copy, events, type Language } from "../data/site";
 import { Modal } from "./Shell";
 import "../portfolio.css";
@@ -10,6 +10,8 @@ export function Portfolio({ lang }: { lang: Language }) {
   const [filter, setFilter] = useState("All");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [edges, setEdges] = useState({ start: true, end: true });
+  const [autoPaused, setAutoPaused] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const [hovered, setHovered] = useState(false);
   const track = useRef<HTMLDivElement>(null);
   const result = events.filter((event) => filter === "All" || event.category === filter);
   const selected = result.find((event) => event.id === selectedId);
@@ -35,6 +37,31 @@ export function Portfolio({ lang }: { lang: Language }) {
   }, [filter]);
 
   useEffect(() => {
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const change = () => { if (preference.matches) setAutoPaused(true); };
+    preference.addEventListener("change", change);
+    return () => preference.removeEventListener("change", change);
+  }, []);
+
+  useEffect(() => {
+    if (autoPaused || hovered || selectedId || !hasOverflow) return;
+    const timer = window.setInterval(() => {
+      const element = track.current;
+      const first = element?.firstElementChild as HTMLElement | null;
+      if (!element || !first || document.hidden || document.querySelector("dialog[open]")) return;
+      const bounds = element.getBoundingClientRect();
+      if (bounds.bottom <= 0 || bounds.top >= window.innerHeight) return;
+      const end = element.scrollWidth - element.clientWidth;
+      const step = first.offsetWidth + (parseFloat(getComputedStyle(element).columnGap) || 0);
+      const restart = element.scrollLeft >= end - 2;
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      // Advance left one card at a time; restart without animating backwards.
+      element.scrollTo({ left: restart ? 0 : element.scrollLeft + step, behavior: restart || reducedMotion ? "instant" : "smooth" });
+    }, 5000);
+    return () => window.clearInterval(timer);
+  }, [autoPaused, hovered, selectedId, hasOverflow, filter]);
+
+  useEffect(() => {
     if (!selectedId) return;
     // The keyboard gallery follows the same category filter as the card row.
     const visible = events.filter((event) => filter === "All" || event.category === filter);
@@ -50,6 +77,7 @@ export function Portfolio({ lang }: { lang: Language }) {
   }, [selectedId, filter]);
 
   function scrollRow(direction: number) {
+    setAutoPaused(true);
     const element = track.current;
     const first = element?.firstElementChild as HTMLElement | null;
     if (!element || !first) return;
@@ -75,6 +103,11 @@ export function Portfolio({ lang }: { lang: Language }) {
         ))}
       </div>
       <div className="event-track" ref={track} role="group" aria-label={id ? "Galeri event SYLUX" : "SYLUX event gallery"}
+        onPointerEnter={(event) => { if (event.pointerType === "mouse") setHovered(true); }}
+        onPointerLeave={() => setHovered(false)}
+        onPointerDown={(event) => { if (event.pointerType !== "mouse") setAutoPaused(true); }}
+        onFocusCapture={() => setAutoPaused(true)}
+        onWheel={(event) => { if (event.deltaX || event.shiftKey) setAutoPaused(true); }}
         onKeyDown={(event) => {
           if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
           const cards = Array.from(track.current?.querySelectorAll<HTMLButtonElement>(".event-tile") || []);
@@ -99,8 +132,11 @@ export function Portfolio({ lang }: { lang: Language }) {
         ))}
       </div>
       <div className="event-track-footer">
-        <p>{hasOverflow ? (id ? "Geser untuk melihat event lainnya. Klik foto untuk memperbesar." : "Swipe to see more events. Click a photo to enlarge it.") : (id ? "Klik foto untuk memperbesar dokumentasi." : "Click a photo to enlarge the documentation.")}</p>
+        <p>{hasOverflow ? (!autoPaused ? (id ? "Event bergeser otomatis ke kiri. Klik foto untuk memperbesar." : "Events scroll left automatically. Click a photo to enlarge it.") : (id ? "Geser untuk melihat event lainnya. Klik foto untuk memperbesar." : "Swipe to see more events. Click a photo to enlarge it.")) : (id ? "Klik foto untuk memperbesar dokumentasi." : "Click a photo to enlarge the documentation.")}</p>
         {hasOverflow && <div className="event-track-controls" role="group" aria-label={id ? "Navigasi galeri event" : "Event gallery navigation"}>
+          <button className="icon-button" onClick={() => setAutoPaused(!autoPaused)} aria-label={autoPaused ? (id ? "Lanjutkan pergeseran otomatis" : "Resume automatic scrolling") : (id ? "Jeda pergeseran otomatis" : "Pause automatic scrolling")}>
+            {autoPaused ? <Play size={18} aria-hidden="true" /> : <Pause size={18} aria-hidden="true" />}
+          </button>
           <button className="icon-button" disabled={edges.start} onClick={() => scrollRow(-1)} aria-label={id ? "Geser ke event sebelumnya" : "Scroll to previous events"}><ArrowLeft size={20} /></button>
           <button className="icon-button" disabled={edges.end} onClick={() => scrollRow(1)} aria-label={id ? "Geser ke event berikutnya" : "Scroll to next events"}><ArrowRight size={20} /></button>
         </div>}
