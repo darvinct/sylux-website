@@ -64,7 +64,7 @@ export function useTeam() {
             } catch { /* Storage may be disabled. */ }
           }
           setPartial(Boolean(data.partial));
-          setState(keepingCached || data.members.length ? "success" : "empty");
+          setState(keepingCached || data.members.length ? "success" : data.partial ? "error" : "empty");
         }
       })
       .catch(() => {
