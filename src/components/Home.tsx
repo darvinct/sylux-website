@@ -17,7 +17,7 @@ import { Stats, useCommunity } from "./Stats";
 import { Team, useTeam } from "./Team";
 import { SocialLinks } from "./SocialLinks";
 
-function TypewriterIntro({ text }: { text: string }) {
+function TypewriterIntro({ text, ready }: { text: string; ready: boolean }) {
   const [length, setLength] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches ? text.length : 0);
   useEffect(() => {
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -27,6 +27,7 @@ function TypewriterIntro({ text }: { text: string }) {
       if (preference.matches) { setLength(text.length); return; }
       let position = 0;
       setLength(0);
+      if (!ready) return;
       const type = () => {
         position += 1;
         setLength(position);
@@ -37,7 +38,7 @@ function TypewriterIntro({ text }: { text: string }) {
     start();
     preference.addEventListener("change", start);
     return () => { window.clearTimeout(timer); preference.removeEventListener("change", start); };
-  }, [text]);
+  }, [text, ready]);
   return (
     <p className="hero-intro">
       <span className="sr-only">{text}</span>
@@ -47,7 +48,7 @@ function TypewriterIntro({ text }: { text: string }) {
   );
 }
 
-export default function Home({ lang }: { lang: Language }) {
+export default function Home({ lang, ready = true }: { lang: Language; ready?: boolean }) {
   const t = copy[lang];
   const id = lang === "id";
   const community = useCommunity();
@@ -67,7 +68,7 @@ export default function Home({ lang }: { lang: Language }) {
           </h1>
           <p className="hero-tagline">{t.heroTagline}</p>
           <p className="hero-welcome">{t.eyebrow}</p>
-          <TypewriterIntro key={lang} text={t.intro} />
+          <TypewriterIntro key={lang} text={t.intro} ready={ready} />
           <div className="hero-presence">
             {directory.members.length > 0 && (
               <a className="hero-members" href="#team" aria-label={id ? "Kenali tim SYLUX" : "Meet the SYLUX team"}>

@@ -1,9 +1,10 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { IconContext } from "@phosphor-icons/react";
 import { copy, site, type Language } from "./data/site";
 import { Footer, Header } from "./components/Shell";
 import Home from "./components/Home";
+import { Opening, shouldPlayOpening } from "./components/Opening";
 import {
   AuthProvider,
   LoginPage,
@@ -23,6 +24,14 @@ function App() {
     }
   });
   const path = window.location.pathname.replace(/\/$/, "") || "/";
+  const [opening, setOpening] = useState(() => path === "/" && shouldPlayOpening());
+  const completeOpening = useCallback(() => {
+    const returnFocus = document.activeElement?.closest(".opening");
+    setOpening(false);
+    if (returnFocus) {
+      requestAnimationFrame(() => document.getElementById("content")?.focus({ preventScroll: true }));
+    }
+  }, []);
   useEffect(() => {
     document.documentElement.lang = lang;
     try {
@@ -41,47 +50,50 @@ function App() {
   return (
     <AuthProvider>
       <IconContext.Provider value={{ weight: "regular" }}>
-        <a className="skip-link" href="#content">
-          {lang === "id" ? "Lewati ke konten" : "Skip to content"}
-        </a>
-        <Header lang={lang} setLang={setLang} tool={path !== "/"} />
-        <div id="content" tabIndex={-1}>
-          <Suspense
-            fallback={
-              <main className="tool-page wrap" aria-busy="true">
-                <div className="loading-block" />
-                <p role="status">
-                  {lang === "id" ? "Menyiapkan halaman…" : "Loading page…"}
-                </p>
-              </main>
-            }
-          >
-            {path === "/" ? (
-              <Home lang={lang} />
-            ) : path === "/information" ? (
-              <Information lang={lang} />
-            ) : path === "/preview-discord" ? (
-              <SharePreview lang={lang} />
-            ) : path === "/login" ? (
-              <LoginPage lang={lang} />
-            ) : path === "/account" ? (
-              <AccountPage lang={lang} />
-            ) : (
-              <main className="tool-page wrap not-found">
-                <span>404</span>
-                <h1>
-                  {lang === "id"
-                    ? "Halaman belum ditemukan."
-                    : "Page not found."}
-                </h1>
-                <a href="/" className="button primary">
-                  {copy[lang].nav[0]}
-                </a>
-              </main>
-            )}
-          </Suspense>
+        <div inert={opening}>
+          <a className="skip-link" href="#content">
+            {lang === "id" ? "Lewati ke konten" : "Skip to content"}
+          </a>
+          <Header lang={lang} setLang={setLang} tool={path !== "/"} />
+          <div id="content" tabIndex={-1}>
+            <Suspense
+              fallback={
+                <main className="tool-page wrap" aria-busy="true">
+                  <div className="loading-block" />
+                  <p role="status">
+                    {lang === "id" ? "Menyiapkan halaman…" : "Loading page…"}
+                  </p>
+                </main>
+              }
+            >
+              {path === "/" ? (
+                <Home lang={lang} ready={!opening} />
+              ) : path === "/information" ? (
+                <Information lang={lang} />
+              ) : path === "/preview-discord" ? (
+                <SharePreview lang={lang} />
+              ) : path === "/login" ? (
+                <LoginPage lang={lang} />
+              ) : path === "/account" ? (
+                <AccountPage lang={lang} />
+              ) : (
+                <main className="tool-page wrap not-found">
+                  <span>404</span>
+                  <h1>
+                    {lang === "id"
+                      ? "Halaman belum ditemukan."
+                      : "Page not found."}
+                  </h1>
+                  <a href="/" className="button primary">
+                    {copy[lang].nav[0]}
+                  </a>
+                </main>
+              )}
+            </Suspense>
+          </div>
+          <Footer lang={lang} />
         </div>
-        <Footer lang={lang} />
+        {opening && <Opening lang={lang} onComplete={completeOpening} />}
       </IconContext.Provider>
     </AuthProvider>
   );
