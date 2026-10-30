@@ -29,8 +29,8 @@ Halaman komunitas bersifat publik. Route `/login` dan `/account` tersedia untuk 
 Gunakan Node.js 24 LTS dan npm.
 
 ```sh
-git clone https://github.com/darvinct/website-komunitasi.git
-cd website-komunitasi
+git clone https://github.com/darvinct/sylux-website.git
+cd sylux-website
 npm ci
 cp .env.example .env.local
 ```
