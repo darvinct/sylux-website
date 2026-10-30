@@ -1,29 +1,12 @@
 @font-face {
-  font-family: Outfit;
-  src: url("/fonts/outfit-400.ttf") format("truetype");
-  font-weight: 400;
-  font-display: swap;
-}
-@font-face {
-  font-family: Outfit;
-  src: url("/fonts/outfit-500.ttf") format("truetype");
-  font-weight: 500;
-  font-display: swap;
-}
-@font-face {
-  font-family: Outfit;
-  src: url("/fonts/outfit-600.ttf") format("truetype");
-  font-weight: 600;
-  font-display: swap;
-}
-@font-face {
-  font-family: Outfit;
-  src: url("/fonts/outfit-700.ttf") format("truetype");
-  font-weight: 700;
+  font-family: Satoshi;
+  src: url("/fonts/satoshi-variable.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: normal;
   font-display: swap;
 }
 :root {
-  font-family: Outfit, Arial, sans-serif;
+  font-family: Satoshi, Arial, sans-serif;
   color: #f8f5ff;
   background: #07060c;
   font-synthesis: none;
@@ -75,6 +58,7 @@ a {
   touch-action: manipulation;
 }
 button {
+  font-weight: 500;
   cursor: pointer;
 }
 button:disabled {
@@ -105,11 +89,11 @@ p {
 h1,
 h2,
 h3 {
-  font-weight: 500;
+  font-weight: 600;
 }
 h2 {
   font-size: clamp(30px, 3.5vw, 46px);
-  letter-spacing: -1.5px;
+  letter-spacing: -.03em;
   line-height: 1.16;
 }
 h3 {
@@ -658,11 +642,12 @@ textarea:focus-visible {
   margin-bottom: 24px;
 }
 .about h2 {
-  font-size: clamp(30px, 3.2vw, 43px);
+  font-size: clamp(28px, 3.2vw, 44px);
 }
 .about-copy > p {
   margin-top: 20px;
-  font-size: 15px;
+  font-size: 16px;
+  line-height: 1.75;
 }
 .about-portfolio-link {
   display: inline-flex;
@@ -1531,10 +1516,10 @@ textarea {
     gap: 40px;
   }
   .about h2 {
-    font-size: 36px;
+    font-size: clamp(28px, 8.2vw, 32px);
   }
   .about-copy > p {
-    font-size: 14px;
+    font-size: 15px;
   }
   .activity-grid {
     gap: 28px 20px;

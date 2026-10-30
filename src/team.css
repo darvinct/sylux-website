@@ -13,7 +13,7 @@
 #team .team-toolbar { grid-area: 1 / 2; display: flex; flex-direction: column; align-items: stretch; gap: 12px; margin: 0; align-self: center; }
 #team .search { flex: none; width: 100%; border-radius: 10px; background: #ffffff04; border-color: #c8adff30; }
 #team .search input { font-size: 13px; }
-#team .search kbd { font: 11px Outfit, sans-serif; padding: 1px 5px; border: 1px solid var(--border); border-radius: 4px; color: var(--muted); }
+#team .search kbd { font: 11px Satoshi, sans-serif; padding: 1px 5px; border: 1px solid var(--border); border-radius: 4px; color: var(--muted); }
 .team-controls { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
 #team .team-controls select { height: 42px; border-radius: 999px; padding-block: 6px; font-size: 12px; background-color: #100b1a; }
 .team-sort { display: flex; gap: 2px; padding: 3px; border: 1px solid #c8adff26; border-radius: 999px; background: #ffffff03; }

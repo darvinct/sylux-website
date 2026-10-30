@@ -29,5 +29,5 @@ Daftar event dan referensi gambar berada di `src/data/site.ts`.
 
 ## Font dan ikon
 
-- [Outfit](https://github.com/Outfitio/Outfit-Fonts) disimpan lokal di `public/fonts/`, dengan bobot 400, 500, 600, dan 700. Lisensi SIL Open Font License ada di `public/fonts/OFL.txt`.
+- [Satoshi](https://www.fontshare.com/fonts/satoshi) memakai font variabel resmi dengan bobot 300 sampai 900. `scripts/prepare-fonts.mjs` mengambil berkas WOFF2 tanpa perubahan dari CDN Fontshare saat `dev` atau `build`, lalu menyimpannya di `public/fonts/` untuk disajikan lokal. Berkas font diabaikan Git. Lisensi ITF Free Font License ada di `public/fonts/SATOSHI-FFL.txt`.
 - Ikon memakai [Phosphor](https://phosphoricons.com/) melalui `@phosphor-icons/react`, dengan lisensi MIT.

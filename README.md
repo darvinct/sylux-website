@@ -15,7 +15,9 @@ Source website komunitas SYLUX: profil tim, dokumentasi event, statistik server,
 
 ## Tentang proyek
 
-Frontend memakai React, TypeScript, dan Vite. API berjalan sebagai Vercel Functions. Font Outfit disimpan lokal, ikon memakai Phosphor, dan tampilan ditulis dengan CSS tanpa framework UI.
+Frontend memakai React, TypeScript, dan Vite. API berjalan sebagai Vercel Functions. Font Satoshi disajikan lokal, ikon memakai Phosphor, dan tampilan ditulis dengan CSS tanpa framework UI.
+
+`dev` dan `build` menyiapkan font dari CDN resmi Fontshare lewat `scripts/prepare-fonts.mjs`. Proses pertama memerlukan koneksi internet; berikutnya memakai berkas lokal yang lolos pemeriksaan hash. Berkas font diabaikan Git agar tidak didistribusikan ulang lewat repository publik.
 
 - **Tim:** profil Discord, banner jika tersedia, pencarian, filter peran, dan urutan A–Z.
 - **Server Stats:** perkiraan jumlah anggota dan pengguna aktif dari undangan publik Discord.
@@ -131,4 +133,4 @@ Isi environment variables untuk Production, pastikan `SITE_URL` sesuai domain ya
 
 ## Aset
 
-Identitas SYLUX, maskot, dan dokumentasi kegiatan berasal dari pengelola komunitas. Font [Outfit](https://github.com/Outfitio/Outfit-Fonts) memakai SIL Open Font License; salinannya ada di [`public/fonts/OFL.txt`](public/fonts/OFL.txt). Ikon [Phosphor](https://phosphoricons.com/) memakai lisensi MIT.
+Identitas SYLUX, maskot, dan dokumentasi kegiatan berasal dari pengelola komunitas. Font [Satoshi](https://www.fontshare.com/fonts/satoshi) memakai ITF Free Font License; salinannya ada di [`public/fonts/SATOSHI-FFL.txt`](public/fonts/SATOSHI-FFL.txt). Ikon [Phosphor](https://phosphoricons.com/) memakai lisensi MIT.

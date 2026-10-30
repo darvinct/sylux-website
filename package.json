@@ -4,9 +4,9 @@
   "version": "1.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
+    "dev": "node scripts/prepare-fonts.mjs && vite --host 0.0.0.0",
     "dev:api": "node --env-file-if-exists=.env.local server/dev.mjs",
-    "build": "tsc -b && vite build",
+    "build": "node scripts/prepare-fonts.mjs && tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check": "node --experimental-strip-types scripts/check.mjs && node scripts/check-auth.mjs && node scripts/check-community.mjs && node --experimental-strip-types scripts/check-share.mjs"
   },

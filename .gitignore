@@ -5,3 +5,6 @@ dist/
 !.env.example
 *.tsbuildinfo
 test-results/
+
+# Fontshare permits self-hosting; fetch the font at build time.
+/public/fonts/satoshi-variable.woff2
