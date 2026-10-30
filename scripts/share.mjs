@@ -64,6 +64,7 @@ export function buildShare(origin = DEFAULT_ORIGIN, invite = "https://discord.gg
   };
 }
 
+/** @returns {import("vite").Plugin} */
 export function discordSharePlugin() {
   let invite;
   return {
