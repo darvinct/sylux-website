@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -9,6 +9,7 @@ import {
 } from "@phosphor-icons/react";
 import { copy, site, type Language } from "../data/site";
 import { inviteCode } from "../lib/utils";
+import "../header.css";
 
 export function BrandLogo({ className = "" }: { className?: string }) {
   return <img className={`brand-logo ${className}`} src="/images/sylux-logo.webp" alt={site.name} width="2158" height="729" />;
@@ -51,8 +52,20 @@ export function Header({
   tool?: boolean;
 }) {
   const t = copy[lang];
+  const marker = useRef<HTMLDivElement>(null);
+  const [compact, setCompact] = useState(false);
+  useEffect(() => {
+    if (!marker.current) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      setCompact(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+    });
+    observer.observe(marker.current);
+    return () => observer.disconnect();
+  }, []);
   return (
-    <header className="header">
+    <>
+    <div ref={marker} className="header-scroll-marker" aria-hidden="true" />
+    <header className={`header floating-header${compact ? " is-compact" : ""}`}>
       <a className="wordmark" href={tool ? "/#home" : "#home"} aria-label={`${site.name} home`}>
         <BrandLogo />
       </a>
@@ -85,6 +98,7 @@ export function Header({
         </div>
       </div>
     </header>
+    </>
   );
 }
 

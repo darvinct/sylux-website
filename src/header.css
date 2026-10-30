@@ -1,0 +1,85 @@
+/* The marker changes header state without a scroll handler or page reflow. */
+.header-scroll-marker { position: absolute; top: 96px; left: 0; width: 1px; height: 1px; pointer-events: none; }
+.header.floating-header {
+  top: calc(16px + var(--safe-top));
+  left: max(0px, env(safe-area-inset-left));
+  right: max(0px, env(safe-area-inset-right));
+  width: min(calc(100% - 40px), 1180px);
+  height: 76px;
+  margin-inline: auto;
+  padding: 0 24px;
+  gap: 24px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto;
+  border: 1px solid #c8adff30;
+  border-radius: 18px;
+  background: #100b1af5;
+  box-shadow: 0 12px 36px #0004, inset 0 1px 0 #ffffff07;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  transition: width .45s cubic-bezier(.22, 1, .36, 1), height .4s cubic-bezier(.22, 1, .36, 1), grid-template-rows .4s ease, padding .4s ease, background .3s ease, box-shadow .3s ease;
+}
+.header.floating-header.is-compact {
+  width: min(calc(100% - 40px), 1040px);
+  height: 64px;
+  padding-inline: 20px;
+  background: #100b1afa;
+  box-shadow: 0 8px 28px #0006, inset 0 1px 0 #ffffff07;
+}
+.header.floating-header .wordmark { grid-column: 1; grid-row: 1; min-height: 44px; }
+.header.floating-header .brand-logo { width: 110px; transition: width .4s cubic-bezier(.22, 1, .36, 1); }
+.header.floating-header.is-compact .brand-logo { width: 96px; }
+.header.floating-header .header-content { grid-column: 2; grid-row: 1; }
+.header.floating-header .header-actions { grid-column: 3; grid-row: 1; gap: 8px; }
+.header.floating-header .nav { display: flex; justify-content: flex-end; gap: 2px; }
+.header.floating-header .nav > a {
+  color: #e1d9ec;
+  font-size: 14px;
+  font-weight: 500;
+  min-height: 44px;
+  padding: 10px;
+  border-radius: 8px;
+  transition: color .2s ease, background .2s ease;
+}
+.header.floating-header .nav > a:hover,
+.header.floating-header .nav > a:focus-visible { color: #fff; background: #c8adff16; }
+.header.floating-header .nav > a[aria-current="page"] { color: #fff; background: #c8adff12; }
+.header.floating-header .language { gap: 0; }
+.header.floating-header .language button { color: #d0c6df; font-size: 12px; }
+.header.floating-header .language button[aria-pressed="true"] { color: #fff; }
+@media (min-width: 861px) and (max-width: 1000px) {
+  .header.floating-header { gap: 12px; padding-inline: 18px; }
+  .header.floating-header .nav > a { padding-inline: 8px; font-size: 13px; }
+}
+@media (max-width: 860px) {
+  :root { --nav-clearance: calc(156px + var(--safe-top)); }
+  .header.floating-header,
+  .header.floating-header.is-compact {
+    top: calc(10px + var(--safe-top));
+    width: calc(100% - 24px);
+    padding: 4px 12px 8px;
+    gap: 0 12px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 56px 44px;
+    height: 114px;
+    border-radius: 16px;
+  }
+  .header.floating-header.is-compact { height: 102px; grid-template-rows: 44px 44px; }
+  .header.floating-header .header-actions { grid-column: 2; }
+  .header.floating-header .header-content { grid-column: 1 / -1; grid-row: 2; width: 100%; }
+  .header.floating-header .nav { position: static; flex-direction: row; align-items: center; justify-content: safe center; gap: 2px; width: 100%; overflow-x: auto; overflow-y: hidden; padding: 0; border: 0; background: transparent; }
+  .header.floating-header .nav > a { flex-shrink: 0; padding: 0 8px; font-size: 13px; }
+  .header.floating-header .brand-logo { width: 100px; }
+  .header.floating-header.is-compact .brand-logo { width: 88px; }
+}
+@media (max-width: 420px) {
+  .header.floating-header, .header.floating-header.is-compact { width: calc(100% - 16px); padding-inline: 8px; }
+  .header.floating-header .nav { gap: 0; }
+  .header.floating-header .nav > a { padding-inline: 5px; font-size: 12px; }
+}
+@media (max-width: 359px) {
+  .header.floating-header .nav > a { padding-inline: 3px; font-size: 11.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .header.floating-header, .header.floating-header * { transition: none; }
+}
