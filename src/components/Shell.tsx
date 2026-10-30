@@ -62,6 +62,9 @@ export function Header({
           className="nav"
           aria-label={lang === "id" ? "Navigasi utama" : "Main navigation"}
           id="main-nav"
+          onFocusCapture={(event) => {
+            if (event.target instanceof HTMLAnchorElement) event.target.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "instant" });
+          }}
         >
           {["home", "stats", "team", "portfolio"].map((id, i) => (
             <a

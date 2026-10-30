@@ -32,19 +32,20 @@
   .header.site-header .nav > a { padding-inline: 8px; font-size: 13px; }
 }
 @media (max-width: 860px) {
-  :root { --nav-clearance: calc(136px + var(--safe-top)); }
-  .header.site-header { height: calc(112px + var(--safe-top)); padding: var(--safe-top) max(16px, env(safe-area-inset-right)) 8px max(16px, env(safe-area-inset-left)); gap: 0 12px; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: 60px 44px; }
-  .header.site-header .header-actions { grid-column: 2; }
-  .header.site-header .header-content { grid-column: 1 / -1; grid-row: 2; width: 100%; }
-  .header.site-header .nav { position: static; flex-direction: row; align-items: center; justify-content: safe center; gap: 2px; width: 100%; overflow-x: auto; overflow-y: hidden; padding: 0; border: 0; background: transparent; }
+  html:root { --nav-clearance: calc(88px + var(--safe-top)); }
+  .header.site-header { height: calc(64px + var(--safe-top)); padding: var(--safe-top) max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left)); gap: 10px; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto; }
+  .header.site-header .wordmark { grid-column: 1; grid-row: 1; }
+  .header.site-header .header-content { grid-column: 2; grid-row: 1; width: 100%; min-width: 0; }
+  .header.site-header .header-actions { grid-column: 3; grid-row: 1; }
+  .header.site-header .nav { position: static; flex-direction: row; align-items: center; justify-content: flex-start; flex-wrap: nowrap; gap: 2px; width: 100%; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; padding: 0; border: 0; background: transparent; scroll-padding-inline: 6px; }
   .header.site-header .nav > a { flex-shrink: 0; padding: 0 8px; font-size: 13px; }
-  .header.site-header .brand-logo { width: 100px; }
+  .header.site-header .brand-logo { width: 80px; }
+  .header.site-header .language button { min-width: 30px; min-height: 44px; padding-inline: 5px; }
 }
 @media (max-width: 420px) {
+  .header.site-header { gap: 6px; padding-left: max(8px, env(safe-area-inset-left)); padding-right: max(8px, env(safe-area-inset-right)); }
+  .header.site-header .brand-logo { width: 64px; }
   .header.site-header .nav { gap: 0; }
-  .header.site-header .nav > a { padding-inline: 5px; font-size: 12px; }
-}
-@media (max-width: 359px) {
-  .header.site-header { padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
-  .header.site-header .nav > a { padding-inline: 3px; font-size: 11.5px; }
+  .header.site-header .nav > a { padding-inline: 6px; font-size: 12px; }
+  .header.site-header .language button { min-width: 28px; font-size: 11px; }
 }
