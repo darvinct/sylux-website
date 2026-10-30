@@ -56,8 +56,8 @@ export function Portfolio({ lang }: { lang: Language }) {
       const end = element.scrollWidth - element.clientWidth;
       const step = first.offsetWidth + (parseFloat(getComputedStyle(element).columnGap) || 0);
       const restart = element.scrollLeft >= end - 2;
-      // Advance left one card at a time; restart without animating backwards.
-      element.scrollTo({ left: restart ? 0 : element.scrollLeft + step, behavior: restart ? "instant" : "smooth" });
+      // Keep both card advances and the return to the first event smooth.
+      element.scrollTo({ left: restart ? 0 : element.scrollLeft + step, behavior: "smooth" });
     }, 5000);
     return () => window.clearInterval(timer);
   }, [reducedMotion, hovered, selectedId, hasOverflow, filter]);
@@ -87,7 +87,10 @@ export function Portfolio({ lang }: { lang: Language }) {
     const first = element?.firstElementChild as HTMLElement | null;
     if (!element || !first) return;
     const gap = parseFloat(getComputedStyle(element).columnGap) || 0;
-    element.scrollBy({ left: direction * (first.offsetWidth + gap), behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+    // Let pointer focus finish scrolling the page before animating this row.
+    requestAnimationFrame(() => {
+      if (element.isConnected) element.scrollBy({ left: direction * (first.offsetWidth + gap), behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+    });
   }
 
   function movePhoto(direction: number) {
@@ -122,7 +125,7 @@ export function Portfolio({ lang }: { lang: Language }) {
           const next = event.key === "Home" ? 0 : event.key === "End" ? cards.length - 1 : Math.max(0, Math.min(cards.length - 1, index + (event.key === "ArrowRight" ? 1 : -1)));
           cards[next].focus({ preventScroll: true });
           const element = track.current!;
-          element.scrollTo({ left: element.scrollLeft + cards[next].getBoundingClientRect().left - element.getBoundingClientRect().left, behavior: "instant" });
+          element.scrollTo({ left: element.scrollLeft + cards[next].getBoundingClientRect().left - element.getBoundingClientRect().left, behavior: reducedMotion ? "instant" : "smooth" });
         }}>
         {result.map((event) => (
           <button key={event.id} className="event-tile" aria-haspopup="dialog" onClick={() => setSelectedId(event.id)}>
@@ -138,7 +141,7 @@ export function Portfolio({ lang }: { lang: Language }) {
       </div>
       <div className="event-track-footer">
         <p>{hasOverflow ? (!reducedMotion ? (id ? "Event bergeser otomatis ke kiri. Klik foto untuk memperbesar." : "Events scroll left automatically. Click a photo to enlarge it.") : (id ? "Geser untuk melihat event lainnya. Klik foto untuk memperbesar." : "Swipe to see more events. Click a photo to enlarge it.")) : (id ? "Klik foto untuk memperbesar dokumentasi." : "Click a photo to enlarge the documentation.")}</p>
-        {hasOverflow && <div className="event-track-controls" role="group" aria-label={id ? "Navigasi galeri event" : "Event gallery navigation"}>
+        {hasOverflow && <div className="event-track-controls" onMouseDown={(event) => event.preventDefault()} role="group" aria-label={id ? "Navigasi galeri event" : "Event gallery navigation"}>
           <button className="icon-button" disabled={edges.start} onClick={() => scrollRow(-1)} aria-label={id ? "Geser ke event sebelumnya" : "Scroll to previous events"}><ArrowLeft size={20} /></button>
           <button className="icon-button" disabled={edges.end} onClick={() => scrollRow(1)} aria-label={id ? "Geser ke event berikutnya" : "Scroll to next events"}><ArrowRight size={20} /></button>
         </div>}

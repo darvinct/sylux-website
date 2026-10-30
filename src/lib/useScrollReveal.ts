@@ -24,12 +24,12 @@ export function useScrollReveal(selector: string) {
       if (!root || preference.matches) return;
       observer = new IntersectionObserver((entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer?.unobserve(entry.target);
-          }
+          // Keep content above the viewport readable. Reset it only as it
+          // leaves the lower edge, so scrolling back down replays the entrance.
+          const above = entry.boundingClientRect.top < (entry.rootBounds?.top ?? 0);
+          entry.target.classList.toggle("is-visible", entry.isIntersecting || above);
         }
-      }, { threshold: .08, rootMargin: "0px 0px -24px 0px" });
+      }, { threshold: 0, rootMargin: "0px 0px -48px 0px" });
       function register() {
         for (const element of marked) {
           if (!root?.contains(element)) {

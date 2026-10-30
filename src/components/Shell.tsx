@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -50,35 +50,10 @@ export function Header({
   setLang: (lang: Language) => void;
   tool?: boolean;
 }) {
-  const [hidden, setHidden] = useState(false);
-  const header = useRef<HTMLElement>(null);
   const t = copy[lang];
-  useEffect(() => {
-    let previousY = window.scrollY;
-    let direction = 0;
-    let distance = 0;
-    const scroll = () => {
-      const currentY = Math.max(0, Math.min(window.scrollY, document.documentElement.scrollHeight - window.innerHeight));
-      const delta = currentY - previousY;
-      previousY = currentY;
-      if (currentY <= 96 || header.current?.querySelector(":focus-visible")) {
-        setHidden(false);
-        distance = 0;
-        return;
-      }
-      if (!delta) return;
-      const nextDirection = Math.sign(delta);
-      if (nextDirection !== direction) distance = 0;
-      direction = nextDirection;
-      distance += Math.abs(delta);
-      if (distance >= (direction > 0 ? 16 : 8)) setHidden(direction > 0);
-    };
-    window.addEventListener("scroll", scroll, { passive: true });
-    return () => window.removeEventListener("scroll", scroll);
-  }, []);
   return (
-    <header ref={header} className={`header${hidden ? " is-hidden" : ""}`} onFocusCapture={() => setHidden(false)}>
-      <a className="wordmark" href="/" aria-label={`${site.name} home`}>
+    <header className="header">
+      <a className="wordmark" href={tool ? "/#home" : "#home"} aria-label={`${site.name} home`}>
         <BrandLogo />
       </a>
       <div className="header-content" id="header-content">
@@ -125,7 +100,7 @@ export function Footer({ lang }: { lang: Language }) {
     <footer className="footer">
       <div className="footer-top wrap">
         <div className="footer-brand">
-          <a href="/" className="wordmark" aria-label={`${site.name} home`}><BrandLogo /></a>
+          <a href="/#home" className="wordmark" aria-label={`${site.name} home`}><BrandLogo /></a>
           <p>{id ? "Ruang untuk bertukar pengalaman, mengembangkan bakat, dan mewujudkan ide bersama." : "Share experiences, develop your talents, and bring ideas to life together."}</p>
           <div className="footer-socials" role="group" aria-label={id ? "Media sosial SYLUX" : "SYLUX social media"}>
             {socials.map(({ name, href, Icon }) => <a key={name} href={href} target="_blank" rel="noreferrer" aria-label={`${name} SYLUX`}><Icon size={21} aria-hidden="true" /></a>)}

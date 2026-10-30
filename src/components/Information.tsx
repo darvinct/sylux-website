@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { Mascot } from "./Mascot";
 import {
   ArrowDown, ArrowLeft, ArrowRight, Atom, Buildings, Camera, Code, Confetti, Crown,
   FirstAidKit, GameController, Handshake, House, Lightning, Medal, Megaphone,
@@ -7,6 +8,7 @@ import {
 import { legacyRole, levellingRoles, sentinelDivisions } from "../data/roles";
 import { copy, type Language } from "../data/site";
 import { useScrollReveal } from "../lib/useScrollReveal";
+import { useRoleScroller } from "../lib/useRoleScroller";
 import { BrandLogo, JoinButton } from "./Shell";
 import "../information.css";
 
@@ -56,44 +58,10 @@ export default function Information({ lang }: { lang: Language }) {
   const roleScene = useRef<HTMLElement>(null);
   const roleRange = useRef<HTMLInputElement>(null);
   const dragging = useRef<{ x: number; left: number } | null>(null);
-  useEffect(() => {
-    const scene = roleScene.current;
-    const element = track.current;
-    if (!scene || !element) return;
-    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let frame = 0;
-    const draw = () => {
-      frame = 0;
-      if (!window.matchMedia("(min-width: 900px)").matches || motion.matches) return;
-      const rect = scene.getBoundingClientRect();
-      const progress = Math.min(1, Math.max(0, -rect.top / Math.max(1, scene.offsetHeight - window.innerHeight)));
-      element.scrollLeft = progress * (element.scrollWidth - element.clientWidth);
-    };
-    const update = () => { if (!frame) frame = requestAnimationFrame(draw); };
-    const sync = () => {
-      const progress = element.scrollLeft / Math.max(1, element.scrollWidth - element.clientWidth);
-      if (roleRange.current) roleRange.current.value = String(Math.round(progress * 1000));
-    };
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    element.addEventListener("scroll", sync, { passive: true });
-    motion.addEventListener("change", update);
-    update(); sync();
-    return () => { cancelAnimationFrame(frame); window.removeEventListener("scroll", update); window.removeEventListener("resize", update); element.removeEventListener("scroll", sync); motion.removeEventListener("change", update); };
-  }, []);
-  function moveCommunity(progress: number) {
-    const element = track.current;
-    const scene = roleScene.current;
-    if (!element || !scene) return;
-    const clamped = Math.min(1, Math.max(0, progress));
-    element.scrollLeft = clamped * (element.scrollWidth - element.clientWidth);
-    if (window.matchMedia("(min-width: 900px)").matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      window.scrollTo({ top: window.scrollY + scene.getBoundingClientRect().top + clamped * (scene.offsetHeight - window.innerHeight), behavior: "instant" });
-    }
-  }
+  const moveCommunity = useRoleScroller(roleScene, track, roleRange);
   function stepCommunity(direction: number) {
     const element = track.current;
-    if (element) moveCommunity((element.scrollLeft + direction * element.clientWidth * .8) / Math.max(1, element.scrollWidth - element.clientWidth));
+    if (element) moveCommunity((element.scrollLeft + direction * element.clientWidth * .8) / Math.max(1, element.scrollWidth - element.clientWidth), true);
   }
 
   const [edges, setEdges] = useState({ start: true, end: false });
@@ -145,7 +113,7 @@ export default function Information({ lang }: { lang: Language }) {
   }
   const role = sentinelDivisions[selected];
   const Icon = icons[role.id];
-  const page = useScrollReveal(".information-section-title, .information-note, .information-cta");
+  const page = useScrollReveal(".information-section-title, .information-note, .information-legacy, .community-mascot-stage, .community-showcase-copy");
   return (
     <main className="information-page motion-page" ref={page}>
       <div className="reading-progress" aria-hidden="true" />
@@ -210,7 +178,13 @@ export default function Information({ lang }: { lang: Language }) {
             const element = event.currentTarget;
             moveCommunity((dragging.current.left + dragging.current.x - event.clientX) / Math.max(1, element.scrollWidth - element.clientWidth));
           }}
-          onPointerUp={() => { dragging.current = null; }} onPointerCancel={() => { dragging.current = null; }}
+          onPointerUp={() => { dragging.current = null; }} onPointerCancel={() => { dragging.current = null; }} onLostPointerCapture={() => { dragging.current = null; }}
+          onKeyDown={(event) => {
+            if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+            event.preventDefault();
+            if (event.key === "Home" || event.key === "End") moveCommunity(event.key === "Home" ? 0 : 1, true);
+            else stepCommunity(event.key === "ArrowRight" ? 1 : -1);
+          }}
           role="region" aria-label={id ? "Tier levelling SYLUX" : "SYLUX levelling tiers"} tabIndex={0}>
           {levellingRoles.map((item) => {
             const ItemIcon = icons[item.id];
@@ -247,7 +221,7 @@ export default function Information({ lang }: { lang: Language }) {
       </section>
       <p className="information-note information-shell">{id ? "Penamaan role dan akses mengikuti pengaturan serta pengumuman terbaru di server SYLUX." : "Role names and access follow the latest settings and announcements in the SYLUX server."}</p>
       <section className="wrap community-showcase" aria-labelledby="information-join-title">
-        <div className="community-mascot-stage" aria-hidden="true"><img src="/images/sylux-community-mascot-blue.webp" width="1536" height="865" alt="" loading="lazy" /></div>
+        <Mascot />
         <div className="community-showcase-copy">
           <h2 id="information-join-title"><span>Let’s go.</span>{id ? "Saatnya gabung SYLUX." : "Come join us at SYLUX."}</h2>
           <p>{copy[lang].joinBody}</p>

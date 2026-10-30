@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Mascot } from "./Mascot";
 import {
   ArrowRight,
   ChatCircleDots,
@@ -53,7 +54,7 @@ export default function Home({ lang, ready = true }: { lang: Language; ready?: b
   const id = lang === "id";
   const community = useCommunity();
   const directory = useTeam();
-  const page = useScrollReveal(".about-copy, .activity, .stats-intro, .stats-data, .section-heading, .event-card, .team-toolbar, .member, .faq-section > h2, .faq-list details, .closing > div:not(.closing-mark), .closing > .button");
+  const page = useScrollReveal(".community-strip, .about-copy, .activity, .stats-intro, .stats-data, .section-heading, .filter-row, .event-track, .event-track-footer, .team-toolbar, .member, .faq-section > h2, .faq-list details, .social-intro, .social-card, .community-mascot-stage, .community-showcase-copy");
   const activityIcons = [ChatCircleDots, Headphones, Microphone, PaintBrush];
   return (
     <main ref={page} className="motion-page">
@@ -162,7 +163,7 @@ export default function Home({ lang, ready = true }: { lang: Language; ready?: b
         <SocialLinks lang={lang} />
       </section>
       <section className="wrap community-showcase" id="join" aria-labelledby="community-join-title">
-        <div className="community-mascot-stage" aria-hidden="true"><img src="/images/sylux-community-mascot-blue.webp" width="1536" height="865" alt="" loading="lazy" /></div>
+        <Mascot />
         <div className="community-showcase-copy">
           <h2 id="community-join-title"><span>Let’s go.</span>{id ? "Saatnya gabung SYLUX." : "Come join us at SYLUX."}</h2>
           <p>{t.joinBody}</p>
