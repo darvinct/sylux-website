@@ -1,97 +1,117 @@
-# SYLUX Community + Discord
+# SYLUX
 
-Website komunitas React/TypeScript dengan login OAuth Discord, profil tim dari Discord, dan Vercel Functions. Versi 1.1 menggantikan profil tim contoh dengan akun Discord nyata yang dipilih pemilik website.
+The luxury of psychology.
 
-**Sudah dibuat:** login/logout, halaman akun, session cookie, proteksi tampilan alat komunitas, direktori tim berdasarkan User ID, pencarian/filter/peran tim, serta fitur komunitas versi awal. Daftar tim terbaru sudah dikonfigurasi sebagai 1 Owner, 2 Founder, dan 8 Developer; Application ID sudah diisi di `.env.example`. Domain produksi `https://website-komunitasi.vercel.app` sudah diisi di `.env.example`. **Perlu diisi di Vercel:** nilai environment variables, termasuk credential baru aplikasi Discord. Tidak ada secret akunmu dalam ZIP ini.
+Source website komunitas SYLUX: profil tim, dokumentasi event, statistik server, dan informasi divisi. Konten tersedia dalam Bahasa Indonesia dan Inggris.
 
-## Deploy singkat
+[Website](https://syluxofficial.vercel.app/) · [Discord](https://discord.gg/sylux) · [Instagram](https://www.instagram.com/syluxcommunity_/) · [TikTok](https://www.tiktok.com/@syluxcommunity_)
 
-1. Upload seluruh isi proyek ke repository GitHub. `package.json`, `api/`, `server/`, `src/`, `public/`, dan `vercel.json` berada di root repository.
-2. Import repository ke Vercel. Preset **Vite**, install `npm ci`, build `npm run build`, output `dist`.
-3. Deploy untuk mendapatkan domain, misalnya `https://website-komunitasi.vercel.app`.
-4. Ikuti **[panduan setup Discord](docs/discord-setup.md)**: buat aplikasi Discord, atur redirect URL, masukkan environment variables di Vercel, dan isi `server/team.json`.
-5. Redeploy setelah mengisi environment variables. Pakai domain produksi yang sama dengan `SITE_URL` saat menguji login.
+![React 19](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
+![TypeScript 7](https://img.shields.io/badge/TypeScript-7-3178C6?logo=typescript&logoColor=white)
+![Vite 8](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+![Vercel](https://img.shields.io/badge/Deploy-Vercel-000000?logo=vercel&logoColor=white)
 
-Website tetap dapat dibuka saat credential belum diisi. Halaman login menjelaskan bahwa login belum tersedia; profil tim belum dapat dimuat sampai bot terkonfigurasi. Login nyata tidak dapat dipakai hanya dengan deploy ZIP tanpa setup aplikasi Discord.
+[![Pratinjau beranda SYLUX](docs/sylux-home.png)](https://syluxofficial.vercel.app/)
 
-## Environment variables
+## Tentang proyek
 
-Salin nama variabel dari `.env.example` ke **Vercel → Settings → Environment Variables** untuk environment **Production**.
+Frontend memakai React, TypeScript, dan Vite. API berjalan sebagai Vercel Functions. Font Outfit disimpan lokal, ikon memakai Phosphor, dan tampilan ditulis dengan CSS tanpa framework UI.
 
-| Variabel | Fungsi |
-| --- | --- |
-| `SITE_URL` | Origin produksi lengkap, misalnya `https://website-komunitasi.vercel.app`, tanpa subpath |
-| `DISCORD_CLIENT_ID` | Application ID dari Discord Developer Portal |
-| `DISCORD_CLIENT_SECRET` | Client secret aplikasi, hanya di server |
-| `SESSION_SECRET` | Secret acak minimal 32 karakter untuk cookie sesi |
-| `DISCORD_BOT_TOKEN` | Bot token untuk mengambil profil tim; tidak dibutuhkan untuk login pengunjung |
-| `DISCORD_GUILD_ID` | Opsional; mengambil nickname/avatar server serta memastikan anggota tim ada di server tersebut |
-| `VITE_DISCORD_INVITE` | Opsional, undangan publik untuk tombol gabung dan perkiraan statistik |
+- **Tim:** profil Discord, banner jika tersedia, pencarian, filter peran, dan urutan A–Z.
+- **Server Stats:** perkiraan jumlah anggota dan pengguna aktif dari undangan publik Discord.
+- **Portfolio:** dokumentasi kegiatan dalam galeri horizontal, filter kategori, dan penampil foto layar penuh.
+- **Informasi:** divisi Sentinel, role levelling, dan legacy recognition.
 
-Client secret, session secret, dan bot token tidak menggunakan awalan `VITE_` dan tidak dimasukkan ke `src/` atau GitHub. Preview deployment memerlukan `SITE_URL` dan redirect Discord yang sesuai jika ingin login di sana; panduan ini menargetkan domain produksi.
+Halaman komunitas bersifat publik. Route `/login` dan `/account` tersedia untuk autentikasi Discord opsional.
 
-## Tim dengan profil Discord
+## Menjalankan lokal
 
-Direktori tim tampil sebagai bagan SYLUX → peran → anggota. Urutan kelompok mengikuti urutan peran di `server/team.json`. Setiap kelompok dapat diringkas. Pencarian mencakup nama, username, peran, dan divisi; tombol `/` memfokuskan pencarian. A–Z mengurutkan nama di dalam kelompok.
-
-Isi `server/team.json` dengan akun tim yang ingin dipublikasikan. Contoh berikut harus diganti dengan ID milik anggota timmu:
-
-```json
-[
-  { "id": "123456789012345678", "role": "Founder", "bio": "Pengelola komunitas." },
-  { "id": "234567890123456789", "role": "Moderator", "bio": "Menjaga suasana percakapan." }
-]
-```
-
-Nama, username, avatar, dan tautan profil diambil dari Discord. Jika `DISCORD_GUILD_ID` diisi, nickname dan avatar server digunakan bila tersedia. Peran serta deskripsi `bio` berasal dari file konfigurasi, bukan dari bio pribadi atau role otomatis Discord. Maksimal 30 profil unik. Nama/avatar dapat tertunda beberapa menit karena cache publik. Status online dan aktivitas per akun tidak diambil.
-
-Login pengunjung **tidak otomatis menjadikan mereka anggota tim**. Bot token berada di server, tidak diberikan ke pengunjung. Direktori tim bersifat publik dan dapat dilihat tanpa login.
-
-Hero terpusat menampilkan logo asli SYLUX dengan gradasi, avatar tim, dan jumlah anggota yang sedang online. Avatar terhubung ke direktori tim dan tidak menandakan status online per akun. `/api/community` mengambil jumlah total/online dari undangan Discord publik; tidak memerlukan bot token. Hero dan Server Stats berbagi satu permintaan, dengan refresh setiap 60 detik ketika halaman aktif dan cache CDN 60 detik. Jika data gagal dimuat, UI menampilkan status tidak tersedia serta tombol coba lagi. Tidak ada angka atau kehadiran yang dibuat-buat.
-
-Deskripsi pembuka memakai animasi ketik satu kali, menyisakan ruang untuk kalimat lengkap agar elemen di bawahnya tidak bergeser. Pergantian bahasa memulai teks baru; reduced-motion menampilkan kalimat lengkap tanpa animasi. Latar beranda dan Informasi memakai gradasi ungu yang tipis, dan navbar hanya memakai satu wordmark SYLUX tanpa tombol login atau ikon bulat.
-
-## Login Discord
-
-- Login hanya meminta scope `identify`: ID, nama, username, avatar. Tidak meminta email, pesan, atau izin bergabung server.
-- Authorization code + PKCE S256, state browser, dan issuer Discord diverifikasi di backend.
-- Website menyimpan profil dasar dalam cookie terenkripsi, HttpOnly, SameSite=Lax, dan Secure pada HTTPS. Sesi berakhir setelah 24 jam; login ulang untuk memperbarui profil akun.
-- Access token dan refresh token Discord dipakai sementara saat callback, tidak dipersistenkan dan tidak dikirim ke browser.
-- Logout memakai POST dengan pemeriksaan origin dan menghapus cookie browser. Tidak mencabut otorisasi aplikasi di pengaturan Discord. Sesi bersifat stateless; penghapusan cookie tidak mencabut salinan cookie lain sebelum masa berlakunya habis.
-- Beranda, tim, dan informasi bersifat publik. Navbar tidak menampilkan tombol login atau avatar akun; pengunjung bergabung lewat tombol Gabung Discord. Twibbon, form komunitas, Webhook Studio, dan menu More sudah dihapus.
-
-## Identitas dan konten
-
-Halaman publik `/information` memuat **Sentinel Divisions**, delapan tier **Levelling** (0–135), dan **Cyber Veteran** sebagai legacy recognition. Daftarnya mengikuti informasi dari pengelola SYLUX dan dapat disunting di `src/data/roles.ts`. Lihat [panduan halaman Informasi](docs/information.md). Halaman ini menjelaskan role tanpa memberikan role atau mengubah izin Discord.
-
-Identitas SYLUX menggunakan logo yang diberikan pengelola dan gradasi violet, ungu, serta biru berdasarkan poster referensi. Edit `src/data/site.ts` untuk tagline, undangan, Instagram, copy ID/EN, dan kegiatan. Kegiatan awal masih contoh; ubah sebelum mematikan `isDemo`. Tim diatur terpisah di `server/team.json`.
-
-Ubah metadata SEO dan Open Graph di `index.html`. Setelah mendapat domain, gunakan URL absolut gambar Open Graph. Gambar berada di `public/images/`, font di `public/fonts/`, dan token warna di `src/styles.css`. Sumber aset ada di `docs/assets.md`.
-
-## Jalankan lokal
-
-Gunakan Node.js 24 LTS atau Node.js 22.18+.
+Gunakan Node.js 24 LTS dan npm.
 
 ```sh
+git clone https://github.com/darvinct/website-komunitasi.git
+cd website-komunitasi
 npm ci
 cp .env.example .env.local
 ```
 
-Isi `.env.local` untuk pengujian lokal. Gunakan `SITE_URL=http://localhost:5173` dan tambahkan `http://localhost:5173/api/auth/callback` pada daftar redirect Discord. `.env.local` diabaikan Git.
+Ubah `SITE_URL` di `.env.local` menjadi `http://localhost:5173`. Isi konfigurasi Discord sesuai fitur yang ingin dijalankan.
 
-Jalankan dua terminal:
+Terminal pertama, jalankan API:
 
 ```sh
 npm run dev:api
 ```
 
+Terminal kedua, jalankan frontend:
+
 ```sh
 npm run dev
 ```
 
-Vite meneruskan `/api` ke server lokal di port 3001. Buka **http://localhost:5173**, bukan alamat IP LAN, agar cookie dan callback sesuai. Server lokal tetap berjalan tanpa credential, dengan status login belum tersedia dan profil tim belum dapat dimuat sampai bot terpasang. File `server/dev.mjs` hanya untuk lokal; Vercel menjalankan file di `api/` sebagai Functions.
+Buka [localhost:5173](http://localhost:5173). Vite meneruskan request `/api` ke port `3001`.
 
-## Verifikasi
+Tanpa bot token, halaman tetap bisa dibuka, tetapi profil tim belum tersedia. Statistik server memakai endpoint undangan publik Discord dan tidak memerlukan bot token.
+
+## Konfigurasi
+
+Untuk lokal, gunakan `.env.local`. Untuk production, isi lewat pengaturan environment variables di Vercel.
+
+| Variabel | Kegunaan |
+| --- | --- |
+| `SITE_URL` | Origin aplikasi. Lokal: `http://localhost:5173`. Production: `https://syluxofficial.vercel.app`. |
+| `DISCORD_BOT_TOKEN` | Mengambil profil anggota tim dari Discord. |
+| `DISCORD_GUILD_ID` | Opsional. Memakai nickname/avatar server dan memeriksa keanggotaan tim di server tersebut. |
+| `VITE_DISCORD_INVITE` | Opsional. Undangan untuk tombol gabung dan sumber statistik. Default: `https://discord.gg/sylux`. |
+
+Variabel dengan awalan `VITE_` ikut masuk ke frontend. Simpan bot token dan konfigurasi sesi sebagai variabel server. `.env.local` sudah diabaikan Git.
+
+<details>
+<summary>Konfigurasi login Discord</summary>
+
+Tambahkan tiga variabel berikut jika ingin memakai login:
+
+| Variabel | Kegunaan |
+| --- | --- |
+| `DISCORD_CLIENT_ID` | Application ID dari Discord Developer Portal. |
+| `DISCORD_CLIENT_SECRET` | Client secret dari aplikasi yang sama. |
+| `SESSION_SECRET` | Secret acak minimal 32 byte untuk cookie sesi. |
+
+Daftarkan `${SITE_URL}/api/auth/callback` di bagian OAuth2 Redirects pada [Discord Developer Portal](https://discord.com/developers/applications). Untuk lokal, gunakan `http://localhost:5173/api/auth/callback`.
+
+Login memakai scope `identify`, PKCE, dan cookie sesi HttpOnly. Login pengunjung tidak menambahkan mereka ke daftar tim.
+
+</details>
+
+## Mengubah konten
+
+| Yang ingin diubah | Berkas |
+| --- | --- |
+| Identitas, sosial media, teks ID/EN, dan daftar event | [`src/data/site.ts`](src/data/site.ts) |
+| Anggota tim, peran, divisi, dan bio | [`server/team.json`](server/team.json) |
+| Divisi Sentinel dan role levelling | [`src/data/roles.ts`](src/data/roles.ts) |
+| Pratinjau tautan Discord dan Open Graph | [`src/data/share.json`](src/data/share.json) |
+| Token warna, font, dan gaya umum | [`src/styles.css`](src/styles.css) |
+| Foto dokumentasi, maskot, dan logo | [`public/images/`](public/images/) |
+
+Nama, username, avatar, dan banner tim diambil dari Discord jika tersedia. Peran dan bio ditentukan di `server/team.json`. Urutan peran di file tersebut menentukan urutan kelompok pada halaman; satu akun bisa masuk ke beberapa divisi. Data profil memakai cache, jadi perubahan avatar tidak selalu langsung muncul.
+
+Untuk menambah event, tambahkan entri ke `events` di `src/data/site.ts` dan simpan fotonya di `public/images/`. Kategori filter mengikuti data event secara otomatis.
+
+## Struktur
+
+```text
+api/              Endpoint auth, tim, dan statistik komunitas
+server/           Integrasi Discord, cache, dan server API lokal
+src/components/   Komponen halaman dan interaksi
+src/data/         Identitas, event, role, dan teks ID/EN
+src/lib/          Helper dan hook
+public/           Gambar dan font lokal
+docs/             Catatan teknis dan pratinjau
+scripts/          Pemeriksaan dan plugin metadata berbagi
+```
+
+## Pemeriksaan dan build
 
 ```sh
 npm run check
@@ -99,19 +119,16 @@ npm run build
 npm run preview
 ```
 
-`check` memeriksa validasi undangan/filter/ekspor, OAuth state/PKCE/issuer, token exchange, sesi terenkripsi/kedaluwarsa, origin logout, pembatasan data profil tim, serta sumber dan format angka komunitas. Pengujian Discord menggunakan respons tiruan dan tidak memanggil akun nyata.
+`check` memeriksa filter anggota, validasi undangan, OAuth, sesi, statistik komunitas, dan metadata berbagi Discord. Pengujian integrasi Discord memakai respons tiruan.
 
-Pengujian browser menggunakan session/team fixtures untuk memeriksa UI dan alat lokal, termasuk login gate dan logout:
+`build` memeriksa TypeScript dan menghasilkan folder `dist`. `preview` menyajikan hasil build; jalankan `dev:api` juga jika ingin memakai API lokal.
 
-```sh
-python -m pip install playwright
-python -m playwright install chromium
-# Jalankan npm run dev atau preview di terminal lain.
-python scripts/smoke.py
-# Untuk production preview di port 4173:
-BASE_URL=http://localhost:4173 python scripts/smoke.py
-# Termasuk error/retry, angka nol, serta refresh status online:
-BASE_URL=http://localhost:4173 TEST_STATS=1 python scripts/smoke.py
-```
+## Deploy
 
-Hasil dan batas verifikasi ada di `docs/verification.md`. Login end-to-end dengan akun Discord dan deploy Vercel milikmu baru bisa diperiksa setelah credential dan redirect URL terpasang.
+Import repository ke Vercel dengan preset **Vite**. Perintah build dan folder output sudah diatur di [`vercel.json`](vercel.json).
+
+Isi environment variables untuk Production, pastikan `SITE_URL` sesuai domain yang dipakai, lalu deploy. Pada repository ini, perubahan di branch `main` memicu deployment melalui integrasi GitHub dan Vercel.
+
+## Aset
+
+Identitas SYLUX, maskot, dan dokumentasi kegiatan berasal dari pengelola komunitas. Font [Outfit](https://github.com/Outfitio/Outfit-Fonts) memakai SIL Open Font License; salinannya ada di [`public/fonts/OFL.txt`](public/fonts/OFL.txt). Ikon [Phosphor](https://phosphoricons.com/) memakai lisensi MIT.
