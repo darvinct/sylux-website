@@ -661,7 +661,6 @@ textarea:focus-visible {
   font-size: clamp(30px, 3.2vw, 43px);
 }
 .about-copy > p {
-  max-width: 330px;
   margin-top: 20px;
   font-size: 15px;
 }
@@ -1536,7 +1535,6 @@ textarea {
   }
   .about-copy > p {
     font-size: 14px;
-    max-width: 340px;
   }
   .activity-grid {
     gap: 28px 20px;
