@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -52,20 +52,8 @@ export function Header({
   tool?: boolean;
 }) {
   const t = copy[lang];
-  const marker = useRef<HTMLDivElement>(null);
-  const [compact, setCompact] = useState(false);
-  useEffect(() => {
-    if (!marker.current) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      setCompact(!entry.isIntersecting && entry.boundingClientRect.top < 0);
-    });
-    observer.observe(marker.current);
-    return () => observer.disconnect();
-  }, []);
   return (
-    <>
-    <div ref={marker} className="header-scroll-marker" aria-hidden="true" />
-    <header className={`header floating-header${compact ? " is-compact" : ""}`}>
+    <header className="header site-header">
       <a className="wordmark" href={tool ? "/#home" : "#home"} aria-label={`${site.name} home`}>
         <BrandLogo />
       </a>
@@ -98,7 +86,6 @@ export function Header({
         </div>
       </div>
     </header>
-    </>
   );
 }
 
