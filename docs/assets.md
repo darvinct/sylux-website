@@ -1,15 +1,33 @@
-# Aset
+# Aset SYLUX
 
-- `public/images/sylux-logo-hd.png`: versi resolusi tinggi berdasarkan logo baru pengelola, dibersihkan dengan alat image generation. Dipakai pada cabang pratinjau; tampilan hitam-putih dirender sebagai mask gradasi/screen blend agar menyatu dengan latar website.
+## Identitas dan tampilan
 
-- `public/images/sylux-logo.png`: logo asli yang diunggah pengelola, digunakan tanpa perubahan berkas pada navigasi, footer, kartu profil tim.
-- Latar hero dan warna website menggunakan gradasi CSS ungu/violet/biru, mengikuti poster SYLUX yang diberikan pengelola. Poster referensi tidak diterbitkan sebagai agenda atau kegiatan aktual.
-- Undangan default `https://discord.gg/sylux` mengikuti tautan yang tertulis pada poster. `VITE_DISCORD_INVITE` tetap dapat menggantinya.
-- `public/images/hero.webp`: aset hero lama yang dibuat untuk versi awal; tidak lagi dipakai di website.
-- `public/images/music.jpg`: foto Unsplash, https://images.unsplash.com/photo-1514525253161-7a46d19cd819. Digunakan sebagai ilustrasi kegiatan contoh, bukan dokumentasi event aktual.
-- `public/images/conversation.jpg`: foto Unsplash, https://images.unsplash.com/photo-1516280440614-37939bbacd81. Ilustrasi sesi bicara.
-- `public/images/games.jpg`: foto Unsplash, https://images.unsplash.com/photo-1511512578047-dfb367046420. Ilustrasi bermain.
-- Foto Unsplash mengikuti https://unsplash.com/license. Ganti dengan dokumentasi milik komunitasmu sebelum menggambarkan kegiatan aktual.
-- Outfit: font lokal melalui Google Fonts, https://github.com/Outfitio/Outfit-Fonts. Lisensi SIL Open Font License di `public/fonts/OFL.txt`.
-- Ikon: `@phosphor-icons/react`, lisensi MIT, https://phosphoricons.com/.
-- Identitas SYLUX mengikuti arahan pengelola. Kegiatan masih contoh. Profil tim diambil dari Discord berdasarkan User ID yang dikonfigurasi. Akun pada screenshot pengujian berlabel fixture dan bukan anggota nyata.
+| Berkas | Pemakaian |
+| --- | --- |
+| `public/images/sylux-logo.webp` | Logo pada navbar, hero, footer, dan profil tim. |
+| `public/images/favicon-32.png` | Favicon website. |
+| `public/images/sylux-community-mascot-blue.webp` | Maskot penutup di Beranda dan Informasi. |
+| `public/images/sylux-join-qr.svg` | Kode QR untuk `https://discord.gg/sylux`. |
+| `public/images/sylux-share-cover-v7.jpg` | Gambar pratinjau tautan Discord dan Open Graph. |
+| `public/images/sylux-share-icon-v3.png` | Thumbnail pada pratinjau tautan. |
+| `docs/sylux-home.png` | Screenshot beranda untuk README. |
+
+Logo dan maskot berasal dari pengelola SYLUX. Latar website memakai gradasi CSS di `src/styles.css`.
+
+## Dokumentasi event
+
+Foto asli dari pengelola disimpan di `public/images/`:
+
+- `luxstars-documentation.png`
+- `sylux-got-talent-s2-documentation.png`
+- `boo-the-show-documentation.png`
+- `jealousy-documentation.png`
+- `spooktacular-beyond-the-dark-documentation.png`
+- `bolehkah-pikiranku-istirahat-documentation.png`
+
+Daftar event dan referensi gambar berada di `src/data/site.ts`.
+
+## Font dan ikon
+
+- [Outfit](https://github.com/Outfitio/Outfit-Fonts) disimpan lokal di `public/fonts/`, dengan bobot 400, 500, 600, dan 700. Lisensi SIL Open Font License ada di `public/fonts/OFL.txt`.
+- Ikon memakai [Phosphor](https://phosphoricons.com/) melalui `@phosphor-icons/react`, dengan lisensi MIT.
