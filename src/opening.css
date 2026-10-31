@@ -138,7 +138,7 @@ html.opening-active body {
   position: absolute;
   inset: -20% -50%;
   background: linear-gradient(110deg, transparent 40%, #e2c9ff66 46%, #fff 50%, #eee1ff80 53%, transparent 60%);
-  animation: opening-sheen .6s .65s cubic-bezier(.4, 0, .2, 1) both;
+  animation: opening-sheen .4s .85s cubic-bezier(.4, 0, .2, 1) both;
 }
 
 .opening-glint {
