@@ -8,7 +8,7 @@
     "dev:api": "node --env-file-if-exists=.env.local server/dev.mjs",
     "build": "node scripts/prepare-fonts.mjs && tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "check": "node --experimental-strip-types scripts/check.mjs && node scripts/check-auth.mjs && node scripts/check-community.mjs && node --experimental-strip-types scripts/check-share.mjs"
+    "check": "node --experimental-strip-types scripts/check.mjs && node scripts/check-auth.mjs && node scripts/check-community.mjs && node --experimental-strip-types scripts/check-share.mjs && node --experimental-strip-types scripts/check-opening.mjs"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

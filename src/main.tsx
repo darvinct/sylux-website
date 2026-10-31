@@ -28,9 +28,14 @@ function App() {
   const completeOpening = useCallback(() => {
     const returnFocus = document.activeElement?.closest(".opening");
     setOpening(false);
-    if (returnFocus) {
-      requestAnimationFrame(() => document.getElementById("content")?.focus({ preventScroll: true }));
-    }
+    requestAnimationFrame(() => {
+      if (returnFocus) document.getElementById("content")?.focus({ preventScroll: true });
+      if (window.location.hash) {
+        try {
+          document.getElementById(decodeURIComponent(window.location.hash.slice(1)))?.scrollIntoView({ block: "start", behavior: "instant" });
+        } catch { /* Ignore malformed hash fragments. */ }
+      }
+    });
   }, []);
   useEffect(() => {
     document.documentElement.lang = lang;
