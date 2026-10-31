@@ -113,7 +113,7 @@ export default function Information({ lang }: { lang: Language }) {
   }
   const role = sentinelDivisions[selected];
   const Icon = icons[role.id];
-  const page = useScrollReveal(".information-section-title, .information-note, .information-legacy, .community-mascot-stage, .community-showcase-copy");
+  const page = useScrollReveal(".information-section-title, .community-role-track, .community-role-controls, .information-note, .information-legacy, .community-mascot-stage, .community-showcase-copy");
   return (
     <main className="information-page motion-page" ref={page}>
       <div className="reading-progress" aria-hidden="true" />
