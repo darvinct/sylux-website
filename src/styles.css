@@ -2028,7 +2028,7 @@ textarea {
 }
 
 /* Community invitation: one mascot, clear type and the existing SYLUX palette. */
-.community-showcase { position: relative; isolation: isolate; text-align: center; overflow: hidden; padding: 20px 0 56px; margin-bottom: 56px; background: radial-gradient(ellipse 42% 44% at 50% 30%, #3d186c55, transparent 80%); color: var(--text); }
+.community-showcase { position: relative; isolation: isolate; text-align: center; overflow: hidden; padding: 20px 0 56px; margin-bottom: 56px; background: radial-gradient(ellipse 42% 44% at 50% 30%, #3d186c55, transparent 80%), var(--bg); color: var(--text); }
 .community-mascot-stage { display:flex; justify-content:center; align-items:center; height:440px; overflow:hidden; }
 .community-showcase-copy { position:relative; max-width:760px; margin:12px auto 0; padding:0 20px; }
 .community-showcase h2 { font-size:clamp(32px,4.2vw,56px); line-height:1.15; font-weight:600; letter-spacing:-.035em; }
@@ -2037,7 +2037,7 @@ textarea {
 .community-showcase .join-button { text-decoration:none; }
 
 @media(max-width:767px) {
-  .community-showcase { padding-top:0; padding-bottom:40px; margin-bottom:36px; background:radial-gradient(ellipse 70% 42% at 50% 28%, #3d186c55, transparent 80%); }
+  .community-showcase { padding-top:0; padding-bottom:40px; margin-bottom:36px; background:radial-gradient(ellipse 70% 42% at 50% 28%, #3d186c55, transparent 80%), var(--bg); }
   .community-mascot-stage { height:330px; }
   .community-showcase-copy { padding-inline:4px; margin-top:12px; }
   .community-showcase h2 { font-size:clamp(29px,7vw,42px); }

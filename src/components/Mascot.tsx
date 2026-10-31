@@ -1,35 +1,80 @@
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useRef } from "react";
 import "../mascot.css";
+
+const POSTER = "/images/sylux-mascot-motion-poster.webp";
+const VIDEO = "/images/sylux-mascot-motion.mp4";
 
 export function Mascot() {
   const stage = useRef<HTMLDivElement>(null);
-  const id = useId().replace(/:/g, "");
-  const hand = `${id}-hand`;
-  const body = `${id}-body`;
+  const video = useRef<HTMLVideoElement>(null);
+
   useEffect(() => {
     const element = stage.current;
-    if (!element) return;
+    const player = video.current;
+    if (!element || !player || !window.IntersectionObserver) return;
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     let visible = false;
-    const update = () => element.classList.toggle("is-animated", visible && !document.hidden);
-    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; update(); });
-    observer.observe(element);
+    let nearby = false;
+    let disposed = false;
+    let failed = false;
+    player.muted = true;
+
+    const mayPlay = () => !disposed && visible && !document.hidden && !preference.matches && !failed;
+    const update = () => {
+      element.toggleAttribute("data-still", preference.matches || failed);
+      if (nearby && !preference.matches && !failed && !player.hasAttribute("src")) {
+        player.src = VIDEO;
+        player.load();
+      }
+      if (mayPlay()) {
+        void player.play().then(() => {
+          if (!mayPlay()) player.pause();
+        }).catch(() => { /* Keep the poster when autoplay is unavailable. */ });
+      } else player.pause();
+    };
+    const ready = () => {
+      element.setAttribute("data-playing", "");
+      if (!mayPlay()) player.pause();
+    };
+    const error = () => { failed = true; update(); };
+    const loadObserver = new IntersectionObserver(([entry]) => {
+      nearby = entry.isIntersecting;
+      update();
+    }, { rootMargin: "400px 0px" });
+    const playObserver = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      update();
+    }, { threshold: .1 });
+
+    player.addEventListener("playing", ready);
+    player.addEventListener("error", error);
     document.addEventListener("visibilitychange", update);
-    return () => { observer.disconnect(); document.removeEventListener("visibilitychange", update); };
+    preference.addEventListener("change", update);
+    loadObserver.observe(element);
+    playObserver.observe(element);
+    update();
+    return () => {
+      disposed = true;
+      loadObserver.disconnect();
+      playObserver.disconnect();
+      document.removeEventListener("visibilitychange", update);
+      preference.removeEventListener("change", update);
+      player.removeEventListener("playing", ready);
+      player.removeEventListener("error", error);
+      player.pause();
+      player.removeAttribute("src");
+      player.load();
+      element.removeAttribute("data-playing");
+      element.removeAttribute("data-still");
+    };
   }, []);
+
   return (
     <div className="community-mascot-stage" ref={stage} aria-hidden="true">
-      <svg className="mascot-art" viewBox="0 0 1536 865" focusable="false">
-        <defs>
-          <clipPath id={hand}><path d="M445 347 L490 345 L507 350 L525 349 L537 365 L551 400 L556 416 L518 457 L490 457 L450 428 L435 387 Z" /></clipPath>
-          <clipPath id={body}><path clipRule="evenodd" d="M0 0 H1536 V865 H0 Z M445 347 L490 345 L507 350 L525 349 L537 365 L551 400 L556 416 L518 452 L492 452 L450 428 L435 387 Z" /></clipPath>
-        </defs>
-        <g className="mascot-breathe">
-          <image href="/images/sylux-community-mascot-blue.webp" width="1536" height="865" clipPath={`url(#${body})`} />
-          <g className="mascot-wave">
-            <image href="/images/sylux-community-mascot-blue.webp" width="1536" height="865" clipPath={`url(#${hand})`} />
-          </g>
-        </g>
-      </svg>
+      <div className="mascot-media">
+        <img className="mascot-poster" src={POSTER} width="768" height="432" alt="" loading="lazy" decoding="async" />
+        <video ref={video} className="mascot-video" poster={POSTER} width="768" height="432" muted loop playsInline preload="none" disablePictureInPicture tabIndex={-1} />
+      </div>
     </div>
   );
 }
