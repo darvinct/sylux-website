@@ -7,7 +7,6 @@ import {
 } from "@phosphor-icons/react";
 import { legacyRole, levellingRoles, sentinelDivisions } from "../data/roles";
 import { copy, type Language } from "../data/site";
-import { useScrollReveal } from "../lib/useScrollReveal";
 import { useRoleScroller } from "../lib/useRoleScroller";
 import { BrandLogo, JoinButton } from "./Shell";
 import "../information.css";
@@ -113,10 +112,8 @@ export default function Information({ lang }: { lang: Language }) {
   }
   const role = sentinelDivisions[selected];
   const Icon = icons[role.id];
-  const page = useScrollReveal(".information-section-title, .community-role-track, .information-note, .information-legacy, .community-mascot-stage, .community-showcase-copy");
   return (
-    <main className="information-page motion-page" ref={page}>
-      <div className="reading-progress" aria-hidden="true" />
+    <main className="information-page motion-page">
       <section ref={hero} className="information-hero" aria-labelledby="information-title">
         <div className="information-hero-stage">
           <div className="information-hero-copy">

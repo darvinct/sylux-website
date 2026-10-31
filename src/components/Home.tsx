@@ -11,7 +11,6 @@ import {
   ArrowClockwise,
 } from "@phosphor-icons/react";
 import { copy, site, type Language } from "../data/site";
-import { useScrollReveal } from "../lib/useScrollReveal";
 import { JoinButton } from "./Shell";
 import { Portfolio } from "./Portfolio";
 import { Stats, useCommunity } from "./Stats";
@@ -54,11 +53,9 @@ export default function Home({ lang, ready = true }: { lang: Language; ready?: b
   const id = lang === "id";
   const community = useCommunity();
   const directory = useTeam();
-  const page = useScrollReveal(".community-strip, .about-copy, .activity, .stats-intro, .stats-data, .section-heading, .filter-row, .event-track, .event-track-footer, .team-toolbar, .member, .faq-section > h2, .faq-list details, .social-intro, .social-card, .community-mascot-stage, .community-showcase-copy");
   const activityIcons = [ChatCircleDots, Headphones, Microphone, PaintBrush];
   return (
-    <main ref={page} className="motion-page">
-      <div className="reading-progress" aria-hidden="true" />
+    <main className="motion-page">
       <section className="hero" id="home">
         <div className="hero-background" aria-hidden="true" />
         <div className="hero-shade" />

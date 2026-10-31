@@ -548,47 +548,6 @@ textarea:focus-visible {
 .hero-presence { animation-delay: .16s; }
 .hero-buttons { animation-delay: .2s; }
 
-/* GSAP owns reveal opacity and transforms; CSS handles hover feedback only. */
-.motion-ready .scroll-reveal {
-  transition: border-color .25s ease, background-color .25s ease, box-shadow .25s ease, translate .25s ease;
-}
-.motion-ready .scroll-reveal:focus-within {
-  opacity: 1 !important;
-  transform: none !important;
-}
-.reading-progress { display: none; }
-@supports (animation-timeline: scroll()) {
-  .reading-progress {
-    display: block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 50;
-    height: 2px;
-    width: 100%;
-    background: var(--brand-gradient);
-    transform-origin: left;
-    animation: reading-progress linear both;
-    animation-timeline: scroll(root block);
-    pointer-events: none;
-  }
-  @keyframes reading-progress {
-    from { transform: scaleX(0); }
-    to { transform: scaleX(1); }
-  }
-}
-@supports (animation-timeline: view()) {
-  .motion-page .hero { view-timeline-name: --hero-exit; }
-  .motion-page .hero-background {
-    animation: hero-glow-parallax linear both;
-    animation-timeline: --hero-exit;
-    animation-range: exit 0% exit 100%;
-  }
-  @keyframes hero-glow-parallax {
-    from { transform: translateY(0) scale(1); }
-    to { transform: translateY(90px) scale(1.12); }
-  }
-}
 @media (hover: hover) and (pointer: fine) {
   .motion-page :is(.member, .event-card) {
     transition: translate .25s ease, border-color .25s ease, background .25s ease;
@@ -600,8 +559,6 @@ textarea:focus-visible {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .motion-ready .scroll-reveal { opacity: 1 !important; transform: none !important; }
-  .reading-progress { display: none; }
   .motion-page :is(.member, .event-card):hover { translate: none; }
 }
 .community-strip {
