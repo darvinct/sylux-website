@@ -548,39 +548,11 @@ textarea:focus-visible {
 .hero-presence { animation-delay: .16s; }
 .hero-buttons { animation-delay: .2s; }
 
-/* Reversible entrances follow the viewport without intercepting page scrolling. */
+/* GSAP owns reveal opacity and transforms; CSS handles hover feedback only. */
 .motion-ready .scroll-reveal {
-  transition:
-    opacity .45s ease,
-    transform .6s cubic-bezier(.2, .65, .3, 1);
-  transition-delay: 0ms;
-}
-.motion-ready .scroll-reveal.is-visible { transition-delay: var(--reveal-delay, 0ms); }
-.motion-ready .scroll-reveal:not(.is-visible) {
-  opacity: 0;
-  transform: translateY(22px);
-}
-.motion-ready .scroll-reveal.is-visible,
-.motion-ready .scroll-reveal:focus-within {
-  opacity: 1;
-  transform: translateY(0);
-}
-.motion-ready .scroll-reveal:focus-within { transition-duration: 0s; transition-delay: 0s; }
-/* Native scroll timelines scrub in both directions instead of replaying a timer. */
-@supports (animation-timeline: view(block 0px 16vh)) and (animation-range: entry 0% entry 100%) {
-  .motion-ready .scroll-reveal {
-    animation: scroll-reveal-progress linear both;
-    animation-timeline: view(block 0px 16vh);
-    animation-range: entry var(--reveal-start, 0%) entry 50%;
-    transition: none;
-  }
-  @keyframes scroll-reveal-progress {
-    from { opacity: 0; transform: translate3d(0, 28px, 0) scale(.985); }
-    to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
-  }
+  transition: border-color .25s ease, background-color .25s ease, box-shadow .25s ease, translate .25s ease;
 }
 .motion-ready .scroll-reveal:focus-within {
-  animation: none !important;
   opacity: 1 !important;
   transform: none !important;
 }
@@ -619,7 +591,7 @@ textarea:focus-visible {
 }
 @media (hover: hover) and (pointer: fine) {
   .motion-page :is(.member, .event-card) {
-    transition: translate .25s ease, border-color .25s ease, background .25s ease, opacity .65s ease, transform .7s ease, filter .65s ease;
+    transition: translate .25s ease, border-color .25s ease, background .25s ease;
   }
   .motion-page :is(.member, .event-card):hover {
     translate: 0 -4px;
@@ -628,7 +600,7 @@ textarea:focus-visible {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .motion-ready .scroll-reveal:not(.is-visible) { opacity: 1; transform: none; filter: none; }
+  .motion-ready .scroll-reveal { opacity: 1 !important; transform: none !important; }
   .reading-progress { display: none; }
   .motion-page :is(.member, .event-card):hover { translate: none; }
 }

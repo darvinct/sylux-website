@@ -4,73 +4,82 @@ export function useScrollReveal(selector: string) {
   const page = useRef<HTMLElement>(null);
   useEffect(() => {
     const root = page.current;
+    if (!root) return;
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (!root || !window.IntersectionObserver) return;
-    let observer: IntersectionObserver | null = null;
-    let changes: MutationObserver | null = null;
-    let resizeTimer: number | undefined;
-    const marked = new Set<HTMLElement>();
-    function observeViewport() {
-      observer?.disconnect();
-      const inset = Math.round(Math.min(180, Math.max(64, window.innerHeight * .16)));
-      observer = new IntersectionObserver((entries) => {
-        for (const entry of entries) {
-          // Reverse the entrance as content leaves the lower viewport when
-          // scrolling up. Earlier content remains readable on the way back.
-          const above = entry.boundingClientRect.top < (entry.rootBounds?.top ?? 0);
-          entry.target.classList.toggle("is-visible", entry.isIntersecting || above);
-        }
-      }, { threshold: 0, rootMargin: `0px 0px -${inset}px 0px` });
-      for (const element of marked) observer.observe(element);
-    }
-    function resize() {
-      window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(observeViewport, 120);
-    }
-    function stop() {
-      observer?.disconnect();
-      changes?.disconnect();
-      window.clearTimeout(resizeTimer);
-      window.removeEventListener("resize", resize);
-      root?.classList.remove("motion-ready");
-      for (const element of marked) {
-        element.classList.remove("scroll-reveal", "is-visible");
-        element.style.removeProperty("--reveal-delay");
-        element.style.removeProperty("--reveal-start");
-      }
-      marked.clear();
-    }
+    let generation = 0;
+    let dispose: (() => void) | undefined;
+
     function start() {
-      stop();
-      if (!root || preference.matches) return;
-      observeViewport();
-      function register() {
-        for (const element of marked) {
-          if (!root?.contains(element)) {
-            observer?.unobserve(element);
-            marked.delete(element);
+      const current = ++generation;
+      dispose?.();
+      dispose = undefined;
+      if (preference.matches) return;
+      // Load the animation engine only when motion is wanted. If loading fails,
+      // the page stays readable without hidden content or interrupted scrolling.
+      void Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(([{ gsap }, { ScrollTrigger }]) => {
+        if (current !== generation || !root) return;
+        gsap.registerPlugin(ScrollTrigger);
+        const reveals = new Map<HTMLElement, ReturnType<typeof gsap.fromTo>>();
+        const refresh = gsap.delayedCall(.12, () => ScrollTrigger.refresh()).pause();
+        const scheduleRefresh = () => { refresh.restart(true); };
+        const changes = new MutationObserver(register);
+        const opening = new MutationObserver(scheduleRefresh);
+        dispose = () => {
+          changes.disconnect();
+          opening.disconnect();
+          refresh.kill();
+          root.removeEventListener("toggle", scheduleRefresh, true);
+          for (const [element, tween] of reveals) {
+            tween.scrollTrigger?.kill();
+            tween.revert();
+            element.classList.remove("scroll-reveal");
           }
+          reveals.clear();
+          root.classList.remove("motion-ready");
+        };
+        function register() {
+          for (const [element, tween] of reveals) {
+            if (!root?.contains(element)) {
+              tween.scrollTrigger?.kill();
+              tween.revert();
+              element.classList.remove("scroll-reveal");
+              reveals.delete(element);
+            }
+          }
+          root?.querySelectorAll<HTMLElement>(selector).forEach((element) => {
+            if (reveals.has(element)) return;
+            const siblings = Array.from(element.parentElement?.children || []);
+            const order = Math.max(0, Math.min(siblings.indexOf(element), 3));
+            element.classList.add("scroll-reveal");
+            const tween = gsap.fromTo(element,
+              { opacity: 0, y: 26, scale: .99 },
+              {
+                opacity: 1, y: 0, scale: 1, ease: "none",
+                scrollTrigger: {
+                  trigger: element,
+                  start: `top ${88 - order * 2}%`,
+                  end: "top 62%",
+                  scrub: window.matchMedia("(pointer: coarse)").matches ? .18 : .4,
+                  invalidateOnRefresh: true,
+                },
+              });
+            reveals.set(element, tween);
+          });
+          scheduleRefresh();
         }
-        root?.querySelectorAll<HTMLElement>(selector).forEach((element) => {
-          if (marked.has(element)) return;
-          marked.add(element);
-          const siblings = Array.from(element.parentElement?.children || []);
-          const delay = Math.min(siblings.indexOf(element), 4) * 65;
-          element.style.setProperty("--reveal-delay", `${delay}ms`);
-          element.style.setProperty("--reveal-start", `${Math.min(siblings.indexOf(element), 3) * 5}%`);
-          element.classList.add("scroll-reveal");
-          observer?.observe(element);
-        });
-      }
-      register();
-      root.classList.add("motion-ready");
-      changes = new MutationObserver(register);
-      changes.observe(root, { childList: true, subtree: true });
-      window.addEventListener("resize", resize, { passive: true });
+        register();
+        root.classList.add("motion-ready");
+        changes.observe(root, { childList: true, subtree: true });
+        opening.observe(document.documentElement, { attributes: true, attributeFilter: ["class", "lang"] });
+        root.addEventListener("toggle", scheduleRefresh, true);
+        void document.fonts.ready.then(() => { if (current === generation) scheduleRefresh(); });
+      }).catch(() => {
+        if (current === generation) { dispose?.(); dispose = undefined; }
+      });
     }
     start();
     preference.addEventListener("change", start);
-    return () => { stop(); preference.removeEventListener("change", start); };
+    return () => { generation++; dispose?.(); preference.removeEventListener("change", start); };
   }, [selector]);
   return page;
 }

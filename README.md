@@ -15,7 +15,7 @@ Source website komunitas SYLUX: profil tim, dokumentasi event, statistik server,
 
 ## Tentang proyek
 
-Frontend memakai React, TypeScript, dan Vite. API berjalan sebagai Vercel Functions. Font Satoshi disajikan lokal, ikon memakai Phosphor, dan tampilan ditulis dengan CSS tanpa framework UI.
+Frontend memakai React, TypeScript, dan Vite. API berjalan sebagai Vercel Functions. Font Satoshi disajikan lokal, ikon memakai Phosphor, dan tampilan ditulis dengan CSS tanpa framework UI. Animasi scroll memakai GSAP ScrollTrigger, dimuat saat animasi diaktifkan dan mengikuti preferensi pengurangan gerakan.
 
 `dev` dan `build` menyiapkan font dari CDN resmi Fontshare lewat `scripts/prepare-fonts.mjs`. Proses pertama memerlukan koneksi internet; berikutnya memakai berkas lokal yang lolos pemeriksaan hash. Berkas font diabaikan Git agar tidak didistribusikan ulang lewat repository publik.
 
