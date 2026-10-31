@@ -1,4 +1,4 @@
-export const OPENING_ANIMATION_MS = 1800;
+export const OPENING_ANIMATION_MS = 3000;
 export const OPENING_LOGO_WAIT_MS = 1000;
 
 export function shouldPlayOpening() {

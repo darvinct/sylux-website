@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { prepareOpeningLogo, shouldPlayOpening, OPENING_ANIMATION_MS } from "../src/lib/opening.ts";
 
 const previousWindow = globalThis.window;
@@ -38,7 +39,10 @@ try {
   reduced = true;
   assert.equal(shouldPlayOpening(), false);
   reduced = false;
-  assert.equal(OPENING_ANIMATION_MS, 1800);
+  const css = readFileSync(new URL("../src/opening.css", import.meta.url), "utf8");
+  const curtain = css.match(/animation:\s*opening-top\s+([\d.]+)s\s+([\d.]+)s/);
+  assert.ok(curtain, "Opening curtain timing must be defined");
+  assert.equal(Math.round((Number(curtain[1]) + Number(curtain[2])) * 1000), OPENING_ANIMATION_MS, "Fallback timing must match the CSS reveal");
 
   assert.equal(await prepareOpeningLogo(new AbortController().signal), true);
   assert.equal(loadedImage.onload, null);
