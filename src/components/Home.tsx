@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Mascot } from "./Mascot";
+import { useScrollAccent } from "../lib/useScrollAccent";
 import {
   ArrowRight,
   ChatCircleDots,
@@ -53,9 +54,10 @@ export default function Home({ lang, ready = true }: { lang: Language; ready?: b
   const id = lang === "id";
   const community = useCommunity();
   const directory = useTeam();
+  const page = useScrollAccent(".about-copy, .activity, .stats-intro, .stats-data, .portfolio .section-heading, .event-track, .social-card, .community-showcase-copy");
   const activityIcons = [ChatCircleDots, Headphones, Microphone, PaintBrush];
   return (
-    <main className="motion-page">
+    <main className="motion-page" ref={page}>
       <section className="hero" id="home">
         <div className="hero-background" aria-hidden="true" />
         <div className="hero-shade" />

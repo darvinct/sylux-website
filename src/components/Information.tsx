@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { Mascot } from "./Mascot";
+import { useScrollAccent } from "../lib/useScrollAccent";
 import {
   ArrowDown, ArrowLeft, ArrowRight, Atom, Buildings, Camera, Code, Confetti, Crown,
   FirstAidKit, GameController, Handshake, House, Lightning, Medal, Megaphone,
@@ -112,8 +113,9 @@ export default function Information({ lang }: { lang: Language }) {
   }
   const role = sentinelDivisions[selected];
   const Icon = icons[role.id];
+  const page = useScrollAccent(".information-section-title, .information-legacy, .community-showcase-copy");
   return (
-    <main className="information-page motion-page">
+    <main className="information-page motion-page" ref={page}>
       <section ref={hero} className="information-hero" aria-labelledby="information-title">
         <div className="information-hero-stage">
           <div className="information-hero-copy">
