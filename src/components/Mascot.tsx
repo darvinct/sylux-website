@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 import "../mascot.css";
 
-const POSTER = "/images/sylux-mascot-motion-poster.webp";
-const VIDEO = "/images/sylux-mascot-motion.mp4";
+const POSTER = "/images/sylux-mascot-motion-poster.webp?v=2";
+const VIDEO = "/images/sylux-mascot-motion.mp4?v=2";
 
 export function Mascot() {
   const stage = useRef<HTMLDivElement>(null);
