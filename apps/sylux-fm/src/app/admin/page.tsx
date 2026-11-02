@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { RadioTower, LogOut, Play, Check, X, Square, RefreshCw, ArrowUpRight } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
-import type { RadioRequest, RequestStatus } from "@/lib/requests";
+import type { RadioRequest } from "@/lib/requests";
 
 export default function AdminPage() {
   const [db, setDb] = useState<ReturnType<typeof createClient> | null>(null);
@@ -15,27 +15,46 @@ export default function AdminPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
+  const currentUserId = useRef<string | null>(null);
+  const reloadSequence = useRef(0);
+
   useEffect(() => {
+    let alive = true;
     try {
       const client = createClient();
       setDb(client);
-      client.auth.getUser().then(({data}) => setUser(data.user));
-      const { data: subscription } = client.auth.onAuthStateChange((_event,session) => setUser(session?.user ?? null));
-      return () => subscription.subscription.unsubscribe();
+      function acceptUser(next: User | null) {
+        if (!alive) return;
+        if (currentUserId.current !== (next?.id ?? null)) { setRows([]); setAllowed(false); }
+        currentUserId.current = next?.id ?? null;
+        setUser(next);
+      }
+      let authChanged = false;
+      void client.auth.getUser().then(({ data }) => {
+        if (!authChanged) acceptUser(data.user);
+      });
+      const { data: subscription } = client.auth.onAuthStateChange((_event, session) => {
+        authChanged = true;
+        acceptUser(session?.user ?? null);
+      });
+      return () => { alive = false; subscription.subscription.unsubscribe(); };
     } catch {
       setError("Supabase belum dikonfigurasi.");
     }
   }, []);
 
   const reload = useCallback(async () => {
-    if (!db || !user) return;
+    const sequence = ++reloadSequence.current;
+    if (!db || !user) { setAllowed(false); setRows([]); return; }
     const { data: isAdmin, error: roleError } = await db.rpc("is_operator", { _uid: user.id });
-    if (roleError || !isAdmin) { setAllowed(false); return; }
+    if (sequence !== reloadSequence.current || currentUserId.current !== user.id) return;
+    if (roleError || !isAdmin) { setAllowed(false); setRows([]); return; }
     setAllowed(true);
     const { data, error: fetchError } = await db.from("radio_requests").select("*")
-      .order("created_at", { ascending: true });
+      .order("created_at", { ascending: true }).order("id", { ascending: true });
+    if (sequence !== reloadSequence.current || currentUserId.current !== user.id) return;
     if (fetchError) setError(fetchError.message);
-    else setRows((data || []) as RadioRequest[]);
+    else { setError(""); setRows((data || []) as RadioRequest[]); }
   }, [db, user]);
 
   useEffect(() => {
@@ -59,17 +78,17 @@ export default function AdminPage() {
     setUser(null); setAllowed(false); setRows([]);
   }
 
-  async function moderate(id: string, status: RequestStatus) {
-    if (!db || !allowed) return;
+  async function moderate(id: string, status: "approved" | "rejected" | "completed") {
+    if (!db || !allowed || busy) return;
     setBusy(true); setError("");
-    const { error: updateError } = await db.from("radio_requests").update({ status }).eq("id", id);
+    const { error: updateError } = await db.rpc("moderate_request", { request_id: id, next_status: status });
     setBusy(false);
     if (updateError) setError(updateError.message);
     else void reload();
   }
 
   async function displayNext() {
-    if (!db || !allowed) return;
+    if (!db || !allowed || busy) return;
     setBusy(true); setError("");
     const { error: rpcError } = await db.rpc("display_next_request");
     setBusy(false);
@@ -94,7 +113,7 @@ export default function AdminPage() {
         !allowed ? <div className="panel gate-panel"><h2>Access restricted</h2><p>Akun ini belum didaftarkan sebagai operator. Tambahkan auth user UUID kamu ke tabel radio_operators di Supabase.</p><button className="secondary-button" onClick={logout}><LogOut size={15}/> Sign out</button><button className="secondary-button" onClick={()=>void reload()}><RefreshCw size={15}/> Check access</button></div> :
         <>
           <div className="dashboard-stats">
-            <div className="panel stat-panel"><small>TOTAL REQUESTS</small><strong>{rows.length}</strong><span>Received today</span></div>
+            <div className="panel stat-panel"><small>TOTAL REQUESTS</small><strong>{rows.length}</strong><span>Received this event</span></div>
             <div className="panel stat-panel"><small>PENDING REVIEW</small><strong>{pending.length}</strong><span>Awaiting moderation</span></div>
             <div className="panel stat-panel"><small>APPROVED QUEUE</small><strong>{approved.length}</strong><span>Ready for air</span></div>
             <div className="panel stat-panel"><small>COMPLETED</small><strong>{completed}</strong><span>{rejected} rejected</span></div>
@@ -113,7 +132,7 @@ export default function AdminPage() {
             <section className="panel queue-panel"><div className="panel-heading"><div><div className="eyebrow">02 / BROADCAST LIST</div><h2>Approved queue</h2></div><span className="count-label">{approved.length}</span></div>
               {approved.length === 0 && <p className="muted">Queue is empty.</p>}
               {approved.map((r,i) => <div className="approved-entry" key={r.id}><span className="queue-number">{String(i+1).padStart(2,"0")}</span><div><strong>{r.song_title}</strong><span>{r.artist} · {r.username}</span></div><span className="status-tag approved">READY</span></div>)}
-              <div className="helper-note">FIFO: request yang disetujui diputar sesuai waktu pengiriman aslinya, bukan waktu approval.</div>
+              <div className="helper-note">FIFO mengikuti waktu pengiriman request. Host membaca pesan dan memutar lagu secara manual.</div>
             </section>
           </div>
         </>
@@ -123,3 +142,4 @@ export default function AdminPage() {
     </main>
   );
 }
+

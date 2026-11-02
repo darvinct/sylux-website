@@ -1,20 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { timingSafeEqual } from "node:crypto";
+import { hasOverlayAccess } from "@/lib/overlay-access";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-function sameSecret(received: string, expected: string) {
-  const a = Buffer.from(received);
-  const b = Buffer.from(expected);
-  return a.length === b.length && timingSafeEqual(a, b);
-}
-
 export async function GET(request: NextRequest) {
   const key = request.headers.get("x-overlay-key") ?? "";
   const expected = process.env.OVERLAY_VIEW_KEY ?? "";
-  if (expected.length < 32 || !sameSecret(key, expected)) {
+  if (!hasOverlayAccess(key, expected)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401, headers: { "Cache-Control": "no-store" } });
   }
 
@@ -34,3 +28,4 @@ export async function GET(request: NextRequest) {
   if (error) return NextResponse.json({ error: "Unable to retrieve current request" }, { status: 500, headers: { "Cache-Control": "no-store" } });
   return NextResponse.json({ active: data ?? null }, { headers: { "Cache-Control": "no-store, max-age=0" } });
 }
+

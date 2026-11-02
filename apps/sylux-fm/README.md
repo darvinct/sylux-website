@@ -1,34 +1,84 @@
 # SYLUX FM — Request & Dedication
 
-A separate Next.js app for the community event. The existing sylux-website root app is untouched.
+Aplikasi Next.js terpisah di `apps/sylux-fm`, dengan desain minimalis, login Discord, moderasi, antrean FIFO, dan popup OBS. Host membaca pesan dan memutar lagu secara manual. Aplikasi tidak mengunggah atau memutar audio.
 
-## Features
+## Menjalankan lokal
 
-- Discord OAuth sign-in using Supabase Auth, with a maximum of **two non-rejected requests per authenticated user**, enforced by a PostgreSQL trigger.
-- Request form: artist, song, recipient (optional), dedication (max 500 characters).
-- Staff moderation: Pending → Approved / Rejected.
-- FIFO queue: Display Next selects the earliest Approved request only.
-- Minimal dark OBS overlay; 12-second fade-out popup, with a private view key.
-- Manual audio playback by host / music operator. No payment or donation service.
+Gunakan Node.js 24 dari folder aplikasi:
 
-## Setup for Codex, local development, and Vercel
+```sh
+cd apps/sylux-fm
+npm install
+cp .env.example .env.local
+npm test
+npm run typecheck
+npm run build
+npm run dev
+```
 
-1. Open this repository in Codex and work inside apps/sylux-fm (do not use repository root as the app).
-2. Create a Supabase project. In SQL Editor, run supabase/schema.sql.
-3. At Discord Developer Portal, create an OAuth application. In Supabase Authentication > Providers > Discord, configure client ID and secret, and set Discord's redirect URL to Supabase's provider callback (shown in Supabase).
-4. In Supabase Authentication > URL Configuration set Site URL to your deployed or local URL; add http://localhost:3000/auth/callback and https://YOUR-VERCEL-DOMAIN/auth/callback to redirect allow list.
-5. Copy .env.example to .env.local and fill in values from Supabase Settings > API. OVERLAY_VIEW_KEY must be random and at least 32 characters. Keep SUPABASE_SERVICE_ROLE_KEY server-only; never commit .env.local.
-6. cd apps/sylux-fm && npm install && npm run dev. Visit http://localhost:3000/request.
-7. Sign in once using Discord, then find your auth user UUID in Supabase Authentication > Users. Insert it into radio_operators as described in schema.sql.
-8. Visit /admin to approve requests, then Display Next. OBS Browser Source should point at /overlay?key=YOUR_OVERLAY_VIEW_KEY, with width 1920, height 1080 and transparent background.
-9. In Vercel, import the GitHub repository, set **Root Directory** to apps/sylux-fm and configure the four environment variables. Deploy.
+Isi `.env.local` dengan konfigurasi Supabase. Jangan commit file tersebut. Setelah instalasi berhasil, simpan lockfile aplikasi untuk pemasangan dependensi yang dapat diulang.
 
-## Security and limitations
+1. Jalankan `supabase/schema.sql` di Supabase SQL Editor. Untuk instalasi sebelumnya, jalankan ulang file lengkap sebelum memakai frontend baru: dashboard sekarang memakai RPC `moderate_request`, dan insert member tidak lagi mengirim username/status. Terapkan pada proyek test/staging dahulu.
+2. Di Discord Developer Portal, buat aplikasi OAuth. Aktifkan provider Discord di Supabase Auth dan masukkan client ID/secret. Redirect Discord menuju callback provider yang ditampilkan Supabase, biasanya `https://PROJECT.supabase.co/auth/v1/callback`.
+3. Di Supabase Auth URL Configuration, atur Site URL ke origin aplikasi FM. Tambahkan URL callback yang tepat: `http://localhost:3000/auth/callback` serta `https://DOMAIN-FM/auth/callback`. Gunakan allow list terpisah untuk staging/preview; jangan memakai wildcard production.
+4. Login Discord sekali di `/request`, lalu salin UUID akun dari Supabase Authentication → Users. Tambahkan operator melalui SQL Editor sebagai admin database:
 
-- Supabase login confirms Discord account ownership but does not verify membership in a specific Discord server. Add guild membership checks if access must be restricted to a server.
-- Supabase RLS restricts members to their own request rows. Admin rights require an explicit radio_operators entry.
-- The count limit is enforced in the database inside an advisory lock, so concurrent submissions cannot exceed two.
-- Rejecting a request frees one slot; Completed requests still count toward the event's two-request lifetime limit.
-- Never share the overlay key publicly. Rotate it if leaked. The overlay API exposes only the current on-air dedication.
-- This is a reviewable MVP, not a deployed production service. Run build and manual end-to-end tests in Codex before deployment.
-- Audio licensing, Discord streaming limitations, and moderation of member-provided text remain the event organizer's responsibility.
+```sql
+insert into public.radio_operators(user_id) values ('UUID-AKUN-DISCORD-OPERATOR');
+```
+
+Jangan mengambil keputusan role dari display name, email, atau metadata user. Login Discord tidak memverifikasi keanggotaan guild.
+
+## Perilaku aplikasi
+
+- Maksimal **dua request non-Rejected per akun selama event**. Completed tetap dihitung; Reject membebaskan slot. Kuota dilindungi trigger database dengan lock per akun.
+- Member mengisi lagu, artis, penerima opsional, dan pesan maksimal 500 karakter. Member hanya melihat request sendiri.
+- `/admin` hanya untuk operator whitelist. Approve/Reject memoderasi Pending. Display Next memilih Approved paling awal berdasarkan waktu pengiriman dan ID; request sebelumnya menjadi Completed. Antrean kosong tidak mengakhiri request aktif. Finish mengakhiri request aktif.
+- Antrean dashboard dan status request member diperbarui setiap lima detik. Audio tetap dioperasikan manual oleh host.
+- Preview visual popup: `/overlay?preview=1`, tanpa data asli atau kunci.
+- OBS Browser Source: `https://DOMAIN-FM/overlay?key=SECRET`, resolusi 1920×1080. Background transparan; popup tampil sekali selama 12 detik per request aktif. API diperiksa tiap 2,5 detik setelah respons sebelumnya selesai. Finish menyembunyikan popup pada poll berikutnya.
+
+Gunakan kunci acak minimal 32 karakter. Contoh pembuatan lokal:
+
+```sh
+node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
+```
+
+## Deployment Vercel terpisah
+
+Buat **proyek Vercel baru khusus SYLUX FM** yang memakai repositori yang sama:
+
+| Pengaturan | Nilai |
+| --- | --- |
+| Root Directory | `apps/sylux-fm` |
+| Framework | Next.js |
+| Node.js | 24.x |
+| Production Branch proyek FM | `feature/sylux-fm-request-system` jika branch ini menjadi sumber deployment |
+| Install Command | `npm install` sampai lockfile tersedia; sesudah itu `npm ci` |
+| Build Command | Dari `vercel.json`: TypeScript → test → Next build |
+| Output Directory | Default Next.js |
+
+Atur variabel per lingkungan melalui Vercel; rebuild setelah mengubah `NEXT_PUBLIC_*`:
+
+| Variabel | Lingkup |
+| --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | URL proyek Supabase |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon/publishable key; data tetap dibatasi RLS |
+| `SUPABASE_SERVICE_ROLE_KEY` | Secret server untuk membaca popup aktif |
+| `OVERLAY_VIEW_KEY` | Secret acak minimal 32 karakter untuk OBS |
+
+Jangan mengubah Root Directory, domain, environment variables, Production Branch, atau `vercel.json` milik proyek website utama. Konfigurasi deployment aplikasi ini berada di folder FM sendiri.
+
+## Pemeriksaan sebelum mengudara
+
+`npm test` tidak memerlukan dependensi eksternal pada Node 24. Uji database menggunakan PostgreSQL kosong disposable dengan role yang dapat membuat schema/role:
+
+```sh
+psql "$SYLUX_TEST_DATABASE_URL" -X -f tests/database.sql
+```
+
+Jangan arahkan uji fixture ke Supabase atau production. Tes menolak database yang sudah memiliki `auth.users` atau `radio_requests`, lalu rollback seluruh fixture.
+
+Di staging, verifikasi login/logout Discord, penolakan nonoperator, kuota termasuk tiga submit paralel, moderasi, FIFO, Finish, pergantian akun, kunci OBS salah/benar, popup 12 detik tanpa pengulangan, dan transparansi di OBS sebenarnya.
+
+Status saat penyiapan: **6 uji unit lulus; TypeScript, build, uji PostgreSQL dan alur browser belum terverifikasi karena dependensi/layanan belum tersedia**. Konfigurasi Vercel disiapkan, deployment belum dilakukan. Lihat [SECURITY.md](SECURITY.md).

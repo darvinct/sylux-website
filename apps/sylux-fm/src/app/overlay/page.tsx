@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { RadioTower, Disc3 } from "lucide-react";
 import type { OverlayRequest } from "@/lib/requests";
+import { createPopup } from "@/lib/popup";
+import { OVERLAY_POLL_MS, parseOverlayPayload } from "@/lib/overlay";
 
 const example: OverlayRequest = {
   id:"preview", username:"Yeri", song_title:"Those Eyes", artist:"New West",
@@ -14,30 +16,19 @@ export default function OverlayPage() {
   const [item, setItem] = useState<OverlayRequest | null>(null);
   const [visible, setVisible] = useState(false);
   const [warning, setWarning] = useState("");
-  const lastId = useRef<string | null>(null);
-  const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const preview = params.get("preview") === "1";
     const key = params.get("key");
     let alive = true;
-
-    function display(next: OverlayRequest | null) {
-      if (!alive) return;
-      if (!next) { setVisible(false); lastId.current=null; return; }
-      if (next.id === lastId.current) return;
-      lastId.current = next.id;
-      setVisible(false);
-      setItem(next);
-      if (timeout.current) clearTimeout(timeout.current);
-      setTimeout(() => { if (alive) setVisible(true); }, 90);
-      timeout.current = setTimeout(() => { if (alive) setVisible(false); }, 12000);
-    }
+    const popup = createPopup(setItem, setVisible);
+    const controller = new AbortController();
+    let timer: ReturnType<typeof setTimeout> | undefined;
 
     if (preview) {
-      display(example);
-      return () => { alive=false; if(timeout.current)clearTimeout(timeout.current); };
+      popup.display(example);
+      return () => { alive=false; popup.clear(); };
     }
     if (!key) {
       setWarning("Add ?key=YOUR_OVERLAY_VIEW_KEY to the OBS browser source URL.");
@@ -47,18 +38,21 @@ export default function OverlayPage() {
     async function poll() {
       try {
         const response = await fetch("/api/overlay", {
-          headers: { "x-overlay-key": key! }, cache:"no-store"
+          headers: { "x-overlay-key": key! }, cache:"no-store",
+          referrerPolicy: "no-referrer", signal: controller.signal
         });
-        if (!response.ok) { if(alive)setWarning("Overlay access denied or unavailable."); return; }
-        const data = (await response.json()) as { active: OverlayRequest | null };
-        if (alive) { setWarning(""); display(data.active); }
+        if (!response.ok) throw new Error("Overlay unavailable");
+        const active = parseOverlayPayload(await response.json());
+        if (alive) { setWarning(""); popup.display(active); }
       } catch {
-        if (alive) setWarning("Unable to connect to overlay API.");
+        if (alive) { popup.clear(); setWarning("Overlay access denied or unavailable."); }
+      } finally {
+        // Schedule only after completion; slow requests cannot overwrite newer data.
+        if (alive) timer = setTimeout(() => { void poll(); }, OVERLAY_POLL_MS);
       }
     }
     void poll();
-    const timer = setInterval(() => { void poll(); }, 2500);
-    return () => { alive=false; clearInterval(timer); if(timeout.current)clearTimeout(timeout.current); };
+    return () => { alive=false; clearTimeout(timer); controller.abort(); popup.clear(); };
   }, []);
 
   return (
@@ -72,3 +66,4 @@ export default function OverlayPage() {
     </main>
   );
 }
+

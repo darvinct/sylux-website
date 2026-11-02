@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { Disc3, RadioTower, Headphones, ArrowUpRight, LogOut, Send, Clock3 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
@@ -18,27 +18,49 @@ export default function RequestPage() {
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
 
+  const currentUserId = useRef<string | null>(null);
+  const reloadSequence = useRef(0);
+
   useEffect(() => {
+    let alive = true;
     try {
       const client = createClient();
       setDb(client);
-      client.auth.getUser().then(({ data }) => setUser(data.user));
-      const { data: subscription } = client.auth.onAuthStateChange((_event, session) => setUser(session?.user ?? null));
-      return () => subscription.subscription.unsubscribe();
+      function acceptUser(next: User | null) {
+        if (!alive) return;
+        if (currentUserId.current !== (next?.id ?? null)) { setRequests([]); setNotice(""); }
+        currentUserId.current = next?.id ?? null;
+        setUser(next);
+      }
+      let authChanged = false;
+      void client.auth.getUser().then(({ data }) => {
+        if (!authChanged) acceptUser(data.user);
+      });
+      const { data: subscription } = client.auth.onAuthStateChange((_event, session) => {
+        authChanged = true;
+        acceptUser(session?.user ?? null);
+      });
+      return () => { alive = false; subscription.subscription.unsubscribe(); };
     } catch {
       setError("Konfigurasi Supabase belum tersedia. Isi environment variables terlebih dahulu.");
     }
   }, []);
 
   const reload = useCallback(async () => {
-    if (!db || !user) return;
+    const sequence = ++reloadSequence.current;
+    if (!db || !user) { setRequests([]); return; }
     const { data, error: fetchError } = await db.from("radio_requests")
       .select("*").eq("user_id", user.id).order("created_at", { ascending: true });
+    if (sequence !== reloadSequence.current || currentUserId.current !== user.id) return;
     if (fetchError) setError(fetchError.message);
-    else setRequests((data ?? []) as RadioRequest[]);
+    else { setError(""); setRequests((data ?? []) as RadioRequest[]); }
   }, [db, user]);
 
-  useEffect(() => { void reload(); }, [reload]);
+  useEffect(() => {
+    void reload();
+    const timer = setInterval(() => { void reload(); }, 5000);
+    return () => clearInterval(timer);
+  }, [reload]);
 
   const count = requests.filter(r => r.status !== "rejected").length;
   const username = String(user?.user_metadata?.full_name || user?.user_metadata?.name || user?.user_metadata?.user_name || "SYLUX Listener");
@@ -62,18 +84,19 @@ export default function RequestPage() {
 
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!db || !user || count >= 2) return;
+    if (!db || !user || busy || count >= 2) return;
+    if (!form.song_title.trim() || !form.artist.trim() || !form.message.trim()) {
+      setError("Judul, artis, dan pesan tidak boleh kosong.");
+      return;
+    }
     setBusy(true); setError(""); setNotice("");
     const { error: submitError } = await db.from("radio_requests").insert({
       user_id: user.id,
-      username: username.slice(0, 64),
       song_title: form.song_title.trim(),
       artist: form.artist.trim(),
       dedication_to: form.dedication_to.trim() || null,
-      message: form.message.trim(),
-      status: "pending"
+      message: form.message.trim()
     });
-    setBusy(false);
     if (submitError) {
       setError(submitError.message.includes("Maksimal") ? "Batas 2 request sudah tercapai." : submitError.message);
     } else {
@@ -81,6 +104,7 @@ export default function RequestPage() {
       setForm(initialForm);
       await reload();
     }
+    setBusy(false);
   }
 
   return (
@@ -157,3 +181,4 @@ export default function RequestPage() {
     </main>
   );
 }
+
