@@ -14,14 +14,17 @@ Perubahan hanya untuk `apps/sylux-fm`. Website utama dan konfigurasi Vercel di r
 - Poll OBS berjalan berurutan. Cleanup membatalkan fetch dan kedua timer popup. Error/standby menyembunyikan popup. Poll identik tidak mengulang popup; popup hilang setelah 12 detik. Tidak ada audio atau perpindahan lagu otomatis.
 - Pergantian akun menghapus antrean di UI dan mengabaikan fetch akun sebelumnya. Nama/judul panjang dibungkus tanpa merusak desain minimalis.
 
-## Verifikasi dalam sesi ini
+## Verifikasi pada 2 November 2026
 
-- `npm test`: **6 pengujian lulus**, mencakup redirect berbahaya, otorisasi OBS, validasi payload, durasi popup, deduplikasi polling, pergantian popup, dan pembatalan timer.
-- `npm run typecheck`: dicoba; terhenti karena `tsc` belum terpasang.
-- `npm run build`: dicoba; terhenti karena `next` belum terpasang.
-- Instalasi dependensi belum berhasil: proxy tidak dapat diakses dari sandbox dan permintaan akses jaringan terhenti. Lockfile aplikasi belum dihasilkan. Jangan menganggap TypeScript atau build sudah lulus.
-- `tests/database.sql` tersedia untuk PostgreSQL disposable: kuota dua request, Completed tetap dihitung, Reject membebaskan slot, isolasi member, penolakan anon/non-Discord, eskalasi operator, pemalsuan kolom, transisi, FIFO, dan penerapan schema dua kali. **Belum dijalankan**, PostgreSQL tidak tersedia.
-- Login Discord sungguhan, RLS pada Supabase, submit paralel, dashboard di browser, Browser Source OBS, dan deployment Vercel **belum diverifikasi**. Tidak ada konfigurasi Supabase/Discord atau kredensial Vercel di lingkungan ini.
+- `npm run typecheck`: **lulus**, setelah memperbaiki tipe callback cookie Supabase di server dan middleware.
+- `npm run build`: **lulus**, Next.js 15.5.28. `outputFileTracingRoot` dibatasi ke folder aplikasi agar lockfile website utama tidak dipilih sebagai root.
+- `npm test`: **6 pengujian lulus**, mencakup redirect berbahaya, kunci OBS, validasi payload, timer popup, deduplikasi, pergantian popup, dan cleanup.
+- `tests/database.sql`: **lulus pada PostgreSQL 17 disposable**, mencakup kuota, Completed tetap dihitung, Reject membebaskan slot, isolasi member, anon/non-Discord, eskalasi operator, pemalsuan kolom, transisi, FIFO, dan penerapan schema dua kali.
+- `tests/concurrency.py`: **5 putaran lulus** menggunakan koneksi PostgreSQL terpisah. Dari tiga submit bersamaan tepat dua tersimpan dan satu ditolak SQLSTATE 23514. Dua Display Next bersamaan selalu menghasilkan satu Now Playing dan satu Completed.
+- Audit dependensi produksi: **0 kerentanan**. Next.js membawa PostCSS 8.4.31 yang rentan; aplikasi meng-override ke 8.5.32 dan menyimpan lockfile. Vercel memakai `npm ci`.
+- Uji browser dijalankan dengan Chromium/Playwright dan fixture Auth/PostgREST lokal, meliputi halaman logout, akses nonoperator, dua submit, kolom insert, moderasi, FIFO, Finish, serta popup OBS dan header API. Ini bukan pengujian provider Discord atau layanan Supabase asli.
+- Server produksi lokal merespons `/request`, `/admin`, `/overlay?preview=1` dengan HTTP 200; `/api/overlay` tanpa kunci ditolak HTTP 401 dengan `Cache-Control: no-store`.
+- Login Discord sungguhan, proyek Supabase sebenarnya, aplikasi OBS desktop, dan deployment Vercel **belum diverifikasi**: kredensial/konfigurasinya belum tersedia. Schema hanya diterapkan pada database test disposable, bukan production.
 
 ## Batas kepercayaan dan pemeriksaan sebelum produksi
 
@@ -31,4 +34,4 @@ Display name Discord adalah teks pengguna, bukan bukti identitas staff. Moderasi
 
 Kunci OBS di URL adalah bearer secret. URL dapat terlihat di konfigurasi OBS, histori browser, dan log permintaan halaman pada hosting. Jangan membagikannya dan rotasi `OVERLAY_VIEW_KEY` jika terekspos. Service-role key tidak boleh berawalan `NEXT_PUBLIC_`.
 
-Jalankan fixture SQL hanya pada database kosong disposable; stub auth di-rollback. Ini bukan pengganti Supabase Auth asli. Sebelum produksi, uji minimal tiga submit bersamaan dari satu akun: tepat dua harus tersimpan. Uji pula dua Display Next bersamaan dan pastikan hanya satu baris Now Playing.
+Jalankan fixture SQL hanya pada database kosong disposable; stub auth di-rollback. Ini bukan pengganti Supabase Auth asli. Pengujian paralel tersebut sudah lulus pada PostgreSQL lokal; ulangi smoke test pada proyek staging Supabase sebelum production.

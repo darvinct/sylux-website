@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  outputFileTracingRoot: process.cwd(),
   async headers() {
     return [{ source: "/:path*", headers: [
       { key: "Referrer-Policy", value: "no-referrer" },

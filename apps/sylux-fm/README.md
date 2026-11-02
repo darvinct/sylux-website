@@ -8,7 +8,7 @@ Gunakan Node.js 24 dari folder aplikasi:
 
 ```sh
 cd apps/sylux-fm
-npm install
+npm ci
 cp .env.example .env.local
 npm test
 npm run typecheck
@@ -16,7 +16,7 @@ npm run build
 npm run dev
 ```
 
-Isi `.env.local` dengan konfigurasi Supabase. Jangan commit file tersebut. Setelah instalasi berhasil, simpan lockfile aplikasi untuk pemasangan dependensi yang dapat diulang.
+Isi `.env.local` dengan konfigurasi Supabase. Jangan commit file tersebut. Lockfile aplikasi disimpan; gunakan `npm ci` untuk pemasangan dependensi yang dapat diulang.
 
 1. Jalankan `supabase/schema.sql` di Supabase SQL Editor. Untuk instalasi sebelumnya, jalankan ulang file lengkap sebelum memakai frontend baru: dashboard sekarang memakai RPC `moderate_request`, dan insert member tidak lagi mengirim username/status. Terapkan pada proyek test/staging dahulu.
 2. Di Discord Developer Portal, buat aplikasi OAuth. Aktifkan provider Discord di Supabase Auth dan masukkan client ID/secret. Redirect Discord menuju callback provider yang ditampilkan Supabase, biasanya `https://PROJECT.supabase.co/auth/v1/callback`.
@@ -54,7 +54,7 @@ Buat **proyek Vercel baru khusus SYLUX FM** yang memakai repositori yang sama:
 | Framework | Next.js |
 | Node.js | 24.x |
 | Production Branch proyek FM | `feature/sylux-fm-request-system` jika branch ini menjadi sumber deployment |
-| Install Command | `npm install` sampai lockfile tersedia; sesudah itu `npm ci` |
+| Install Command | `npm ci` (lockfile aplikasi tersedia) |
 | Build Command | Dari `vercel.json`: TypeScript → test → Next build |
 | Output Directory | Default Next.js |
 
@@ -81,4 +81,27 @@ Jangan arahkan uji fixture ke Supabase atau production. Tes menolak database yan
 
 Di staging, verifikasi login/logout Discord, penolakan nonoperator, kuota termasuk tiga submit paralel, moderasi, FIFO, Finish, pergantian akun, kunci OBS salah/benar, popup 12 detik tanpa pengulangan, dan transparansi di OBS sebenarnya.
 
-Status saat penyiapan: **6 uji unit lulus; TypeScript, build, uji PostgreSQL dan alur browser belum terverifikasi karena dependensi/layanan belum tersedia**. Konfigurasi Vercel disiapkan, deployment belum dilakukan. Lihat [SECURITY.md](SECURITY.md).
+Status verifikasi: **TypeScript, build produksi, 6 uji unit, uji PostgreSQL, dan uji paralel lulus**. Audit dependensi produksi melaporkan **0 kerentanan** setelah override PostCSS ke 8.5.32. Uji browser memakai fixture lokal, bukan akun Discord/Supabase asli. Deployment Vercel belum dilakukan. Lihat [SECURITY.md](SECURITY.md).
+
+Untuk menjalankan uji database dan paralel memakai container PostgreSQL disposable lokal:
+
+```sh
+docker run --detach --rm --name sylux-fm-tests \
+  --env POSTGRES_HOST_AUTH_METHOD=trust --env POSTGRES_DB=sylux_fm_tests \
+  --mount type=bind,src="$PWD",dst=/app,readonly postgres:17-alpine
+# Tunggu pg_isready mengembalikan exit code 0 sebelum menjalankan tes.
+docker exec sylux-fm-tests pg_isready -U postgres
+docker exec --workdir /app sylux-fm-tests psql -U postgres -d sylux_fm_tests -X -q -f tests/database.sql
+python3 tests/concurrency.py sylux-fm-tests
+docker stop sylux-fm-tests
+```
+
+Container ini tidak mengekspos port ke jaringan. `tests/concurrency.py` membuat database test sendiri, memakai koneksi terpisah untuk lima putaran submit/Display Next bersamaan, lalu menghapus database tersebut.
+
+Uji browser membutuhkan Python Playwright dan Chromium di `/usr/bin/chromium`:
+
+```sh
+python3 tests/browser.py
+```
+
+Tes ini menjalankan salinan aplikasi sementara di port 3001 dan fixture Supabase lokal di port 54321. File environment production tidak disalin. Endpoint simulasi hanya digunakan untuk menguji UI; pemeriksaan otorisasi database sebenarnya tetap diuji oleh `database.sql`.
