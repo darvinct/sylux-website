@@ -1,0 +1,159 @@
+"use client";
+
+import { useCallback, useEffect, useState, type FormEvent } from "react";
+import Link from "next/link";
+import { Disc3, RadioTower, Headphones, ArrowUpRight, LogOut, Send, Clock3 } from "lucide-react";
+import type { User } from "@supabase/supabase-js";
+import { createClient } from "@/lib/supabase/client";
+import type { RadioRequest } from "@/lib/requests";
+
+const initialForm = { song_title: "", artist: "", dedication_to: "", message: "" };
+
+export default function RequestPage() {
+  const [db, setDb] = useState<ReturnType<typeof createClient> | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [requests, setRequests] = useState<RadioRequest[]>([]);
+  const [form, setForm] = useState(initialForm);
+  const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    try {
+      const client = createClient();
+      setDb(client);
+      client.auth.getUser().then(({ data }) => setUser(data.user));
+      const { data: subscription } = client.auth.onAuthStateChange((_event, session) => setUser(session?.user ?? null));
+      return () => subscription.subscription.unsubscribe();
+    } catch {
+      setError("Konfigurasi Supabase belum tersedia. Isi environment variables terlebih dahulu.");
+    }
+  }, []);
+
+  const reload = useCallback(async () => {
+    if (!db || !user) return;
+    const { data, error: fetchError } = await db.from("radio_requests")
+      .select("*").eq("user_id", user.id).order("created_at", { ascending: true });
+    if (fetchError) setError(fetchError.message);
+    else setRequests((data ?? []) as RadioRequest[]);
+  }, [db, user]);
+
+  useEffect(() => { void reload(); }, [reload]);
+
+  const count = requests.filter(r => r.status !== "rejected").length;
+  const username = String(user?.user_metadata?.full_name || user?.user_metadata?.name || user?.user_metadata?.user_name || "SYLUX Listener");
+
+  async function login() {
+    if (!db) return;
+    setError("");
+    const { error: loginError } = await db.auth.signInWithOAuth({
+      provider: "discord",
+      options: { redirectTo: window.location.origin + "/auth/callback?next=/request" }
+    });
+    if (loginError) setError(loginError.message);
+  }
+
+  async function logout() {
+    if (!db) return;
+    await db.auth.signOut();
+    setRequests([]);
+    setUser(null);
+  }
+
+  async function submit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!db || !user || count >= 2) return;
+    setBusy(true); setError(""); setNotice("");
+    const { error: submitError } = await db.from("radio_requests").insert({
+      user_id: user.id,
+      username: username.slice(0, 64),
+      song_title: form.song_title.trim(),
+      artist: form.artist.trim(),
+      dedication_to: form.dedication_to.trim() || null,
+      message: form.message.trim(),
+      status: "pending"
+    });
+    setBusy(false);
+    if (submitError) {
+      setError(submitError.message.includes("Maksimal") ? "Batas 2 request sudah tercapai." : submitError.message);
+    } else {
+      setNotice("Request berhasil masuk ke antrean. Tunggu persetujuan operator.");
+      setForm(initialForm);
+      await reload();
+    }
+  }
+
+  return (
+    <main className="site-shell">
+      <header className="site-header">
+        <div className="brand"><span className="brand-icon"><RadioTower size={18}/></span> SYLUX<span className="accent">FM</span></div>
+        <div className="header-links"><span className="live-pill"><i/> FREQUENCIES OF THE NIGHT</span><Link href="/admin" className="subtle-link">Operator <ArrowUpRight size={14}/></Link></div>
+      </header>
+
+      <section className="hero">
+        <div className="eyebrow"><span className="tiny-line"/> THE NIGHT IS YOURS TO SHARE</div>
+        <h1>Every song has <em>a story.</em></h1>
+        <p>Request lagu favoritmu, titipkan pesan untuk seseorang, dan dengarkan kisahmu mengudara di SYLUX FM.</p>
+      </section>
+
+      <div className="content-grid">
+        <section className="panel form-panel">
+          <div className="panel-heading">
+            <div><div className="eyebrow">01 / SUBMISSION PORTAL</div><h2>Request & Dedication</h2></div>
+            <div className="round-icon"><Disc3 size={22}/></div>
+          </div>
+          {user ? (
+            <>
+              <div className="user-bar"><div><small>LOGGED IN AS</small><strong>{username}</strong></div><button type="button" className="text-button" onClick={logout}><LogOut size={14}/> Sign out</button></div>
+              <div className="quota">
+                <div><small>YOUR REQUEST SLOTS</small><strong>{count} / 2 used</strong></div>
+                <div className="slot-indicators"><span className={count >= 1 ? "filled" : ""}/><span className={count >= 2 ? "filled" : ""}/></div>
+              </div>
+              {count >= 2 ? <div className="notice">Kedua slot request sudah digunakan. Terima kasih sudah berpartisipasi!</div> :
+                <form onSubmit={submit}>
+                  <div className="field-row">
+                    <label>Song title <span>*</span><input required maxLength={120} value={form.song_title} onChange={e => setForm({ ...form, song_title:e.target.value })} placeholder="e.g. Those Eyes"/></label>
+                    <label>Artist <span>*</span><input required maxLength={120} value={form.artist} onChange={e => setForm({ ...form, artist:e.target.value })} placeholder="e.g. New West"/></label>
+                  </div>
+                  <label>Dedicated to <small>(OPTIONAL)</small><input maxLength={64} value={form.dedication_to} onChange={e => setForm({ ...form, dedication_to:e.target.value })} placeholder="Someone special, your best friend..."/></label>
+                  <label>Your message <span>*</span><textarea required minLength={1} maxLength={500} rows={5} value={form.message} onChange={e => setForm({ ...form, message:e.target.value })} placeholder="Your words will be read live on air..."/></label>
+                  <div className="form-bottom"><span>{form.message.length} / 500 characters</span><span>Free · 2 requests max</span></div>
+                  <button className="primary-button" type="submit" disabled={busy}><Send size={17}/>{busy ? "Submitting..." : "Send dedication"}<ArrowUpRight size={17}/></button>
+                </form>
+              }
+            </>
+          ) : (
+            <div className="login-panel">
+              <Headphones size={30}/>
+              <h3>Tune in with Discord</h3>
+              <p>Masuk melalui Discord agar request kamu terhitung dengan benar. Maksimal 2 request per akun.</p>
+              <button className="primary-button" onClick={login} disabled={!db}>Continue with Discord <ArrowUpRight size={17}/></button>
+            </div>
+          )}
+          {notice && <div role="status" className="notice success">{notice}</div>}
+          {error && <div role="alert" className="notice error">{error}</div>}
+        </section>
+
+        <aside className="sidebar">
+          <div className="panel secondary-panel">
+            <div className="eyebrow">NOW TUNING IN</div>
+            <div className="station-art"><RadioTower size={52} strokeWidth={1}/><div className="frequency">98.7<span> FM</span></div><div className="frequency-caption">THE SYLUX FREQUENCY</div></div>
+            <div className="sidebar-footer"><span><i className="status-dot"/> ON AIR</span><span>YOUR VOICE, OUR FREQUENCY</span></div>
+          </div>
+          <div className="panel info-panel">
+            <div className="eyebrow">HOW IT WORKS</div>
+            <div className="info-item"><span>01</span><p>Sign in with Discord and fill in your song request.</p></div>
+            <div className="info-item"><span>02</span><p>Operator checks and approves your message.</p></div>
+            <div className="info-item"><span>03</span><p>Host reads it on air and plays the song manually.</p></div>
+            <div className="info-foot"><Clock3 size={15}/> Requests are played as airtime allows.</div>
+          </div>
+          {user && requests.length > 0 && <div className="panel info-panel">
+            <div className="eyebrow">YOUR SUBMISSIONS</div>
+            {requests.map(r => <div className="my-request" key={r.id}><strong>{r.song_title}</strong><span>{r.artist}</span><span className={"status-tag "+r.status}>{r.status.replace("_", " ")}</span></div>)}
+          </div>}
+        </aside>
+      </div>
+      <footer className="site-footer"><span>© SYLUX FM · TUNE IN, STAY AWHILE</span><span>Made for the community.</span></footer>
+    </main>
+  );
+}
