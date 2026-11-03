@@ -105,3 +105,15 @@ python3 tests/browser.py
 ```
 
 Tes ini menjalankan salinan aplikasi sementara di port 3001 dan fixture Supabase lokal di port 54321. File environment production tidak disalin. Endpoint simulasi hanya digunakan untuk menguji UI; pemeriksaan otorisasi database sebenarnya tetap diuji oleh `database.sql`.
+
+## Jika muncul 500 MIDDLEWARE_INVOCATION_FAILED
+
+`NEXT_PUBLIC_SUPABASE_URL` harus berupa **Project URL**, misalnya `https://PROJECT-ID.supabase.co`. Nilai `sb_publishable_...` adalah API key dan ditempatkan di `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Setelah memperbaiki environment variable di Vercel, redeploy karena `NEXT_PUBLIC_*` juga dipakai saat build.
+
+Konfigurasi diperiksa sebelum SDK dibuat di browser, server, middleware, dan endpoint OBS. Konfigurasi invalid menonaktifkan login, mengarahkan callback ke halaman login, dan memberi API OBS respons 503. Kegagalan refresh sesi tidak memberikan hak akses; RLS dan RPC tetap memeriksa sesi sebenarnya.
+
+Uji regresi konfigurasi invalid:
+
+```sh
+SYLUX_BROWSER_TEST_MODE=invalid-config python3 tests/browser.py
+```

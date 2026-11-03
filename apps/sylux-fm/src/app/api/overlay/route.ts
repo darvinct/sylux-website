@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { hasOverlayAccess } from "@/lib/overlay-access";
+import { getSupabaseConfig } from "@/lib/supabase/config";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -12,13 +13,14 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401, headers: { "Cache-Control": "no-store" } });
   }
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const role = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !role) {
+  const settings = getSupabaseConfig(
+    process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY,
+  );
+  if (!settings) {
     return NextResponse.json({ error: "Service not configured" }, { status: 503, headers: { "Cache-Control": "no-store" } });
   }
 
-  const admin = createClient(url, role, { auth: { autoRefreshToken: false, persistSession: false } });
+  const admin = createClient(settings.url, settings.key, { auth: { autoRefreshToken: false, persistSession: false } });
   const { data, error } = await admin
     .from("radio_requests")
     .select("id,username,song_title,artist,dedication_to,message,updated_at")

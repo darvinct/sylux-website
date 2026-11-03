@@ -35,3 +35,9 @@ Display name Discord adalah teks pengguna, bukan bukti identitas staff. Moderasi
 Kunci OBS di URL adalah bearer secret. URL dapat terlihat di konfigurasi OBS, histori browser, dan log permintaan halaman pada hosting. Jangan membagikannya dan rotasi `OVERLAY_VIEW_KEY` jika terekspos. Service-role key tidak boleh berawalan `NEXT_PUBLIC_`.
 
 Jalankan fixture SQL hanya pada database kosong disposable; stub auth di-rollback. Ini bukan pengganti Supabase Auth asli. Pengujian paralel tersebut sudah lulus pada PostgreSQL lokal; ulangi smoke test pada proyek staging Supabase sebelum production.
+
+## Perbaikan konfigurasi, 3 November 2026
+
+Error produksi `Invalid supabaseUrl` terjadi ketika kolom Project URL berisi publishable key. URL proyek di Vercel diperbaiki berdasarkan project ref dari anon key; endpoint health menerima kedua public keys milik proyek tersebut. Nilai key tidak dicatat dalam laporan atau log aplikasi.
+
+Validasi konfigurasi kini dipakai sebelum membuat SDK di middleware, browser, server, dan API OBS. URL non-HTTP(S), URL dengan credential/query/fragment, dan konfigurasi kosong ditolak. Kegagalan konfigurasi atau refresh tidak boleh menutup seluruh halaman dengan 500 dan tidak pernah memberikan role; otorisasi Supabase RLS tidak berubah. Callback OAuth menangani kegagalan konfigurasi/provider dengan redirect ke halaman login. Pengujian unit bertambah menjadi tujuh, ditambah mode browser untuk reproduksi konfigurasi invalid.

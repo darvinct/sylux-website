@@ -4,9 +4,25 @@ import { authDestination } from '../src/lib/auth-redirect.ts';
 import { parseOverlayPayload, POPUP_DURATION_MS } from '../src/lib/overlay.ts';
 import { createPopup } from '../src/lib/popup.ts';
 import { hasOverlayAccess } from '../src/lib/overlay-access.ts';
+import { getSupabaseConfig } from '../src/lib/supabase/config.ts';
 
 const item = { id: 'one', username: 'Listener', song_title: 'Song', artist: 'Artist',
   dedication_to: null, message: '<script>alert(1)</script>', updated_at: '2026-11-02T00:00:00Z' };
+
+test('Supabase configuration rejects keys in the URL field and unsafe URLs without throwing', () => {
+  for (const url of [undefined, '', 'sb_publishable_test_key', 'project.supabase.co',
+    'NEXT_PUBLIC_SUPABASE_URL=https://project.supabase.co', 'file:///tmp/config',
+    'javascript:alert(1)', 'https://user:password@project.supabase.co',
+    'https://project.supabase.co?apikey=private', 'https://project.supabase.co/#token']) {
+    assert.equal(getSupabaseConfig(url, 'test-anon-key'), null);
+  }
+  assert.equal(getSupabaseConfig('https://project.supabase.co', '  '), null);
+  assert.equal(getSupabaseConfig('https://project.supabase.co', undefined), null);
+  assert.deepEqual(getSupabaseConfig(' https://project.supabase.co/ ', ' test-key '),
+    { url: 'https://project.supabase.co', key: 'test-key' });
+  assert.deepEqual(getSupabaseConfig('http://127.0.0.1:54321/', 'test-key'),
+    { url: 'http://127.0.0.1:54321', key: 'test-key' });
+});
 
 test('OBS secret authorization fails closed and handles different byte lengths', () => {
   const key = 'test-only-' + 'x'.repeat(32);

@@ -2,6 +2,7 @@
 
 Requires Python Playwright and Chromium. Starts an isolated copy of the app on
 port 3001 and a local auth/data fixture on 54321. No production env is copied.
+Set SYLUX_BROWSER_TEST_MODE=invalid-config to reproduce a key in the URL field.
 """
 import base64
 from datetime import datetime, timezone
@@ -22,6 +23,7 @@ import urllib.request
 from playwright.sync_api import sync_playwright, expect
 
 root = Path(__file__).resolve().parents[1]
+invalid_config = os.environ.get("SYLUX_BROWSER_TEST_MODE") == "invalid-config"
 origin = "http://127.0.0.1:3001"
 member = "00000000-0000-0000-0000-000000000001"
 host = "00000000-0000-0000-0000-000000000002"
@@ -145,7 +147,7 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
             shutil.copy2(source, directory/name)
     (directory/"node_modules").symlink_to(root/"node_modules", target_is_directory=True)
     env = os.environ.copy()
-    env.update({"NEXT_PUBLIC_SUPABASE_URL": "http://127.0.0.1:54321",
+    env.update({"NEXT_PUBLIC_SUPABASE_URL": "sb_publishable_test_key" if invalid_config else "http://127.0.0.1:54321",
                 "NEXT_PUBLIC_SUPABASE_ANON_KEY": "test-anon-key",
                 "SUPABASE_SERVICE_ROLE_KEY": "test-service-key", "OVERLAY_VIEW_KEY": secret})
     with (directory/"server.log").open("w+") as log:
@@ -168,84 +170,107 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
             with sync_playwright() as playwright:
                 browser = playwright.chromium.launch(executable_path="/usr/bin/chromium", headless=True,
                     args=["--no-sandbox"])
-                context = browser.new_context()
-                page = context.new_page()
-                page.goto(origin+"/request")
-                expect(page.get_by_role("button", name="Continue with Discord")).to_be_enabled()
-                page.goto(origin+"/admin")
-                expect(page.get_by_role("heading", name="Operator sign in")).to_be_visible()
-                context.close()
-                print("PASS: logged-out member and operator pages", flush=True)
+                if invalid_config:
+                    context = browser.new_context()
+                    page = context.new_page()
+                    for path in ['/request', '/admin']:
+                        response = page.goto(origin+path)
+                        assert response.status == 200
+                        expect(page.get_by_role("button", name="Continue with Discord")).to_be_disabled()
+                        expect(page.locator(".notice.error")).to_be_visible()
+                    response = context.request.get(origin+"/auth/callback?code=invalid-test-code", max_redirects=0)
+                    assert response.status == 307
+                    destination = urllib.parse.urlsplit(response.headers["location"])
+                    assert destination.path == "/request" and destination.query == "error=auth"
+                    assert destination.hostname in ("127.0.0.1", "localhost")
+                    response = context.request.get(origin+"/api/overlay", headers={"x-overlay-key": secret})
+                    assert response.status == 503
+                    assert response.headers["cache-control"] == "no-store"
+                    response = context.request.get(origin+"/api/overlay")
+                    assert response.status == 401
+                    assert calls == []
+                    context.close()
+                    browser.close()
+                    print("PASS: malformed Supabase URL cannot crash member/admin pages, OAuth callback or OBS API; login stays disabled", flush=True)
+                else:
+                    context = browser.new_context()
+                    page = context.new_page()
+                    page.goto(origin+"/request")
+                    expect(page.get_by_role("button", name="Continue with Discord")).to_be_enabled()
+                    page.goto(origin+"/admin")
+                    expect(page.get_by_role("heading", name="Operator sign in")).to_be_visible()
+                    context.close()
+                    print("PASS: logged-out member and operator pages", flush=True)
 
-                context = signed_context(browser, member)
-                page = context.new_page()
-                page.goto(origin+"/admin")
-                expect(page.get_by_role("heading", name="Access restricted")).to_be_visible(timeout=20000)
-                page.goto(origin+"/request")
-                expect(page.get_by_text("0 / 2 used")).to_be_visible()
-                for index in (1, 2):
-                    page.get_by_label("Song title").fill(f"Member song {index}")
-                    page.get_by_label("Artist", exact=False).fill("Artist")
-                    page.get_by_label("Your message").fill("A dedication")
-                    page.get_by_role("button", name="Send dedication").click()
-                    expect(page.get_by_text(f"{index} / 2 used")).to_be_visible()
-                expect(page.get_by_role("button", name="Send dedication")).to_have_count(0)
-                submitted = [body for path, body in calls if path == "/rest/v1/radio_requests"]
-                assert len(submitted) == 2
-                assert all("username" not in body and "status" not in body for body in submitted)
-                context.close()
-                print("PASS: member gate, two submissions, quota UI and server-owned columns", flush=True)
+                    context = signed_context(browser, member)
+                    page = context.new_page()
+                    page.goto(origin+"/admin")
+                    expect(page.get_by_role("heading", name="Access restricted")).to_be_visible(timeout=20000)
+                    page.goto(origin+"/request")
+                    expect(page.get_by_text("0 / 2 used")).to_be_visible()
+                    for index in (1, 2):
+                        page.get_by_label("Song title").fill(f"Member song {index}")
+                        page.get_by_label("Artist", exact=False).fill("Artist")
+                        page.get_by_label("Your message").fill("A dedication")
+                        page.get_by_role("button", name="Send dedication").click()
+                        expect(page.get_by_text(f"{index} / 2 used")).to_be_visible()
+                    expect(page.get_by_role("button", name="Send dedication")).to_have_count(0)
+                    submitted = [body for path, body in calls if path == "/rest/v1/radio_requests"]
+                    assert len(submitted) == 2
+                    assert all("username" not in body and "status" not in body for body in submitted)
+                    context.close()
+                    print("PASS: member gate, two submissions, quota UI and server-owned columns", flush=True)
 
-                with lock:
-                    requests[:] = [row(1, "pending"), row(2, "approved")]
-                context = signed_context(browser, host)
-                page = context.new_page()
-                page.goto(origin+"/admin")
-                expect(page.get_by_role("button", name="Approve", exact=True)).to_be_visible(timeout=20000)
-                page.get_by_role("button", name="Approve", exact=True).click()
-                expect(page.locator(".approved-entry")).to_have_count(2)
-                page.get_by_role("button", name="Display next approved request").click()
-                expect(page.locator(".active-request h3")).to_have_text("Song 1")
-                expect(page.locator(".approved-entry")).to_have_count(1)
-                page.get_by_role("button", name="Finish", exact=True).click()
-                expect(page.locator(".active-request")).to_have_count(0)
-                assert any(path.endswith("/moderate_request") for path, _ in calls)
-                context.close()
-                print("PASS: operator moderation, FIFO display and Finish", flush=True)
+                    with lock:
+                        requests[:] = [row(1, "pending"), row(2, "approved")]
+                    context = signed_context(browser, host)
+                    page = context.new_page()
+                    page.goto(origin+"/admin")
+                    expect(page.get_by_role("button", name="Approve", exact=True)).to_be_visible(timeout=20000)
+                    page.get_by_role("button", name="Approve", exact=True).click()
+                    expect(page.locator(".approved-entry")).to_have_count(2)
+                    page.get_by_role("button", name="Display next approved request").click()
+                    expect(page.locator(".active-request h3")).to_have_text("Song 1")
+                    expect(page.locator(".approved-entry")).to_have_count(1)
+                    page.get_by_role("button", name="Finish", exact=True).click()
+                    expect(page.locator(".active-request")).to_have_count(0)
+                    assert any(path.endswith("/moderate_request") for path, _ in calls)
+                    context.close()
+                    print("PASS: operator moderation, FIFO display and Finish", flush=True)
 
-                context = browser.new_context(viewport={"width": 1920, "height": 1080})
-                page = context.new_page()
-                page.goto(origin+"/overlay?preview=1")
-                expect(page.locator(".overlay-card")).to_have_class("overlay-card overlay-visible")
-                assert page.evaluate("getComputedStyle(document.body).backgroundColor") == "rgba(0, 0, 0, 0)"
-                assert page.locator("audio,video").count() == 0
-                response = context.request.get(origin+"/api/overlay")
-                assert response.status == 401
-                assert response.headers["cache-control"] == "no-store"
-                response = context.request.get(origin+"/api/overlay", headers={"x-overlay-key": secret})
-                assert response.status == 200 and response.json() == {"active": None}
-                assert response.headers["referrer-policy"] == "no-referrer"
-                with lock:
-                    requests[:] = [row(3, "now_playing")]
-                page.goto(origin+"/overlay?key="+secret)
-                expect(page.locator(".overlay-card")).to_have_class("overlay-card overlay-visible")
-                expect(page.locator(".overlay-song-title")).to_have_text("Song 3")
-                expect(page.locator(".overlay-message")).to_contain_text("<script>")
-                response = context.request.get(origin+"/api/overlay", headers={"x-overlay-key": secret})
-                assert "user_id" not in response.json()["active"]
-                expect(page.locator(".overlay-card")).to_have_class("overlay-card ", timeout=15000)
-                page.wait_for_timeout(3300)
-                expect(page.locator(".overlay-card")).to_have_class("overlay-card ")
-                with lock:
-                    requests[:] = [row(4, "now_playing")]
-                expect(page.locator(".overlay-song-title")).to_have_text("Song 4", timeout=5000)
-                expect(page.locator(".overlay-card")).to_have_class("overlay-card overlay-visible")
-                with lock:
-                    requests[0]["status"] = "completed"
-                expect(page.locator(".overlay-card")).to_have_class("overlay-card ", timeout=5000)
-                context.close()
-                browser.close()
-                print("PASS: transparent OBS, live API popup, 12-second fade, no replay, replacement, Finish and key/cache headers", flush=True)
+                    context = browser.new_context(viewport={"width": 1920, "height": 1080})
+                    page = context.new_page()
+                    page.goto(origin+"/overlay?preview=1")
+                    expect(page.locator(".overlay-card")).to_have_class("overlay-card overlay-visible")
+                    assert page.evaluate("getComputedStyle(document.body).backgroundColor") == "rgba(0, 0, 0, 0)"
+                    assert page.locator("audio,video").count() == 0
+                    response = context.request.get(origin+"/api/overlay")
+                    assert response.status == 401
+                    assert response.headers["cache-control"] == "no-store"
+                    response = context.request.get(origin+"/api/overlay", headers={"x-overlay-key": secret})
+                    assert response.status == 200 and response.json() == {"active": None}
+                    assert response.headers["referrer-policy"] == "no-referrer"
+                    with lock:
+                        requests[:] = [row(3, "now_playing")]
+                    page.goto(origin+"/overlay?key="+secret)
+                    expect(page.locator(".overlay-card")).to_have_class("overlay-card overlay-visible")
+                    expect(page.locator(".overlay-song-title")).to_have_text("Song 3")
+                    expect(page.locator(".overlay-message")).to_contain_text("<script>")
+                    response = context.request.get(origin+"/api/overlay", headers={"x-overlay-key": secret})
+                    assert "user_id" not in response.json()["active"]
+                    expect(page.locator(".overlay-card")).to_have_class("overlay-card ", timeout=15000)
+                    page.wait_for_timeout(3300)
+                    expect(page.locator(".overlay-card")).to_have_class("overlay-card ")
+                    with lock:
+                        requests[:] = [row(4, "now_playing")]
+                    expect(page.locator(".overlay-song-title")).to_have_text("Song 4", timeout=5000)
+                    expect(page.locator(".overlay-card")).to_have_class("overlay-card overlay-visible")
+                    with lock:
+                        requests[0]["status"] = "completed"
+                    expect(page.locator(".overlay-card")).to_have_class("overlay-card ", timeout=5000)
+                    context.close()
+                    browser.close()
+                    print("PASS: transparent OBS, live API popup, 12-second fade, no replay, replacement, Finish and key/cache headers", flush=True)
         except BaseException:
             log.flush()
             log.seek(0)
