@@ -129,7 +129,7 @@ class Fixture(BaseHTTPRequestHandler):
 
 
 def signed_context(browser, uid):
-    context = browser.new_context(viewport={"width": 1440, "height": 1000})
+    context = browser.new_context(viewport={"width": 1440, "height": 1000}, permissions=["clipboard-read", "clipboard-write"])
     value = "base64-" + base64.urlsafe_b64encode(json.dumps(session(uid)).encode()).decode().rstrip("=")
     context.add_cookies([{"name": "sb-127-auth-token", "value": value, "url": origin}])
     return context
@@ -199,11 +199,15 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
                     expect(page.get_by_role("button", name="Continue with Discord")).to_be_enabled()
                     page.goto(origin+"/admin")
                     expect(page.get_by_role("heading", name="Operator sign in")).to_be_visible()
+                    response = context.request.get(origin+"/api/operator/overlay-link")
+                    assert response.status == 401 and "path" not in response.json()
                     context.close()
-                    print("PASS: logged-out member and operator pages", flush=True)
+                    print("PASS: logged-out pages and no private OBS link for anonymous users", flush=True)
 
                     context = signed_context(browser, member)
                     page = context.new_page()
+                    response = context.request.get(origin+"/api/operator/overlay-link?user_id="+host)
+                    assert response.status == 403 and "path" not in response.json()
                     page.goto(origin+"/admin")
                     expect(page.get_by_role("heading", name="Access restricted")).to_be_visible(timeout=20000)
                     page.goto(origin+"/request")
@@ -227,6 +231,15 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
                     page = context.new_page()
                     page.goto(origin+"/admin")
                     expect(page.get_by_role("button", name="Approve", exact=True)).to_be_visible(timeout=20000)
+                    response = context.request.get(origin+"/api/operator/overlay-link")
+                    assert response.status == 200
+                    assert "no-store" in response.headers["cache-control"]
+                    path = response.json()["path"]
+                    assert urllib.parse.parse_qs(urllib.parse.urlsplit(path).query)["key"] == [secret]
+                    assert "test-service-key" not in response.text()
+                    page.get_by_role("button", name="Salin URL OBS").click()
+                    expect(page.get_by_text("URL OBS berhasil disalin.", exact=False)).to_be_visible()
+                    assert page.evaluate("navigator.clipboard.readText()") == origin+path
                     page.get_by_role("button", name="Approve", exact=True).click()
                     expect(page.locator(".approved-entry")).to_have_count(2)
                     page.get_by_role("button", name="Display next approved request").click()
@@ -240,6 +253,8 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
 
                     context = browser.new_context(viewport={"width": 1920, "height": 1080})
                     page = context.new_page()
+                    page.goto(origin+"/overlay?key=wrong-key")
+                    expect(page.locator(".overlay-warning")).to_contain_text("Kunci OBS tidak cocok")
                     page.goto(origin+"/overlay?preview=1")
                     expect(page.locator(".overlay-card")).to_have_class("overlay-card overlay-visible")
                     assert page.evaluate("getComputedStyle(document.body).backgroundColor") == "rgba(0, 0, 0, 0)"
@@ -263,7 +278,10 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
                     expect(page.locator(".overlay-card")).to_have_class("overlay-card ")
                     with lock:
                         requests[:] = [row(4, "now_playing")]
-                    expect(page.locator(".overlay-song-title")).to_have_text("Song 4", timeout=5000)
+                    response = context.request.get(origin+"/api/overlay", headers={"x-overlay-key": secret})
+                    assert response.status == 200
+                    assert response.json()["active"]["song_title"] == "Song 4", response.json()
+                    expect(page.locator(".overlay-song-title")).to_have_text("Song 4", timeout=10000)
                     expect(page.locator(".overlay-card")).to_have_class("overlay-card overlay-visible")
                     with lock:
                         requests[0]["status"] = "completed"

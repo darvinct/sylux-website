@@ -5,9 +5,29 @@ import { parseOverlayPayload, POPUP_DURATION_MS } from '../src/lib/overlay.ts';
 import { createPopup } from '../src/lib/popup.ts';
 import { hasOverlayAccess } from '../src/lib/overlay-access.ts';
 import { getSupabaseConfig } from '../src/lib/supabase/config.ts';
+import { isPublicSupabaseKey } from '../src/lib/overlay-service.ts';
+import { overlayErrorMessage } from '../src/lib/overlay-errors.ts';
 
 const item = { id: 'one', username: 'Listener', song_title: 'Song', artist: 'Artist',
   dedication_to: null, message: '<script>alert(1)</script>', updated_at: '2026-11-02T00:00:00Z' };
+
+test('OBS server configuration identifies public keys without granting trust to JWT claims', () => {
+  const token = role => `test.${Buffer.from(JSON.stringify({ role })).toString('base64url')}.test`;
+  assert.equal(isPublicSupabaseKey('sb_publishable_test'), true);
+  assert.equal(isPublicSupabaseKey(token('anon')), true);
+  assert.equal(isPublicSupabaseKey(token('service_role')), false);
+  assert.equal(isPublicSupabaseKey('sb_secret_test'), false);
+  assert.equal(isPublicSupabaseKey('malformed'), false);
+});
+
+test('OBS distinguishes a bad source key from server and database configuration failures', () => {
+  assert.match(overlayErrorMessage(401), /Kunci OBS tidak cocok/);
+  assert.match(overlayErrorMessage(503, 'OVERLAY_KEY_NOT_CONFIGURED'), /32 karakter/);
+  assert.match(overlayErrorMessage(503, 'OVERLAY_SERVICE_ROLE_REQUIRED'), /SUPABASE_SERVICE_ROLE_KEY/);
+  assert.match(overlayErrorMessage(500), /Supabase/);
+  assert.match(overlayErrorMessage(0), /Koneksi/);
+  assert.doesNotMatch(overlayErrorMessage(503, '<private-error-details>'), /private-error-details/);
+});
 
 test('Supabase configuration rejects keys in the URL field and unsafe URLs without throwing', () => {
   for (const url of [undefined, '', 'sb_publishable_test_key', 'project.supabase.co',

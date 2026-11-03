@@ -41,3 +41,9 @@ Jalankan fixture SQL hanya pada database kosong disposable; stub auth di-rollbac
 Error produksi `Invalid supabaseUrl` terjadi ketika kolom Project URL berisi publishable key. URL proyek di Vercel diperbaiki berdasarkan project ref dari anon key; endpoint health menerima kedua public keys milik proyek tersebut. Nilai key tidak dicatat dalam laporan atau log aplikasi.
 
 Validasi konfigurasi kini dipakai sebelum membuat SDK di middleware, browser, server, dan API OBS. URL non-HTTP(S), URL dengan credential/query/fragment, dan konfigurasi kosong ditolak. Kegagalan konfigurasi atau refresh tidak boleh menutup seluruh halaman dengan 500 dan tidak pernah memberikan role; otorisasi Supabase RLS tidak berubah. Callback OAuth menangani kegagalan konfigurasi/provider dengan redirect ke halaman login. Pengujian unit bertambah menjadi tujuh, ditambah mode browser untuk reproduksi konfigurasi invalid.
+
+## Akses URL OBS dan diagnosis koneksi
+
+`GET /api/operator/overlay-link` memverifikasi user melalui Supabase Auth dan memeriksa whitelist operator melalui RPC sebelum mengembalikan path OBS privat. Query parameter tidak menentukan identitas. Respons menggunakan `private, no-store`; user anonim ditolak 401, member nonoperator ditolak 403. Service-role key tidak pernah diberikan kepada browser. UI menghapus URL saat akun berubah atau hak operator dicabut, dan tidak menyalin hasil respons akun sebelumnya.
+
+API OBS mendeteksi anon/publishable key yang salah ditempatkan sebagai service-role key dan mengembalikan kesalahan konfigurasi. Pemeriksaan payload JWT hanya dipakai untuk menolak konfigurasi publik, tidak untuk memberikan otorisasi; Supabase tetap memverifikasi kredensial sebenarnya. Log kegagalan database mencatat kode/status terbatas tanpa pesan provider yang dapat mengandung data privat. Sembilan uji unit serta browser fixture mencakup otorisasi URL, clipboard, dan pesan error OBS.

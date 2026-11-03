@@ -9,3 +9,5 @@ html:has(.overlay-stage),body:has(.overlay-stage){background:transparent!importa
 /* User-provided names and titles can be long, unbroken strings. */
 .user-bar strong,.queue-entry h3,.approved-entry strong,.active-request h3,.my-request strong,.overlay-content h1,.overlay-song-title,.overlay-artist{overflow-wrap:anywhere}
 .approved-entry>div,.overlay-song>div,.active-request>div{min-width:0}
+
+.obs-url{display:block;width:100%;margin-top:12px;padding:12px;background:#0f1825;border:1px solid #344251;border-radius:8px;color:#eff5fc;font-size:12px}

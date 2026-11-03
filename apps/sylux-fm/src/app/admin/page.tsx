@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { RadioTower, LogOut, Play, Check, X, Square, RefreshCw, ArrowUpRight } from "lucide-react";
+import { RadioTower, LogOut, Play, Check, X, Square, RefreshCw, ArrowUpRight, Copy } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
 import type { RadioRequest } from "@/lib/requests";
@@ -14,6 +14,9 @@ export default function AdminPage() {
   const [rows, setRows] = useState<RadioRequest[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [obsBusy, setObsBusy] = useState(false);
+  const [obsLink, setObsLink] = useState("");
+  const [obsNotice, setObsNotice] = useState("");
 
   const currentUserId = useRef<string | null>(null);
   const reloadSequence = useRef(0);
@@ -25,7 +28,9 @@ export default function AdminPage() {
       setDb(client);
       function acceptUser(next: User | null) {
         if (!alive) return;
-        if (currentUserId.current !== (next?.id ?? null)) { setRows([]); setAllowed(false); }
+        if (currentUserId.current !== (next?.id ?? null)) {
+          setRows([]); setAllowed(false); setObsLink(""); setObsNotice("");
+        }
         currentUserId.current = next?.id ?? null;
         setUser(next);
       }
@@ -48,7 +53,7 @@ export default function AdminPage() {
     if (!db || !user) { setAllowed(false); setRows([]); return; }
     const { data: isAdmin, error: roleError } = await db.rpc("is_operator", { _uid: user.id });
     if (sequence !== reloadSequence.current || currentUserId.current !== user.id) return;
-    if (roleError || !isAdmin) { setAllowed(false); setRows([]); return; }
+    if (roleError || !isAdmin) { setAllowed(false); setRows([]); setObsLink(""); setObsNotice(""); return; }
     setAllowed(true);
     const { data, error: fetchError } = await db.from("radio_requests").select("*")
       .order("created_at", { ascending: true }).order("id", { ascending: true });
@@ -75,7 +80,37 @@ export default function AdminPage() {
   async function logout() {
     if (!db) return;
     await db.auth.signOut();
-    setUser(null); setAllowed(false); setRows([]);
+    setUser(null); setAllowed(false); setRows([]); setObsLink(""); setObsNotice("");
+  }
+
+  async function copyObsLink() {
+    if (!allowed || !user || obsBusy) return;
+    const userId = user.id;
+    setObsBusy(true); setObsNotice(""); setObsLink("");
+    try {
+      const response = await fetch("/api/operator/overlay-link", { cache: "no-store" });
+      const data = await response.json();
+      if (currentUserId.current !== userId) return;
+      if (!response.ok) throw new Error(data.error || "URL OBS belum tersedia.");
+      if (typeof data.path !== "string") throw new Error("URL OBS belum tersedia.");
+      const url = new URL(data.path, window.location.origin);
+      if (url.origin !== window.location.origin || url.pathname !== "/overlay") {
+        throw new Error("URL OBS tidak valid.");
+      }
+      try {
+        await navigator.clipboard.writeText(url.href);
+        if (currentUserId.current === userId) setObsNotice("URL OBS berhasil disalin. Tempel di Browser Source OBS (1920 × 1080).");
+      } catch {
+        if (currentUserId.current === userId) {
+          setObsLink(url.href);
+          setObsNotice("Salin URL di kolom berikut ke Browser Source OBS (1920 × 1080).");
+        }
+      }
+    } catch (err) {
+      if (currentUserId.current === userId) setObsNotice(err instanceof Error ? err.message : "URL OBS belum tersedia.");
+    } finally {
+      setObsBusy(false);
+    }
   }
 
   async function moderate(id: string, status: "approved" | "rejected" | "completed") {
@@ -122,7 +157,9 @@ export default function AdminPage() {
             <div className="panel-heading"><div><div className="eyebrow">LIVE OUTPUT</div><h2>On Air</h2></div><span className={"status-tag "+(active ? "now_playing" : "pending")}>{active ? "● BROADCASTING" : "STANDBY"}</span></div>
             {active ? <div className="active-request"><div><h3>{active.song_title}</h3><p>{active.artist} · requested by {active.username}</p><blockquote>“{active.message}”</blockquote></div><button className="secondary-button" onClick={()=>void moderate(active.id,"completed")} disabled={busy}><Square size={14}/> Finish</button></div> :
               <p className="muted">No dedication is currently live. Approve at least one request, then display the next one.</p>}
-            <div className="action-row"><button className="primary-button compact" disabled={busy || approved.length===0} onClick={displayNext}><Play size={17}/> Display next approved request</button><span className="muted">Previous active request is completed automatically.</span></div>
+            <div className="action-row"><button className="primary-button compact" disabled={busy || approved.length===0} onClick={displayNext}><Play size={17}/> Display next approved request</button><button className="secondary-button" disabled={obsBusy} onClick={copyObsLink}><Copy size={15}/>{obsBusy ? "Menyiapkan URL…" : "Salin URL OBS"}</button><span className="muted">Previous active request is completed automatically.</span></div>
+            {obsNotice && <div role="status" className="helper-note">{obsNotice}</div>}
+            {obsLink && <input className="obs-url" aria-label="URL OBS privat" readOnly value={obsLink} onFocus={event => event.currentTarget.select()}/>}
           </section>
           <div className="admin-columns">
             <section className="panel queue-panel"><div className="panel-heading"><div><div className="eyebrow">01 / MODERATION</div><h2>Incoming requests</h2></div><span className="count-label">{pending.length}</span></div>

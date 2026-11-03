@@ -5,6 +5,7 @@ import { RadioTower, Disc3 } from "lucide-react";
 import type { OverlayRequest } from "@/lib/requests";
 import { createPopup } from "@/lib/popup";
 import { OVERLAY_POLL_MS, parseOverlayPayload } from "@/lib/overlay";
+import { overlayErrorMessage } from "@/lib/overlay-errors";
 
 const example: OverlayRequest = {
   id:"preview", username:"Yeri", song_title:"Those Eyes", artist:"New West",
@@ -36,16 +37,21 @@ export default function OverlayPage() {
     }
 
     async function poll() {
+      let failureMessage = overlayErrorMessage(0);
       try {
         const response = await fetch("/api/overlay", {
           headers: { "x-overlay-key": key! }, cache:"no-store",
           referrerPolicy: "no-referrer", signal: controller.signal
         });
-        if (!response.ok) throw new Error("Overlay unavailable");
+        if (!response.ok) {
+          const body = await response.json().catch(() => null);
+          failureMessage = overlayErrorMessage(response.status, body?.code);
+          throw new Error("Overlay unavailable");
+        }
         const active = parseOverlayPayload(await response.json());
         if (alive) { setWarning(""); popup.display(active); }
       } catch {
-        if (alive) { popup.clear(); setWarning("Overlay access denied or unavailable."); }
+        if (alive) { popup.clear(); setWarning(failureMessage); }
       } finally {
         // Schedule only after completion; slow requests cannot overwrite newer data.
         if (alive) timer = setTimeout(() => { void poll(); }, OVERLAY_POLL_MS);

@@ -117,3 +117,11 @@ Uji regresi konfigurasi invalid:
 ```sh
 SYLUX_BROWSER_TEST_MODE=invalid-config python3 tests/browser.py
 ```
+
+## Menghubungkan OBS dari Control Room
+
+Login sebagai operator di `/admin`, lalu tekan **Salin URL OBS** pada panel On Air. Tempel hasilnya ke OBS → Browser Source dengan ukuran 1920×1080. Jika browser tidak mengizinkan clipboard, Control Room menampilkan kolom URL untuk disalin manual. URL hanya tersedia untuk operator yang diverifikasi di server dan tidak di-cache.
+
+Jika kunci diterima tetapi API gagal membaca data, periksa `SUPABASE_SERVICE_ROLE_KEY` pada environment Production di Vercel. Gunakan legacy `service_role` JWT atau secret key Supabase (`sb_secret_...`). Anon/publishable key dipakai di `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Redeploy setelah mengubah environment variables.
+
+Pesan OBS kini membedakan kunci sumber yang salah, konfigurasi server belum siap, dan kegagalan pembacaan database. Log server hanya mencatat kode/status error, tanpa nilai key atau isi dedikasi.
