@@ -18,7 +18,7 @@ npm run dev
 
 Isi `.env.local` dengan konfigurasi Supabase. Jangan commit file tersebut. Lockfile aplikasi disimpan; gunakan `npm ci` untuk pemasangan dependensi yang dapat diulang.
 
-1. Jalankan `supabase/schema.sql` di Supabase SQL Editor. Untuk instalasi sebelumnya, jalankan ulang file lengkap sebelum memakai frontend baru: dashboard sekarang memakai RPC `moderate_request`, dan insert member tidak lagi mengirim username/status. Terapkan pada proyek test/staging dahulu.
+1. Jalankan `supabase/schema.sql` di Supabase SQL Editor. Untuk instalasi sebelumnya, **jalankan ulang file lengkap sebelum deploy frontend baru** agar trigger pembatas dua request lama dihapus dan semua pengiriman berikutnya diterima. Skrip aman dijalankan ulang; uji di staging dahulu. Dashboard memakai RPC `moderate_request`, dan insert member tidak mengirim username/status.
 2. Di Discord Developer Portal, buat aplikasi OAuth. Aktifkan provider Discord di Supabase Auth dan masukkan client ID/secret. Redirect Discord menuju callback provider yang ditampilkan Supabase, biasanya `https://PROJECT.supabase.co/auth/v1/callback`.
 3. Di Supabase Auth URL Configuration, atur Site URL ke origin aplikasi FM. Tambahkan URL callback yang tepat: `http://localhost:3000/auth/callback` serta `https://DOMAIN-FM/auth/callback`. Gunakan allow list terpisah untuk staging/preview; jangan memakai wildcard production.
 4. Login Discord sekali di `/request`, lalu salin UUID akun dari Supabase Authentication → Users. Tambahkan operator melalui SQL Editor sebagai admin database:
@@ -31,7 +31,7 @@ Jangan mengambil keputusan role dari display name, email, atau metadata user. Lo
 
 ## Perilaku aplikasi
 
-- Maksimal **dua request non-Rejected per akun selama event**. Completed tetap dihitung; Reject membebaskan slot. Kuota dilindungi trigger database dengan lock per akun.
+- **Tidak ada batas jumlah request per akun** selama event. Member dapat mengirim request ketiga dan seterusnya; setiap pengiriman tetap menunggu moderasi operator.
 - Member mengisi lagu, artis, penerima opsional, dan pesan maksimal 500 karakter. Member hanya melihat request sendiri.
 - `/admin` hanya untuk operator whitelist. Approve/Reject memoderasi Pending. Display Next memilih Approved paling awal berdasarkan waktu pengiriman dan ID; request sebelumnya menjadi Completed. Antrean kosong tidak mengakhiri request aktif. Finish mengakhiri request aktif.
 - Antrean dashboard dan status request member diperbarui setiap lima detik. Audio tetap dioperasikan manual oleh host.
@@ -79,7 +79,7 @@ psql "$SYLUX_TEST_DATABASE_URL" -X -f tests/database.sql
 
 Jangan arahkan uji fixture ke Supabase atau production. Tes menolak database yang sudah memiliki `auth.users` atau `radio_requests`, lalu rollback seluruh fixture.
 
-Di staging, verifikasi login/logout Discord, penolakan nonoperator, kuota termasuk tiga submit paralel, moderasi, FIFO, Finish, pergantian akun, kunci OBS salah/benar, popup 12 detik tanpa pengulangan, dan transparansi di OBS sebenarnya.
+Di staging, verifikasi login/logout Discord, penolakan nonoperator, request ketiga dan tiga submit paralel yang semuanya diterima, moderasi, FIFO, Finish, pergantian akun, kunci OBS salah/benar, popup 12 detik tanpa pengulangan, dan transparansi di OBS sebenarnya.
 
 Status verifikasi: **TypeScript, build produksi, 6 uji unit, uji PostgreSQL, dan uji paralel lulus**. Audit dependensi produksi melaporkan **0 kerentanan** setelah override PostCSS ke 8.5.32. Uji browser memakai fixture lokal, bukan akun Discord/Supabase asli. Deployment Vercel belum dilakukan. Lihat [SECURITY.md](SECURITY.md).
 

@@ -8,7 +8,7 @@ Perubahan hanya untuk `apps/sylux-fm`. Website utama dan konfigurasi Vercel di r
 - RLS memerlukan identitas Discord di `auth.identities`, bukan metadata yang bisa diubah member. Whitelist operator tetap berupa UUID di `radio_operators`; klien tidak dapat menambah dirinya sendiri.
 - Member hanya membaca request sendiri dan memasukkan kolom formulir yang diizinkan. Nama, status awal, UUID request, dan timestamp antrean ditentukan database. `is_operator` hanya memeriksa akun pemanggil.
 - UPDATE/DELETE langsung ditolak, termasuk dari klien operator. RPC `moderate_request` memvalidasi Pending → Approved/Rejected dan Now Playing → Completed. Display Next memakai lock yang sama, memilih Approved berdasarkan `(created_at,id)`, dan mempertahankan request aktif saat antrean kosong.
-- Kuota dua request non-Rejected tetap berlaku selama event, termasuk Completed. Trigger memakai advisory lock per akun. Reject membebaskan slot; klien operator tidak dapat mengaktifkan ulang Rejected.
+- Tidak ada kuota jumlah request per akun. Trigger tetap memvalidasi identitas Discord dan menetapkan username/status/timestamp dari server; klien operator tidak dapat mengaktifkan ulang Rejected.
 - Fungsi dengan hak elevated memakai `search_path` kosong dan nama tabel lengkap. Akses tabel/fungsi dibatasi secara eksplisit. Service role hanya digunakan server pada endpoint OBS yang mengeluarkan field popup aktif.
 - Otorisasi OBS memeriksa panjang byte dan `timingSafeEqual`; kunci minimal 32 karakter. API tidak di-cache. `Referrer-Policy: no-referrer` mencegah URL kunci terkirim sebagai referrer.
 - Poll OBS berjalan berurutan. Cleanup membatalkan fetch dan kedua timer popup. Error/standby menyembunyikan popup. Poll identik tidak mengulang popup; popup hilang setelah 12 detik. Tidak ada audio atau perpindahan lagu otomatis.
@@ -47,3 +47,9 @@ Validasi konfigurasi kini dipakai sebelum membuat SDK di middleware, browser, se
 `GET /api/operator/overlay-link` memverifikasi user melalui Supabase Auth dan memeriksa whitelist operator melalui RPC sebelum mengembalikan path OBS privat. Query parameter tidak menentukan identitas. Respons menggunakan `private, no-store`; user anonim ditolak 401, member nonoperator ditolak 403. Service-role key tidak pernah diberikan kepada browser. UI menghapus URL saat akun berubah atau hak operator dicabut, dan tidak menyalin hasil respons akun sebelumnya.
 
 API OBS mendeteksi anon/publishable key yang salah ditempatkan sebagai service-role key dan mengembalikan kesalahan konfigurasi. Pemeriksaan payload JWT hanya dipakai untuk menolak konfigurasi publik, tidak untuk memberikan otorisasi; Supabase tetap memverifikasi kredensial sebenarnya. Log kegagalan database mencatat kode/status terbatas tanpa pesan provider yang dapat mengandung data privat. Sembilan uji unit serta browser fixture mencakup otorisasi URL, clipboard, dan pesan error OBS.
+
+## Kebijakan pengiriman, 7 November 2026
+
+Batas dua request per akun dihapus pada formulir dan di trigger database. Member terautentikasi dapat mengirim pesan dedikasi berulang kali; setiap request tetap memerlukan persetujuan operator sebelum ditampilkan. Validasi panjang maksimal 500 karakter per pesan, identitas Discord, isolasi RLS, FIFO, dan otorisasi operator tetap berlaku.
+
+Instalasi Supabase yang sudah berjalan **harus** menjalankan ulang `supabase/schema.sql` agar trigger pembatas lama terganti. Perubahan kode frontend saja tidak menghapus kuota di database. Uji regresi terkini memeriksa lebih dari dua pengiriman dan tiga submit paralel.

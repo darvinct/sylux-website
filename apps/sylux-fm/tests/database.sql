@@ -40,8 +40,9 @@ insert into public.radio_requests(user_id,song_title,artist,message) values
  (auth.uid(),'First','Artist','Message'), (auth.uid(),'Second','Artist','Message');
 select public.test_assert((select count(*)=2 from public.radio_requests),'two requests accepted');
 select public.test_assert((select bool_and(username='Listener A') from public.radio_requests),'identity set by server');
-select public.test_denied($q$insert into public.radio_requests(user_id,song_title,artist,message)
- values(auth.uid(),'Third','Artist','Message')$q$,'23514');
+insert into public.radio_requests(user_id,song_title,artist,message)
+ values(auth.uid(),'Third','Artist','Message');
+select public.test_assert((select count(*)=3 from public.radio_requests),'third request accepted without quota');
 select public.test_denied($q$insert into public.radio_requests(user_id,song_title,artist,message,created_at)
  values(auth.uid(),'Forged','Artist','Message','2000-01-01')$q$,'42501');
 select public.test_denied($q$insert into public.radio_requests(user_id,song_title,artist,message,username)
@@ -67,7 +68,7 @@ select public.test_denied($q$insert into public.radio_requests(user_id,song_titl
 
 select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000003',true);
 select public.test_assert(public.is_operator(auth.uid()),'operator recognized');
-select public.test_assert((select count(*)=4 from public.radio_requests),'operator reads queue');
+select public.test_assert((select count(*)=5 from public.radio_requests),'operator reads queue');
 select public.test_denied($q$update public.radio_requests set song_title='Tampered'$q$,'42501');
 select public.moderate_request((select id from public.radio_requests where song_title='Reject me'),'rejected');
 select public.moderate_request((select id from public.radio_requests where song_title='Second'),'approved');
@@ -82,12 +83,13 @@ select public.moderate_request((select id from public.radio_requests where song_
 select public.test_assert((select count(*)=0 from public.radio_requests where status='now_playing'),'finish removes live popup');
 
 select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000001',true);
-select public.test_denied($q$insert into public.radio_requests(user_id,song_title,artist,message)
- values(auth.uid(),'Completed counts','Artist','Message')$q$,'23514');
+insert into public.radio_requests(user_id,song_title,artist,message)
+ values(auth.uid(),'Completed requests do not block new ones','Artist','Message');
+select public.test_assert((select count(*)=4 from public.radio_requests),'completed requests do not limit new submissions');
 select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000002',true);
 insert into public.radio_requests(user_id,song_title,artist,message)
  values(auth.uid(),'Replacement','Artist','Message');
-select public.test_assert((select count(*)=2 from public.radio_requests where status<>'rejected'),'rejection frees one slot');
+select public.test_assert((select count(*)=2 from public.radio_requests where status<>'rejected'),'new submissions allowed alongside rejected ones');
 
 set local role anon;
 select public.test_denied('select * from public.radio_requests','42501');
@@ -95,4 +97,4 @@ select public.test_denied('select public.display_next_request()','42501');
 select public.test_denied('select public.has_discord_identity()','42501');
 reset role;
 rollback;
-\echo 'Database authorization, quota, transitions and FIFO assertions passed.'
+\echo 'Database authorization, unlimited requests, transitions and FIFO assertions passed.'

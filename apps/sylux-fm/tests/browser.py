@@ -211,19 +211,19 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
                     page.goto(origin+"/admin")
                     expect(page.get_by_role("heading", name="Access restricted")).to_be_visible(timeout=20000)
                     page.goto(origin+"/request")
-                    expect(page.get_by_text("0 / 2 used")).to_be_visible()
-                    for index in (1, 2):
+                    expect(page.get_by_text("0 sent")).to_be_visible()
+                    for index in (1, 2, 3):
                         page.get_by_label("Song title").fill(f"Member song {index}")
                         page.get_by_label("Artist", exact=False).fill("Artist")
                         page.get_by_label("Your message").fill("A dedication")
                         page.get_by_role("button", name="Send dedication").click()
-                        expect(page.get_by_text(f"{index} / 2 used")).to_be_visible()
-                    expect(page.get_by_role("button", name="Send dedication")).to_have_count(0)
+                        expect(page.get_by_text(f"{index} sent")).to_be_visible()
+                    expect(page.get_by_role("button", name="Send dedication")).to_be_visible()
                     submitted = [body for path, body in calls if path == "/rest/v1/radio_requests"]
-                    assert len(submitted) == 2
+                    assert len(submitted) == 3
                     assert all("username" not in body and "status" not in body for body in submitted)
                     context.close()
-                    print("PASS: member gate, two submissions, quota UI and server-owned columns", flush=True)
+                    print("PASS: member gate, unlimited submissions and server-owned columns", flush=True)
 
                     with lock:
                         requests[:] = [row(1, "pending"), row(2, "approved")]

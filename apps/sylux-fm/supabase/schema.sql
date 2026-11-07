@@ -37,11 +37,11 @@ returns boolean language sql stable security definer set search_path = '' as $$
     and exists(select 1 from public.radio_operators where user_id = _uid);
 $$;
 
-create or replace function public.enforce_request_limit()
+create or replace function public.prepare_radio_request_insert()
 returns trigger language plpgsql security definer set search_path = '' as $$
 begin
   -- BEFORE triggers execute before RLS WITH CHECK. Reject foreign user IDs
-  -- before looking up identities or quota, avoiding account/quota enumeration.
+  -- before looking up identities, avoiding account enumeration.
   if auth.uid() is null or new.user_id is distinct from auth.uid() then
     raise exception 'Not authorized' using errcode = '42501';
   end if;
@@ -61,17 +61,15 @@ begin
   new.artist = btrim(new.artist);
   new.message = btrim(new.message);
   new.dedication_to = nullif(btrim(new.dedication_to), '');
-  perform pg_advisory_xact_lock(hashtextextended(new.user_id::text, 0));
-  if (select count(*) from public.radio_requests
-      where user_id = new.user_id and status <> 'rejected') >= 2 then
-    raise exception 'Maksimal 2 request per member.' using errcode = '23514';
-  end if;
   return new;
 end;
 $$;
+-- Replace the legacy quota trigger without changing Discord identity validation.
 drop trigger if exists radio_limit_on_insert on public.radio_requests;
-create trigger radio_limit_on_insert before insert on public.radio_requests
-  for each row execute function public.enforce_request_limit();
+drop trigger if exists radio_prepare_on_insert on public.radio_requests;
+create trigger radio_prepare_on_insert before insert on public.radio_requests
+  for each row execute function public.prepare_radio_request_insert();
+drop function if exists public.enforce_request_limit();
 
 create or replace function public.radio_touch_updated_at()
 returns trigger language plpgsql set search_path = '' as $$
@@ -166,7 +164,7 @@ revoke all on function public.has_discord_identity() from public, anon;
 grant execute on function public.has_discord_identity() to authenticated;
 revoke all on function public.moderate_request(uuid, text) from public, anon;
 grant execute on function public.moderate_request(uuid, text) to authenticated;
-revoke all on function public.enforce_request_limit() from public, anon, authenticated;
+revoke all on function public.prepare_radio_request_insert() from public, anon, authenticated;
 revoke all on function public.radio_touch_updated_at() from public, anon, authenticated;
 
 -- BOOTSTRAP: After signing in as an operator once, copy your auth.users UUID in
