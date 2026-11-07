@@ -139,7 +139,7 @@ server = ThreadingHTTPServer(("127.0.0.1", 54321), Fixture)
 threading.Thread(target=server.serve_forever, daemon=True).start()
 with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
     directory = Path(temp)
-    for name in ("src", "package.json", "next.config.ts", "tsconfig.json", "next-env.d.ts"):
+    for name in ("src", "public", "package.json", "next.config.ts", "tsconfig.json", "next-env.d.ts"):
         source = root / name
         if source.is_dir():
             shutil.copytree(source, directory/name)
@@ -261,6 +261,10 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
                     page = context.new_page()
                     page.goto(origin+"/overlay?key=wrong-key")
                     expect(page.locator(".overlay-warning")).to_contain_text("Kunci OBS tidak cocok")
+                    sound = context.request.get(origin+"/love-alarm-notification.mp3")
+                    assert sound.status == 200
+                    assert "audio/mpeg" in sound.headers.get("content-type", "")
+                    assert sound.body().startswith(b"ID3")
                     page.goto(origin+"/overlay?preview=1")
                     expect(page.locator(".overlay-card")).to_have_class("overlay-card overlay-visible")
                     expect(page.get_by_text("SYLUX FM", exact=True)).to_be_visible()
