@@ -37,7 +37,7 @@ def session(uid):
     user = {"id": uid, "aud": "authenticated", "role": "authenticated",
             "email": "test@example.invalid", "created_at": "2026-01-01T00:00:00Z",
             "app_metadata": {"provider": "discord", "providers": ["discord"]},
-            "user_metadata": {"full_name": "Test Listener"},
+            "user_metadata": {"full_name": "listener_handle", "name": "Test Display"},
             "identities": [{"id": uid, "user_id": uid, "provider": "discord", "identity_data": {}}]}
     expiry = int(time.time()) + 3600
     payload = base64.urlsafe_b64encode(json.dumps({"sub": uid, "exp": expiry, "iat": expiry-3600,
@@ -49,7 +49,7 @@ def session(uid):
 
 def row(index, status):
     return {"id": f"10000000-0000-0000-0000-{index:012d}", "user_id": member,
-            "username": "Listener", "song_title": f"Song {index}", "artist": "Artist",
+            "username": "Test Display", "is_anonymous": False, "song_title": f"Song {index}", "artist": "Artist",
             "message": "<script>alert('text only')</script>", "dedication_to": "Community",
             "status": status, "created_at": f"2026-01-01T00:00:0{index}Z",
             "updated_at": f"2026-01-01T00:00:0{index}Z"}
@@ -212,15 +212,21 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
                     expect(page.get_by_role("heading", name="Access restricted")).to_be_visible(timeout=20000)
                     page.goto(origin+"/request")
                     expect(page.get_by_text("0 sent")).to_be_visible()
+                    expect(page.get_by_text("Test Display", exact=True)).to_be_visible()
                     for index in (1, 2, 3):
                         page.get_by_label("Song title").fill(f"Member song {index}")
                         page.get_by_label("Artist", exact=False).fill("Artist")
                         page.get_by_label("Your message").fill("A dedication")
+                        if index == 2:
+                            page.get_by_label("Anonim").check()
+                        else:
+                            page.get_by_label("Tampilkan nama").check()
                         page.get_by_role("button", name="Send dedication").click()
                         expect(page.get_by_text(f"{index} sent")).to_be_visible()
                     expect(page.get_by_role("button", name="Send dedication")).to_be_visible()
                     submitted = [body for path, body in calls if path == "/rest/v1/radio_requests"]
                     assert len(submitted) == 3
+                    assert [body["is_anonymous"] for body in submitted] == [False, True, False]
                     assert all("username" not in body and "status" not in body for body in submitted)
                     context.close()
                     print("PASS: member gate, unlimited submissions and server-owned columns", flush=True)
@@ -257,7 +263,12 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
                     expect(page.locator(".overlay-warning")).to_contain_text("Kunci OBS tidak cocok")
                     page.goto(origin+"/overlay?preview=1")
                     expect(page.locator(".overlay-card")).to_have_class("overlay-card overlay-visible")
+                    expect(page.get_by_text("A LIL NOTE")).to_be_visible()
+                    expect(page.get_by_text("NOW PLAYING")).to_be_visible()
+                    expect(page.locator(".overlay-to")).to_be_visible()
                     assert page.evaluate("getComputedStyle(document.body).backgroundColor") == "rgba(0, 0, 0, 0)"
+                    page.goto(origin+"/overlay?preview=anonymous")
+                    expect(page.locator(".overlay-content h1")).to_have_text("Anonymous")
                     assert page.locator("audio,video").count() == 0
                     response = context.request.get(origin+"/api/overlay")
                     assert response.status == 401

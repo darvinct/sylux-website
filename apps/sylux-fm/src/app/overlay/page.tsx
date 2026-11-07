@@ -1,16 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { RadioTower, Disc3 } from "lucide-react";
+import { Music2, Sparkles } from "lucide-react";
 import type { OverlayRequest } from "@/lib/requests";
+import { publicSenderName } from "@/lib/requests";
 import { createPopup } from "@/lib/popup";
 import { OVERLAY_POLL_MS, parseOverlayPayload } from "@/lib/overlay";
 import { overlayErrorMessage } from "@/lib/overlay-errors";
 
 const example: OverlayRequest = {
-  id:"preview", username:"Yeri", song_title:"Those Eyes", artist:"New West",
-  dedication_to:"Someone special", message:"A little song for someone who makes ordinary days feel special.",
-  updated_at:new Date().toISOString()
+  id: "preview", username: "Mellie", is_anonymous: false,
+  song_title: "Those Eyes", artist: "New West",
+  dedication_to: "Someone special",
+  message: "A little song for someone who makes ordinary days feel special. Thank you for being here!",
+  updated_at: new Date().toISOString()
 };
 
 export default function OverlayPage() {
@@ -20,16 +23,18 @@ export default function OverlayPage() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const preview = params.get("preview") === "1";
+    const preview = params.get("preview");
     const key = params.get("key");
     let alive = true;
     const popup = createPopup(setItem, setVisible);
     const controller = new AbortController();
     let timer: ReturnType<typeof setTimeout> | undefined;
 
-    if (preview) {
-      popup.display(example);
-      return () => { alive=false; popup.clear(); };
+    if (preview === "1" || preview === "anonymous") {
+      // Keep visual previews on screen for design review; live OBS still uses 12s.
+      setItem({ ...example, is_anonymous: preview === "anonymous" });
+      setVisible(true);
+      return () => { alive = false; popup.clear(); };
     }
     if (!key) {
       setWarning("Add ?key=YOUR_OVERLAY_VIEW_KEY to the OBS browser source URL.");
@@ -40,7 +45,7 @@ export default function OverlayPage() {
       let failureMessage = overlayErrorMessage(0);
       try {
         const response = await fetch("/api/overlay", {
-          headers: { "x-overlay-key": key! }, cache:"no-store",
+          headers: { "x-overlay-key": key! }, cache: "no-store",
           referrerPolicy: "no-referrer", signal: controller.signal
         });
         if (!response.ok) {
@@ -53,23 +58,48 @@ export default function OverlayPage() {
       } catch {
         if (alive) { popup.clear(); setWarning(failureMessage); }
       } finally {
-        // Schedule only after completion; slow requests cannot overwrite newer data.
         if (alive) timer = setTimeout(() => { void poll(); }, OVERLAY_POLL_MS);
       }
     }
     void poll();
-    return () => { alive=false; clearTimeout(timer); controller.abort(); popup.clear(); };
+    return () => { alive = false; clearTimeout(timer); controller.abort(); popup.clear(); };
   }, []);
+
+  const length = item?.message.length ?? 0;
+  const sizeClass = length > 310 ? "message-extra-long" : length > 155 ? "message-long" : "";
 
   return (
     <main className="overlay-stage">
-      <div className={"overlay-card "+(visible ? "overlay-visible" : "")} aria-live="polite">
-        <div className="overlay-top"><div className="overlay-brand"><RadioTower size={19}/> SYLUX<span>FM</span></div><div className="overlay-label">NEW DEDICATION</div></div>
-        <div className="overlay-content"><div className="overlay-kicker">A MESSAGE FROM</div><h1>{item?.username}</h1>{item?.dedication_to && <p className="overlay-to">To: {item.dedication_to}</p>}<p className="overlay-message">“{item?.message}”</p></div>
-        <div className="overlay-song"><div className="record-icon"><Disc3 size={24}/></div><div><div className="overlay-song-title">{item?.song_title}</div><div className="overlay-artist">{item?.artist}</div></div><span className="overlay-wave"><b/><b/><b/><b/><b/></span></div>
+      <div className={"overlay-card " + (visible ? "overlay-visible" : "")} aria-live="polite">
+        <div className="overlay-sparkle overlay-sparkle-one" aria-hidden="true">✦</div>
+        <section className="overlay-window overlay-note">
+          <div className="overlay-window-header overlay-pink">
+            <div className="overlay-window-title"><span className="overlay-capsule"/><span className="overlay-small-dot"/> A LIL NOTE</div>
+            <div className="overlay-window-dots" aria-hidden="true"><i/><i/><i/></div>
+          </div>
+          <div className="overlay-content">
+            <p className="overlay-kicker">A MESSAGE FROM</p>
+            <h1>{item ? publicSenderName(item) : "SYLUX Listener"}</h1>
+            {item?.dedication_to && <p className="overlay-to">For: <strong>{item.dedication_to}</strong></p>}
+            <p className={"overlay-message " + sizeClass}>{item?.message}</p>
+          </div>
+          <div className="overlay-window-buttons" aria-hidden="true"><span className="overlay-pill overlay-close">CLOSE</span><span className="overlay-pill overlay-okay">OKAY</span></div>
+        </section>
+        <div className="overlay-sparkle overlay-sparkle-two" aria-hidden="true">✦</div>
+        <section className="overlay-window overlay-music">
+          <div className="overlay-window-header overlay-green">
+            <div className="overlay-window-title"><span className="overlay-capsule"/><span className="overlay-small-dot"/> NOW PLAYING</div>
+            <div className="overlay-window-dots" aria-hidden="true"><i/><i/><i/></div>
+          </div>
+          <div className="overlay-music-body">
+            <div className="overlay-music-icon"><Music2 size={34} strokeWidth={2.4}/></div>
+            <div className="overlay-song"><strong className="overlay-song-title">{item?.song_title}</strong><span className="overlay-artist">{item?.artist}</span></div>
+            <Sparkles className="overlay-music-sparkle" size={32}/>
+          </div>
+          <div className="overlay-window-buttons" aria-hidden="true"><span className="overlay-pill overlay-green-close">CLOSE</span><span className="overlay-pill overlay-yellow">OKAY</span></div>
+        </section>
       </div>
       {warning && <div className="overlay-warning">{warning}</div>}
     </main>
   );
 }
-

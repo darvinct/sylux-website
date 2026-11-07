@@ -7,7 +7,7 @@ import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
 import type { RadioRequest } from "@/lib/requests";
 
-const initialForm = { song_title: "", artist: "", dedication_to: "", message: "" };
+const initialForm = { song_title: "", artist: "", dedication_to: "", message: "", is_anonymous: false };
 
 export default function RequestPage() {
   const [db, setDb] = useState<ReturnType<typeof createClient> | null>(null);
@@ -62,7 +62,7 @@ export default function RequestPage() {
     return () => clearInterval(timer);
   }, [reload]);
 
-  const username = String(user?.user_metadata?.full_name || user?.user_metadata?.name || user?.user_metadata?.user_name || "SYLUX Listener");
+  const displayName = String(user?.user_metadata?.global_name || user?.user_metadata?.name || user?.user_metadata?.display_name || "SYLUX Listener");
 
   async function login() {
     if (!db) return;
@@ -94,7 +94,8 @@ export default function RequestPage() {
       song_title: form.song_title.trim(),
       artist: form.artist.trim(),
       dedication_to: form.dedication_to.trim() || null,
-      message: form.message.trim()
+      message: form.message.trim(),
+      is_anonymous: form.is_anonymous
     });
     if (submitError) {
       setError(submitError.message);
@@ -127,7 +128,7 @@ export default function RequestPage() {
           </div>
           {user ? (
             <>
-              <div className="user-bar"><div><small>LOGGED IN AS</small><strong>{username}</strong></div><button type="button" className="text-button" onClick={logout}><LogOut size={14}/> Sign out</button></div>
+              <div className="user-bar"><div><small>LOGGED IN AS</small><strong>{displayName}</strong></div><button type="button" className="text-button" onClick={logout}><LogOut size={14}/> Sign out</button></div>
               <div className="quota">
                 <div><small>YOUR REQUESTS</small><strong>{requests.length} sent</strong></div>
                 <span>Unlimited submissions</span>
@@ -139,6 +140,20 @@ export default function RequestPage() {
                   </div>
                   <label>Dedicated to <small>(OPTIONAL)</small><input maxLength={64} value={form.dedication_to} onChange={e => setForm({ ...form, dedication_to:e.target.value })} placeholder="Someone special, your best friend..."/></label>
                   <label>Your message <span>*</span><textarea required minLength={1} maxLength={500} rows={5} value={form.message} onChange={e => setForm({ ...form, message:e.target.value })} placeholder="Your words will be read live on air..."/></label>
+                  <fieldset className="identity-choice">
+                    <legend>IDENTITAS PENGIRIM</legend>
+                    <div className="identity-options">
+                      <label className={"identity-option " + (!form.is_anonymous ? "identity-selected" : "")}>
+                        <input type="radio" name="sender-visibility" checked={!form.is_anonymous} onChange={() => setForm({ ...form, is_anonymous: false })}/>
+                        <span><strong>Tampilkan nama</strong><small>{displayName}</small></span>
+                      </label>
+                      <label className={"identity-option " + (form.is_anonymous ? "identity-selected" : "")}>
+                        <input type="radio" name="sender-visibility" checked={form.is_anonymous} onChange={() => setForm({ ...form, is_anonymous: true })}/>
+                        <span><strong>Anonim</strong><small>Nama disembunyikan saat siaran</small></span>
+                      </label>
+                    </div>
+                    <p>Kalau anonim, penonton cuma lihat “Anonymous”. Operator tetap bisa melihat pengirim untuk moderasi.</p>
+                  </fieldset>
                   <div className="form-bottom"><span>{form.message.length} / 500 characters</span><span>Free · Unlimited requests</span></div>
                   <button className="primary-button" type="submit" disabled={busy}><Send size={17}/>{busy ? "Submitting..." : "Send dedication"}<ArrowUpRight size={17}/></button>
               </form>
@@ -170,7 +185,7 @@ export default function RequestPage() {
           </div>
           {user && requests.length > 0 && <div className="panel info-panel">
             <div className="eyebrow">YOUR SUBMISSIONS</div>
-            {requests.map(r => <div className="my-request" key={r.id}><strong>{r.song_title}</strong><span>{r.artist}</span><span className={"status-tag "+r.status}>{r.status.replace("_", " ")}</span></div>)}
+            {requests.map(r => <div className="my-request" key={r.id}><strong>{r.song_title}</strong><span>{r.artist}</span><span className={"status-tag "+r.status}>{r.is_anonymous ? "Anonim · " : ""}{r.status.replace("_", " ")}</span></div>)}
           </div>}
         </aside>
       </div>

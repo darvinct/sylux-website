@@ -32,10 +32,10 @@ Jangan mengambil keputusan role dari display name, email, atau metadata user. Lo
 ## Perilaku aplikasi
 
 - **Tidak ada batas jumlah request per akun** selama event. Member dapat mengirim request ketiga dan seterusnya; setiap pengiriman tetap menunggu moderasi operator.
-- Member mengisi lagu, artis, penerima opsional, dan pesan maksimal 500 karakter. Member hanya melihat request sendiri.
+- Member mengisi lagu, artis, penerima opsional, dan pesan maksimal 500 karakter. Pengirim boleh memilih tampil dengan **Discord display name** atau **Anonymous** (anonim hanya terhadap penonton; operator dapat melihat identitas asli untuk moderasi). Member hanya melihat request sendiri.
 - `/admin` hanya untuk operator whitelist. Approve/Reject memoderasi Pending. Display Next memilih Approved paling awal berdasarkan waktu pengiriman dan ID; request sebelumnya menjadi Completed. Antrean kosong tidak mengakhiri request aktif. Finish mengakhiri request aktif.
 - Antrean dashboard dan status request member diperbarui setiap lima detik. Audio tetap dioperasikan manual oleh host.
-- Preview visual popup: `/overlay?preview=1`, tanpa data asli atau kunci.
+- Preview visual popup bergaya dua jendela pastel (pink untuk pesan, hijau untuk lagu): `/overlay?preview=1` atau `/overlay?preview=anonymous`, tanpa data asli atau kunci.
 - OBS Browser Source: `https://DOMAIN-FM/overlay?key=SECRET`, resolusi 1920×1080. Background transparan; popup tampil sekali selama 12 detik per request aktif. API diperiksa tiap 2,5 detik setelah respons sebelumnya selesai. Finish menyembunyikan popup pada poll berikutnya.
 
 Gunakan kunci acak minimal 32 karakter. Contoh pembuatan lokal:
@@ -125,3 +125,10 @@ Login sebagai operator di `/admin`, lalu tekan **Salin URL OBS** pada panel On A
 Jika kunci diterima tetapi API gagal membaca data, periksa `SUPABASE_SERVICE_ROLE_KEY` pada environment Production di Vercel. Gunakan legacy `service_role` JWT atau secret key Supabase (`sb_secret_...`). Anon/publishable key dipakai di `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Redeploy setelah mengubah environment variables.
 
 Pesan OBS kini membedakan kunci sumber yang salah, konfigurasi server belum siap, dan kegagalan pembacaan database. Log server hanya mencatat kode/status error, tanpa nilai key atau isi dedikasi.
+
+
+## Opsi anonim dan display name
+- Database: jalankan ulang `supabase/schema.sql` sebelum rilis aplikasi untuk menambahkan `radio_requests.is_anonymous` (default `false`) dan grant INSERT kolom tersebut. Tidak ada data lama yang dihapus.
+- Data `auth.identities.identity_data.name` pada integrasi Discord ini berisi display name; `full_name` berisi handle. Trigger lebih mengutamakan `global_name` / `name` / `display_name`, tidak memakai username sebagai fallback.
+- Overlay OBS menghapus identitas dari respons API untuk request anonim; operator tetap melihat sumber asli di Control Room.
+- Tombol CLOSE / OKAY pada visual OBS adalah dekorasi agar sesuai referensi; popup tetap otomatis hilang setelah 12 detik.

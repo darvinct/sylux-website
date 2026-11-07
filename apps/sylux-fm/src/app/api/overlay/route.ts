@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { hasOverlayAccess } from "@/lib/overlay-access";
 import { getOverlayServiceConfig, isPublicSupabaseKey } from "@/lib/overlay-service";
+import { publicSenderName } from "@/lib/requests";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -29,7 +30,7 @@ export async function GET(request: NextRequest) {
     const admin = createClient(settings.url, settings.key, { auth: { autoRefreshToken: false, persistSession: false } });
     const { data, error, status } = await admin
       .from("radio_requests")
-      .select("id,username,song_title,artist,dedication_to,message,updated_at")
+      .select("id,username,is_anonymous,song_title,artist,dedication_to,message,updated_at")
       .eq("status", "now_playing")
       .maybeSingle();
 
@@ -40,7 +41,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unable to retrieve current request", code: "OVERLAY_DATABASE_UNAVAILABLE" },
         { status: 500, headers: { "Cache-Control": "no-store" } });
     }
-    return NextResponse.json({ active: data ?? null }, { headers: { "Cache-Control": "no-store, max-age=0" } });
+    // Never send an anonymous listener\u0027s real display name to OBS/browser clients.
+    const active = data ? { ...data, username: publicSenderName(data) } : null;
+    return NextResponse.json({ active }, { headers: { "Cache-Control": "no-store, max-age=0" } });
   } catch {
     console.error("OBS database connection unavailable");
     return NextResponse.json({ error: "Overlay unavailable", code: "OVERLAY_DATABASE_UNAVAILABLE" },

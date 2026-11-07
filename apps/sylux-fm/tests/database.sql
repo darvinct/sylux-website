@@ -29,17 +29,19 @@ insert into auth.users values
  ('00000000-0000-0000-0000-000000000003'),
  ('00000000-0000-0000-0000-000000000004');
 insert into auth.identities values
- ('discord-a','00000000-0000-0000-0000-000000000001','discord','{"full_name":"Listener A"}'),
- ('discord-b','00000000-0000-0000-0000-000000000002','discord','{"full_name":"Listener B"}'),
- ('discord-host','00000000-0000-0000-0000-000000000003','discord','{"full_name":"Host"}');
+ ('discord-a','00000000-0000-0000-0000-000000000001','discord','{"full_name":"handle_a","name":"Listener A"}'),
+ ('discord-b','00000000-0000-0000-0000-000000000002','discord','{"full_name":"handle_b","name":"Listener B"}'),
+ ('discord-host','00000000-0000-0000-0000-000000000003','discord','{"full_name":"handle_host","name":"Host"}');
 insert into public.radio_operators(user_id) values ('00000000-0000-0000-0000-000000000003');
 
 set local role authenticated;
 select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000001',true);
-insert into public.radio_requests(user_id,song_title,artist,message) values
- (auth.uid(),'First','Artist','Message'), (auth.uid(),'Second','Artist','Message');
+insert into public.radio_requests(user_id,song_title,artist,message,is_anonymous) values
+ (auth.uid(),'First','Artist','Message',false), (auth.uid(),'Second','Artist','Message',true);
 select public.test_assert((select count(*)=2 from public.radio_requests),'two requests accepted');
-select public.test_assert((select bool_and(username='Listener A') from public.radio_requests),'identity set by server');
+select public.test_assert((select bool_and(username='Listener A') from public.radio_requests),'Discord display name set by server, not handle');
+select public.test_assert((select is_anonymous from public.radio_requests where song_title='Second'),'anonymous submission saved');
+select public.test_assert((select not is_anonymous from public.radio_requests where song_title='First'),'named submission saved');
 insert into public.radio_requests(user_id,song_title,artist,message)
  values(auth.uid(),'Third','Artist','Message');
 select public.test_assert((select count(*)=3 from public.radio_requests),'third request accepted without quota');
@@ -50,6 +52,7 @@ select public.test_denied($q$insert into public.radio_requests(user_id,song_titl
 select public.test_denied($q$insert into public.radio_requests(user_id,song_title,artist,message)
  values('00000000-0000-0000-0000-000000000002','Forged','Artist','Message')$q$,'42501');
 select public.test_denied($q$update public.radio_requests set status='approved'$q$,'42501');
+select public.test_denied($q$update public.radio_requests set is_anonymous=false$q$,'42501');
 select public.test_denied($q$delete from public.radio_requests$q$,'42501');
 select public.test_denied($q$insert into public.radio_operators(user_id) values(auth.uid())$q$,'42501');
 select public.test_denied('select public.display_next_request()','42501');

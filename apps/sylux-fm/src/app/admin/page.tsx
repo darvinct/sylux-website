@@ -5,7 +5,7 @@ import Link from "next/link";
 import { RadioTower, LogOut, Play, Check, X, Square, RefreshCw, ArrowUpRight, Copy } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
-import type { RadioRequest } from "@/lib/requests";
+import { publicSenderName, type RadioRequest } from "@/lib/requests";
 
 export default function AdminPage() {
   const [db, setDb] = useState<ReturnType<typeof createClient> | null>(null);
@@ -155,7 +155,7 @@ export default function AdminPage() {
           </div>
           <section className="panel active-panel">
             <div className="panel-heading"><div><div className="eyebrow">LIVE OUTPUT</div><h2>On Air</h2></div><span className={"status-tag "+(active ? "now_playing" : "pending")}>{active ? "● BROADCASTING" : "STANDBY"}</span></div>
-            {active ? <div className="active-request"><div><h3>{active.song_title}</h3><p>{active.artist} · requested by {active.username}</p><blockquote>“{active.message}”</blockquote></div><button className="secondary-button" onClick={()=>void moderate(active.id,"completed")} disabled={busy}><Square size={14}/> Finish</button></div> :
+            {active ? <div className="active-request"><div><h3>{active.song_title}</h3><p>{active.artist} · requested by {publicSenderName(active)}</p><blockquote>“{active.message}”</blockquote></div><button className="secondary-button" onClick={()=>void moderate(active.id,"completed")} disabled={busy}><Square size={14}/> Finish</button></div> :
               <p className="muted">No dedication is currently live. Approve at least one request, then display the next one.</p>}
             <div className="action-row"><button className="primary-button compact" disabled={busy || approved.length===0} onClick={displayNext}><Play size={17}/> Display next approved request</button><button className="secondary-button" disabled={obsBusy} onClick={copyObsLink}><Copy size={15}/>{obsBusy ? "Menyiapkan URL…" : "Salin URL OBS"}</button><span className="muted">Previous active request is completed automatically.</span></div>
             {obsNotice && <div role="status" className="helper-note">{obsNotice}</div>}
@@ -164,11 +164,11 @@ export default function AdminPage() {
           <div className="admin-columns">
             <section className="panel queue-panel"><div className="panel-heading"><div><div className="eyebrow">01 / MODERATION</div><h2>Incoming requests</h2></div><span className="count-label">{pending.length}</span></div>
               {pending.length === 0 && <p className="muted">No new requests.</p>}
-              {pending.map(r => <div className="queue-entry" key={r.id}><div className="queue-meta"><span>{new Date(r.created_at).toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"})}</span><span>{r.username}</span></div><h3>{r.song_title} <span>— {r.artist}</span></h3>{r.dedication_to && <p className="dedication-to">To: {r.dedication_to}</p>}<p className="request-message">{r.message}</p><div className="queue-actions"><button disabled={busy} className="small-button accept" onClick={()=>void moderate(r.id,"approved")}><Check size={15}/> Approve</button><button disabled={busy} className="small-button reject" onClick={()=>void moderate(r.id,"rejected")}><X size={15}/> Reject</button></div></div>)}
+              {pending.map(r => <div className="queue-entry" key={r.id}><div className="queue-meta"><span>{new Date(r.created_at).toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"})}</span><span>{r.username}{r.is_anonymous ? " · ANONIM ON AIR" : ""}</span></div><h3>{r.song_title} <span>— {r.artist}</span></h3>{r.dedication_to && <p className="dedication-to">To: {r.dedication_to}</p>}<p className="request-message">{r.message}</p><div className="queue-actions"><button disabled={busy} className="small-button accept" onClick={()=>void moderate(r.id,"approved")}><Check size={15}/> Approve</button><button disabled={busy} className="small-button reject" onClick={()=>void moderate(r.id,"rejected")}><X size={15}/> Reject</button></div></div>)}
             </section>
             <section className="panel queue-panel"><div className="panel-heading"><div><div className="eyebrow">02 / BROADCAST LIST</div><h2>Approved queue</h2></div><span className="count-label">{approved.length}</span></div>
               {approved.length === 0 && <p className="muted">Queue is empty.</p>}
-              {approved.map((r,i) => <div className="approved-entry" key={r.id}><span className="queue-number">{String(i+1).padStart(2,"0")}</span><div><strong>{r.song_title}</strong><span>{r.artist} · {r.username}</span></div><span className="status-tag approved">READY</span></div>)}
+              {approved.map((r,i) => <div className="approved-entry" key={r.id}><span className="queue-number">{String(i+1).padStart(2,"0")}</span><div><strong>{r.song_title}</strong><span>{r.artist} · {publicSenderName(r)}</span></div><span className="status-tag approved">READY</span></div>)}
               <div className="helper-note">FIFO mengikuti waktu pengiriman request. Host membaca pesan dan memutar lagu secara manual.</div>
             </section>
           </div>

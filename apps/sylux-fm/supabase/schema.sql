@@ -14,11 +14,16 @@ create table if not exists public.radio_requests (
   artist text not null check (char_length(artist) between 1 and 120),
   dedication_to text check (dedication_to is null or char_length(dedication_to) <= 64),
   message text not null check (char_length(message) between 1 and 500),
+  is_anonymous boolean not null default false,
   status text not null default 'pending'
     check (status in ('pending','approved','rejected','now_playing','completed')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+-- Existing installations keep request history intact and get the new field.
+alter table public.radio_requests
+  add column if not exists is_anonymous boolean not null default false;
 
 create index if not exists radio_requests_fifo_idx on public.radio_requests (status, created_at, id);
 create index if not exists radio_requests_member_idx on public.radio_requests (user_id);
@@ -46,9 +51,12 @@ begin
     raise exception 'Not authorized' using errcode = '42501';
   end if;
   -- Identity and FIFO timestamps are server-owned, never supplied by a member.
-  select left(coalesce(nullif(identity_data->>'global_name', ''),
-    nullif(identity_data->>'full_name', ''), nullif(identity_data->>'user_name', ''),
-    'Discord Listener'), 64) into new.username
+  -- Discord OAuth: 'name' is the display name; 'full_name' can be the handle.
+  -- Never fall back to a Discord username when a display name is missing.
+  select left(coalesce(nullif(btrim(identity_data->>'global_name'), ''),
+    nullif(btrim(identity_data->>'name'), ''),
+    nullif(btrim(identity_data->>'display_name'), ''),
+    'SYLUX Listener'), 64) into new.username
     from auth.identities where user_id = new.user_id and provider = 'discord'
     order by id limit 1;
   if not found then
@@ -153,7 +161,7 @@ create policy "operator reads own operator record"
 revoke all on public.radio_requests, public.radio_operators from public, anon, authenticated;
 grant select on public.radio_requests, public.radio_operators to authenticated;
 grant select on public.radio_requests to service_role;
-grant insert (user_id, song_title, artist, dedication_to, message)
+grant insert (user_id, song_title, artist, dedication_to, message, is_anonymous)
   on public.radio_requests to authenticated;
 
 revoke all on function public.display_next_request() from public, anon;
