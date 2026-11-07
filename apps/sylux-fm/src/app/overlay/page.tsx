@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Music2 } from "lucide-react";
 import type { OverlayRequest } from "@/lib/requests";
 import { publicSenderName } from "@/lib/requests";
@@ -20,13 +20,25 @@ export default function OverlayPage() {
   const [item, setItem] = useState<OverlayRequest | null>(null);
   const [visible, setVisible] = useState(false);
   const [warning, setWarning] = useState("");
+  const soundRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const preview = params.get("preview");
     const key = params.get("key");
     let alive = true;
-    const popup = createPopup(setItem, setVisible);
+    // Only ring when a new popup becomes visible (not on each 2.5s poll).
+    const playNotification = () => {
+      const audio = soundRef.current;
+      if (!audio) return;
+      audio.pause();
+      audio.currentTime = 0;
+      void audio.play().catch(() => {
+        // Regular browsers can block autoplay; OBS Browser Source allows source audio.
+        console.warn("SYLUX FM: notification audio blocked by browser autoplay policy.");
+      });
+    };
+    const popup = createPopup(setItem, setVisible, undefined, undefined, playNotification);
     const controller = new AbortController();
     let timer: ReturnType<typeof setTimeout> | undefined;
 
@@ -34,7 +46,8 @@ export default function OverlayPage() {
       // Keep visual previews on screen for design review; live OBS still uses 12s.
       setItem({ ...example, is_anonymous: preview === "anonymous" });
       setVisible(true);
-      return () => { alive = false; popup.clear(); };
+      playNotification();
+      return () => { alive = false; popup.clear(); soundRef.current?.pause(); };
     }
     if (!key) {
       setWarning("Add ?key=YOUR_OVERLAY_VIEW_KEY to the OBS browser source URL.");
@@ -70,6 +83,7 @@ export default function OverlayPage() {
 
   return (
     <main className="overlay-stage">
+      <audio ref={soundRef} src="/sounds/love-alarm-notification.ogg" preload="auto" aria-hidden="true" />
       <div className={"overlay-card " + (visible ? "overlay-visible" : "")} aria-live="polite">
         <div className="overlay-sparkle overlay-sparkle-one" aria-hidden="true">✦</div>
         <section className="overlay-window overlay-note" aria-label="SYLUX FM dedication popup">
