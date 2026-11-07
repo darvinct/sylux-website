@@ -9,7 +9,7 @@ import { OVERLAY_POLL_MS, parseOverlayPayload } from "@/lib/overlay";
 import { overlayErrorMessage } from "@/lib/overlay-errors";
 
 const example: OverlayRequest = {
-  id: "preview", username: "Mellie", is_anonymous: false,
+  id: "preview", display_name: "Mellie", is_anonymous: false,
   song_title: "Those Eyes", artist: "New West",
   dedication_to: "Someone special",
   message: "A little song for someone who makes ordinary days feel special. Thank you for being here!",
