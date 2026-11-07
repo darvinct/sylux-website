@@ -274,9 +274,9 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
                     assert page.evaluate("getComputedStyle(document.body).backgroundColor") == "rgba(0, 0, 0, 0)"
                     page.goto(origin+"/overlay?preview=anonymous")
                     expect(page.locator(".overlay-content h1")).to_have_text("Anonymous")
-                    expect(page.locator('audio[src="/sounds/love-alarm-notification.ogg"]')).to_have_count(1)
+                    expect(page.locator('audio[src="/sounds/tuturu-notification.ogg"]')).to_have_count(1)
                     assert page.locator("video").count() == 0
-                    audio_response = context.request.get(origin+"/sounds/love-alarm-notification.ogg")
+                    audio_response = context.request.get(origin+"/sounds/tuturu-notification.ogg")
                     assert audio_response.status == 200
                     assert audio_response.headers["content-type"].startswith("audio/"), audio_response.headers
                     response = context.request.get(origin+"/api/overlay")
@@ -295,7 +295,7 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
                     assert "user_id" not in response.json()["active"]
                     assert "username" not in response.json()["active"]
                     assert response.json()["active"]["display_name"] == "Test Display"
-                    expect(page.locator(".overlay-card")).to_have_class("overlay-card ", timeout=15000)
+                    expect(page.locator(".overlay-card")).to_have_class("overlay-card ", timeout=45000)
                     page.wait_for_timeout(3300)
                     expect(page.locator(".overlay-card")).to_have_class("overlay-card ")
                     with lock:

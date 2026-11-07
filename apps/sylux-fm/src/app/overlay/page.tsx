@@ -43,7 +43,7 @@ export default function OverlayPage() {
     let timer: ReturnType<typeof setTimeout> | undefined;
 
     if (preview === "1" || preview === "anonymous") {
-      // Keep visual previews on screen for design review; live OBS still uses 12s.
+      // Keep visual previews on screen for design review; live OBS uses 40s.
       setItem({ ...example, is_anonymous: preview === "anonymous" });
       setVisible(true);
       playNotification();
@@ -83,7 +83,7 @@ export default function OverlayPage() {
 
   return (
     <main className="overlay-stage">
-      <audio ref={soundRef} src="/sounds/love-alarm-notification.ogg" preload="auto" aria-hidden="true" />
+      <audio ref={soundRef} src="/sounds/tuturu-notification.ogg" preload="auto" aria-hidden="true" />
       <div className={"overlay-card " + (visible ? "overlay-visible" : "")} aria-live="polite">
         <div className="overlay-sparkle overlay-sparkle-one" aria-hidden="true">✦</div>
         <section className="overlay-window overlay-note" aria-label="SYLUX FM dedication popup">
