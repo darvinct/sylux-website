@@ -93,7 +93,8 @@ function fixture(onVisible = () => {}) {
   return { popup, shown, visibility, timers, advance };
 }
 
-test('OBS displays once, fades after 12 seconds, and ignores repeated polling', () => {
+test('OBS displays once, fades after 40 seconds, and ignores repeated polling', () => {
+  assert.equal(POPUP_DURATION_MS, 40_000);
   const f = fixture();
   f.popup.display(item); f.advance(90);
   assert.equal(f.visibility.at(-1), true);
@@ -149,6 +150,7 @@ test('OBS treats a new updated_at as a new broadcast', () => {
 test('anonymous display never discloses the real sender name', () => {
   assert.equal(publicSenderName({ display_name: 'Hidden identity', is_anonymous: true }), 'Anonymous');
   assert.equal(publicSenderName({ display_name: 'Actual Display Name', is_anonymous: false }), 'Actual Display Name');
+  assert.equal(publicSenderName({ display_name: 'Discord Display', username: 'discord.handle', is_anonymous: false }), 'Discord Display');
   assert.deepEqual(parseOverlayPayload({ active: { ...item, is_anonymous: true, display_name: 'Anonymous' } }),
     { ...item, is_anonymous: true, display_name: 'Anonymous' });
 });
