@@ -264,8 +264,12 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
                     page.goto(origin+"/overlay?preview=1")
                     expect(page.locator(".overlay-card")).to_have_class("overlay-card overlay-visible")
                     expect(page.get_by_text("A LIL NOTE")).to_be_visible()
-                    expect(page.get_by_text("NOW PLAYING")).to_be_visible()
+                    expect(page.locator(".overlay-window")).to_have_count(1)
+                    expect(page.get_by_text("SONG REQUEST")).to_be_visible()
+                    expect(page.locator(".overlay-song-title")).to_have_text("Those Eyes")
                     expect(page.locator(".overlay-to")).to_be_visible()
+                    assert float(page.locator(".overlay-message").evaluate("(el) => getComputedStyle(el).fontSize").removesuffix("px")) >= 33
+                    assert float(page.locator(".overlay-to").evaluate("(el) => getComputedStyle(el).fontSize").removesuffix("px")) >= 30
                     assert page.evaluate("getComputedStyle(document.body).backgroundColor") == "rgba(0, 0, 0, 0)"
                     page.goto(origin+"/overlay?preview=anonymous")
                     expect(page.locator(".overlay-content h1")).to_have_text("Anonymous")
