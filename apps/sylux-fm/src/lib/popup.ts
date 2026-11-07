@@ -7,6 +7,7 @@ export function createPopup(
   visibility: (visible: boolean) => void,
   schedule: (callback: () => void, delay: number) => ReturnType<typeof setTimeout> = setTimeout,
   cancel: (timer: ReturnType<typeof setTimeout>) => void = clearTimeout,
+  onVisible?: (item: OverlayRequest) => void,
 ) {
   let lastVersion: string | null = null;
   let enter: ReturnType<typeof setTimeout> | undefined;
@@ -25,7 +26,7 @@ export function createPopup(
       clear();
       lastVersion = version;
       show(item);
-      enter = schedule(() => visibility(true), 90);
+      enter = schedule(() => { visibility(true); onVisible?.(item); }, 90);
       leave = schedule(() => visibility(false), POPUP_DURATION_MS);
     },
     clear,
