@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { authDestination } from '../src/lib/auth-redirect.ts';
 import { parseOverlayPayload, POPUP_DURATION_MS } from '../src/lib/overlay.ts';
@@ -74,13 +75,13 @@ test('OBS accepts standby and complete requests; rejects malformed payloads', ()
   }
 });
 
-function fixture() {
+function fixture(notify) {
   let now = 0, sequence = 0;
   const timers = new Map();
   const shown = [], visibility = [];
   const popup = createPopup(value => shown.push(value), value => visibility.push(value),
     (callback, delay) => { const id = ++sequence; timers.set(id, { at: now + delay, callback }); return id; },
-    id => timers.delete(id));
+    id => timers.delete(id), notify);
   function advance(ms) {
     const end = now + ms;
     while (true) {
@@ -126,6 +127,37 @@ test('OBS treats a new updated_at as a new broadcast', () => {
   assert.equal(f.visibility.at(-1), true);
 });
 
+
+test('a new on-air popup triggers one notification, not one per poll', () => {
+  const notified = [];
+  const f = fixture(request => notified.push(request.id));
+  f.popup.display(item);
+  f.advance(90);
+  f.popup.display(item);
+  f.advance(POPUP_DURATION_MS);
+  f.popup.display(item);
+  assert.deepEqual(notified, ['one']);
+
+  f.popup.display({ ...item, id: 'two' });
+  assert.deepEqual(notified, ['one', 'two']);
+  f.popup.display(null);
+  f.popup.display(item);
+  assert.deepEqual(notified, ['one', 'two', 'one']);
+});
+
+test('a notification error cannot block the live request', () => {
+  const f = fixture(() => { throw new Error('Sound blocked'); });
+  f.popup.display(item);
+  f.advance(90);
+  assert.equal(f.shown.at(-1).id, 'one');
+  assert.equal(f.visibility.at(-1), true);
+});
+
+test('the supplied OBS notification sound is a valid short MP3', () => {
+  const asset = readFileSync(new URL('../public/love-alarm-notification.mp3', import.meta.url));
+  assert.ok(asset.length > 2000 && asset.length < 200_000);
+  assert.equal(asset.subarray(0, 3).toString(), 'ID3');
+});
 
 test('anonymous display never discloses the real sender name', () => {
   assert.equal(publicSenderName({ display_name: 'Hidden identity', is_anonymous: true }), 'Anonymous');
