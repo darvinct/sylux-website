@@ -62,7 +62,6 @@ export default function RequestPage() {
     return () => clearInterval(timer);
   }, [reload]);
 
-  const count = requests.filter(r => r.status !== "rejected").length;
   const username = String(user?.user_metadata?.full_name || user?.user_metadata?.name || user?.user_metadata?.user_name || "SYLUX Listener");
 
   async function login() {
@@ -84,7 +83,7 @@ export default function RequestPage() {
 
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!db || !user || busy || count >= 2) return;
+    if (!db || !user || busy) return;
     if (!form.song_title.trim() || !form.artist.trim() || !form.message.trim()) {
       setError("Judul, artis, dan pesan tidak boleh kosong.");
       return;
@@ -98,7 +97,7 @@ export default function RequestPage() {
       message: form.message.trim()
     });
     if (submitError) {
-      setError(submitError.message.includes("Maksimal") ? "Batas 2 request sudah tercapai." : submitError.message);
+      setError(submitError.message);
     } else {
       setNotice("Request berhasil masuk ke antrean. Tunggu persetujuan operator.");
       setForm(initialForm);
@@ -130,27 +129,25 @@ export default function RequestPage() {
             <>
               <div className="user-bar"><div><small>LOGGED IN AS</small><strong>{username}</strong></div><button type="button" className="text-button" onClick={logout}><LogOut size={14}/> Sign out</button></div>
               <div className="quota">
-                <div><small>YOUR REQUEST SLOTS</small><strong>{count} / 2 used</strong></div>
-                <div className="slot-indicators"><span className={count >= 1 ? "filled" : ""}/><span className={count >= 2 ? "filled" : ""}/></div>
+                <div><small>YOUR REQUESTS</small><strong>{requests.length} sent</strong></div>
+                <span>Unlimited submissions</span>
               </div>
-              {count >= 2 ? <div className="notice">Kedua slot request sudah digunakan. Terima kasih sudah berpartisipasi!</div> :
-                <form onSubmit={submit}>
+              <form onSubmit={submit}>
                   <div className="field-row">
                     <label>Song title <span>*</span><input required maxLength={120} value={form.song_title} onChange={e => setForm({ ...form, song_title:e.target.value })} placeholder="e.g. Those Eyes"/></label>
                     <label>Artist <span>*</span><input required maxLength={120} value={form.artist} onChange={e => setForm({ ...form, artist:e.target.value })} placeholder="e.g. New West"/></label>
                   </div>
                   <label>Dedicated to <small>(OPTIONAL)</small><input maxLength={64} value={form.dedication_to} onChange={e => setForm({ ...form, dedication_to:e.target.value })} placeholder="Someone special, your best friend..."/></label>
                   <label>Your message <span>*</span><textarea required minLength={1} maxLength={500} rows={5} value={form.message} onChange={e => setForm({ ...form, message:e.target.value })} placeholder="Your words will be read live on air..."/></label>
-                  <div className="form-bottom"><span>{form.message.length} / 500 characters</span><span>Free · 2 requests max</span></div>
+                  <div className="form-bottom"><span>{form.message.length} / 500 characters</span><span>Free · Unlimited requests</span></div>
                   <button className="primary-button" type="submit" disabled={busy}><Send size={17}/>{busy ? "Submitting..." : "Send dedication"}<ArrowUpRight size={17}/></button>
-                </form>
-              }
+              </form>
             </>
           ) : (
             <div className="login-panel">
               <Headphones size={30}/>
               <h3>Tune in with Discord</h3>
-              <p>Masuk melalui Discord agar request kamu terhitung dengan benar. Maksimal 2 request per akun.</p>
+              <p>Masuk melalui Discord untuk mengirim request lagu dan pesan dedikasi tanpa batas jumlah pengiriman.</p>
               <button className="primary-button" onClick={login} disabled={!db}>Continue with Discord <ArrowUpRight size={17}/></button>
             </div>
           )}

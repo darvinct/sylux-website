@@ -72,15 +72,14 @@ try:
             "insert into public.radio_requests(user_id,song_title,artist,message) "
             f"values(auth.uid(),'Concurrent {i}','Artist','Message')") for i in range(3)]
         results = parallel(submissions)
-        assert sum(result.returncode == 0 for result in results) == 2, [r.stderr for r in results]
-        assert sum("23514" in result.stderr for result in results) == 1, [r.stderr for r in results]
-        assert sql("select count(*) from public.radio_requests;").stdout.strip() == "2"
+        assert all(result.returncode == 0 for result in results), [r.stderr for r in results]
+        assert sql("select count(*) from public.radio_requests;").stdout.strip() == "3"
         sql(session(host, "select public.moderate_request(id,'approved') from public.radio_requests"))
         results = parallel([session(host, "select public.display_next_request()") for _ in range(2)])
         assert all(result.returncode == 0 for result in results), [r.stderr for r in results]
         counts = sql("select status,count(*) from public.radio_requests group by status order by status;").stdout.strip()
-        assert counts == "completed|1\nnow_playing|1", counts
-        print(f"Round {iteration + 1}: 3 simultaneous submissions -> 2 accepted, 1 quota rejection; "
+        assert counts == "approved|1\ncompleted|1\nnow_playing|1", counts
+        print(f"Round {iteration + 1}: 3 simultaneous submissions -> all accepted; "
               "2 simultaneous Display Next -> 1 active, 1 completed.", flush=True)
 finally:
     sql(f'drop database "{database}" with (force);', db="postgres")
