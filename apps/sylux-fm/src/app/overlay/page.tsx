@@ -74,7 +74,7 @@ export default function OverlayPage() {
         <div className="overlay-sparkle overlay-sparkle-one" aria-hidden="true">✦</div>
         <section className="overlay-window overlay-note" aria-label="SYLUX FM dedication popup">
           <div className="overlay-window-header overlay-pink">
-            <div className="overlay-window-title"><span className="overlay-capsule"/><span className="overlay-small-dot"/> A LIL NOTE</div>
+            <div className="overlay-window-title"><span className="overlay-capsule"/><span className="overlay-small-dot"/> SYLUX FM</div>
             <div className="overlay-window-dots" aria-hidden="true"><i/><i/><i/></div>
           </div>
           <div className="overlay-content">
