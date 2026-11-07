@@ -26,18 +26,38 @@ export default function OverlayPage() {
     const preview = params.get("preview");
     const key = params.get("key");
     let alive = true;
-    const popup = createPopup(setItem, setVisible);
+    const popup = createPopup(setItem, setVisible, undefined, undefined, ring);
     const controller = new AbortController();
     let timer: ReturnType<typeof setTimeout> | undefined;
+
+    // User-supplied 2.8-second chime. OBS plays it once for each new
+    // on-air request; ?sound=0 disables it without touching the popup.
+    const soundEnabled = params.get("sound") !== "0";
+    const chime = soundEnabled ? new Audio("/love-alarm-notification.mp3") : null;
+    if (chime) {
+      chime.preload = "auto";
+      chime.volume = 0.8;
+      chime.load();
+    }
+    function ring() {
+      if (!chime) return;
+      chime.pause();
+      chime.currentTime = 0;
+      void chime.play().catch(() => {
+        // Browsers can block sound until user interaction; OBS can capture it.
+      });
+    }
 
     if (preview === "1" || preview === "anonymous") {
       // Keep visual previews on screen for design review; live OBS still uses 12s.
       setItem({ ...example, is_anonymous: preview === "anonymous" });
       setVisible(true);
-      return () => { alive = false; popup.clear(); };
+      ring();
+      return () => { alive = false; popup.clear(); chime?.pause(); };
     }
     if (!key) {
       setWarning("Add ?key=YOUR_OVERLAY_VIEW_KEY to the OBS browser source URL.");
+      chime?.pause();
       return;
     }
 
@@ -62,7 +82,7 @@ export default function OverlayPage() {
       }
     }
     void poll();
-    return () => { alive = false; clearTimeout(timer); controller.abort(); popup.clear(); };
+    return () => { alive = false; clearTimeout(timer); controller.abort(); popup.clear(); chime?.pause(); };
   }, []);
 
   const length = item?.message.length ?? 0;
