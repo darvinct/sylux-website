@@ -1,6 +1,6 @@
 # SYLUX FM — Request & Dedication
 
-Aplikasi Next.js terpisah di `apps/sylux-fm`, dengan desain minimalis, login Discord, moderasi, antrean FIFO, dan popup OBS. Host membaca pesan dan memutar lagu secara manual. Aplikasi tidak mengunggah atau memutar audio.
+Aplikasi Next.js terpisah di `apps/sylux-fm`, dengan desain minimalis, login Discord, moderasi, antrean FIFO, dan popup OBS. Host membaca pesan dan memutar lagu secara manual. Aplikasi tidak mengunggah atau memutar **lagu**; hanya memutar bunyi notifikasi pendek yang disediakan pengguna ketika popup OBS muncul.
 
 ## Menjalankan lokal
 
@@ -34,9 +34,9 @@ Jangan mengambil keputusan role dari display name, email, atau metadata user. Lo
 - **Tidak ada batas jumlah request per akun** selama event. Member dapat mengirim request ketiga dan seterusnya; setiap pengiriman tetap menunggu moderasi operator.
 - Member mengisi lagu, artis, penerima opsional, dan pesan maksimal 500 karakter. Pengirim boleh memilih tampil dengan **Discord display name** atau **Anonymous** (anonim hanya terhadap penonton; operator dapat melihat identitas asli untuk moderasi). Member hanya melihat request sendiri.
 - `/admin` hanya untuk operator whitelist. Approve/Reject memoderasi Pending. Display Next memilih Approved paling awal berdasarkan waktu pengiriman dan ID; request sebelumnya menjadi Completed. Antrean kosong tidak mengakhiri request aktif. Finish mengakhiri request aktif.
-- Antrean dashboard dan status request member diperbarui setiap lima detik. Audio tetap dioperasikan manual oleh host.
+- Antrean dashboard dan status request member diperbarui setiap lima detik. Pemutaran **lagu** tetap manual oleh host; chime notifikasi otomatis berbunyi sekali pada popup baru.
 - Preview visual popup bergaya dua jendela pastel (pink untuk pesan, hijau untuk lagu): `/overlay?preview=1` atau `/overlay?preview=anonymous`, tanpa data asli atau kunci.
-- OBS Browser Source: `https://DOMAIN-FM/overlay?key=SECRET`, resolusi 1920×1080. Background transparan; popup tampil sekali selama 12 detik per request aktif. API diperiksa tiap 2,5 detik setelah respons sebelumnya selesai. Finish menyembunyikan popup pada poll berikutnya.
+- OBS Browser Source: `https://DOMAIN-FM/overlay?key=SECRET`, resolusi 1920×1080. Background transparan; popup tampil sekali selama 12 detik per request aktif dan membunyikan `public/sounds/love-alarm-notification.ogg` **hanya ketika popup baru tampil**. Di OBS, aktifkan opsi **Control audio via OBS** untuk mengatur volume/mute sumber suara; audio dapat diblokir ketika preview dibuka di browser biasa tanpa interaksi. API diperiksa tiap 2,5 detik setelah respons sebelumnya selesai. Finish menyembunyikan popup pada poll berikutnya.
 
 Gunakan kunci acak minimal 32 karakter. Contoh pembuatan lokal:
 

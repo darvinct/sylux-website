@@ -274,7 +274,11 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
                     assert page.evaluate("getComputedStyle(document.body).backgroundColor") == "rgba(0, 0, 0, 0)"
                     page.goto(origin+"/overlay?preview=anonymous")
                     expect(page.locator(".overlay-content h1")).to_have_text("Anonymous")
-                    assert page.locator("audio,video").count() == 0
+                    expect(page.locator('audio[src="/sounds/love-alarm-notification.ogg"]')).to_have_count(1)
+                    assert page.locator("video").count() == 0
+                    audio_response = context.request.get(origin+"/sounds/love-alarm-notification.ogg")
+                    assert audio_response.status == 200
+                    assert audio_response.headers["content-type"].startswith("audio/"), audio_response.headers
                     response = context.request.get(origin+"/api/overlay")
                     assert response.status == 401
                     assert response.headers["cache-control"] == "no-store"
