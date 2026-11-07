@@ -7,8 +7,9 @@ import { hasOverlayAccess } from '../src/lib/overlay-access.ts';
 import { getSupabaseConfig } from '../src/lib/supabase/config.ts';
 import { isPublicSupabaseKey } from '../src/lib/overlay-service.ts';
 import { overlayErrorMessage } from '../src/lib/overlay-errors.ts';
+import { publicSenderName } from '../src/lib/requests.ts';
 
-const item = { id: 'one', username: 'Listener', song_title: 'Song', artist: 'Artist',
+const item = { id: 'one', username: 'Listener', is_anonymous: false, song_title: 'Song', artist: 'Artist',
   dedication_to: null, message: '<script>alert(1)</script>', updated_at: '2026-11-02T00:00:00Z' };
 
 test('OBS server configuration identifies public keys without granting trust to JWT claims', () => {
@@ -66,7 +67,8 @@ test('OBS accepts standby and complete requests; rejects malformed payloads', ()
   assert.equal(parseOverlayPayload({ active: null }), null);
   assert.deepEqual(parseOverlayPayload({ active: item }), item);
   for (const payload of [null, {}, { active: [] }, { active: 'hello' },
-    { active: { ...item, message: null } }, { active: { ...item, dedication_to: {} } }]) {
+    { active: { ...item, message: null } }, { active: { ...item, is_anonymous: "true" } },
+    { active: { ...item, dedication_to: {} } }]) {
     assert.throws(() => parseOverlayPayload(payload));
   }
 });
@@ -121,4 +123,12 @@ test('OBS treats a new updated_at as a new broadcast', () => {
   f.popup.display({ ...item, updated_at: '2026-11-02T00:01:00Z' }); f.advance(90);
   assert.equal(f.shown.length, 2);
   assert.equal(f.visibility.at(-1), true);
+});
+
+
+test('anonymous display never discloses the real sender name', () => {
+  assert.equal(publicSenderName({ username: 'Hidden identity', is_anonymous: true }), 'Anonymous');
+  assert.equal(publicSenderName({ username: 'Actual Display Name', is_anonymous: false }), 'Actual Display Name');
+  assert.deepEqual(parseOverlayPayload({ active: { ...item, is_anonymous: true, username: 'Anonymous' } }),
+    { ...item, is_anonymous: true, username: 'Anonymous' });
 });

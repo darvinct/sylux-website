@@ -17,6 +17,7 @@ export function parseOverlayPayload(payload: unknown): OverlayRequest | null {
   const record = active as Record<string, unknown>;
   const fields = ["id", "username", "song_title", "artist", "message", "updated_at"] as const;
   if (!fields.every(field => typeof record[field] === "string") ||
+      typeof record.is_anonymous !== "boolean" ||
       !("dedication_to" in active) ||
       (active.dedication_to !== null && typeof active.dedication_to !== "string")) {
     throw new Error("Invalid overlay request");
