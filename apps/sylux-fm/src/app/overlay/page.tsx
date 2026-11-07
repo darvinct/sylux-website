@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Music2, Sparkles } from "lucide-react";
+import { Music2 } from "lucide-react";
 import type { OverlayRequest } from "@/lib/requests";
 import { publicSenderName } from "@/lib/requests";
 import { createPopup } from "@/lib/popup";
@@ -72,7 +72,7 @@ export default function OverlayPage() {
     <main className="overlay-stage">
       <div className={"overlay-card " + (visible ? "overlay-visible" : "")} aria-live="polite">
         <div className="overlay-sparkle overlay-sparkle-one" aria-hidden="true">✦</div>
-        <section className="overlay-window overlay-note">
+        <section className="overlay-window overlay-note" aria-label="SYLUX FM dedication popup">
           <div className="overlay-window-header overlay-pink">
             <div className="overlay-window-title"><span className="overlay-capsule"/><span className="overlay-small-dot"/> A LIL NOTE</div>
             <div className="overlay-window-dots" aria-hidden="true"><i/><i/><i/></div>
@@ -82,22 +82,21 @@ export default function OverlayPage() {
             <h1>{item ? publicSenderName(item) : "SYLUX Listener"}</h1>
             {item?.dedication_to && <p className="overlay-to">For: <strong>{item.dedication_to}</strong></p>}
             <p className={"overlay-message " + sizeClass}>{item?.message}</p>
+            <div className="overlay-song-inline">
+              <div className="overlay-song-inline-icon"><Music2 size={29} strokeWidth={2.5}/></div>
+              <div className="overlay-song-inline-text">
+                <span className="overlay-song-inline-label">SONG REQUEST</span>
+                <strong className="overlay-song-title">{item?.song_title}</strong>
+                <span className="overlay-artist">{item?.artist}</span>
+              </div>
+            </div>
           </div>
-          <div className="overlay-window-buttons" aria-hidden="true"><span className="overlay-pill overlay-close">CLOSE</span><span className="overlay-pill overlay-okay">OKAY</span></div>
+          <div className="overlay-window-buttons" aria-hidden="true">
+            <span className="overlay-pill overlay-close">CLOSE</span>
+            <span className="overlay-pill overlay-okay">OKAY</span>
+          </div>
         </section>
         <div className="overlay-sparkle overlay-sparkle-two" aria-hidden="true">✦</div>
-        <section className="overlay-window overlay-music">
-          <div className="overlay-window-header overlay-green">
-            <div className="overlay-window-title"><span className="overlay-capsule"/><span className="overlay-small-dot"/> NOW PLAYING</div>
-            <div className="overlay-window-dots" aria-hidden="true"><i/><i/><i/></div>
-          </div>
-          <div className="overlay-music-body">
-            <div className="overlay-music-icon"><Music2 size={34} strokeWidth={2.4}/></div>
-            <div className="overlay-song"><strong className="overlay-song-title">{item?.song_title}</strong><span className="overlay-artist">{item?.artist}</span></div>
-            <Sparkles className="overlay-music-sparkle" size={32}/>
-          </div>
-          <div className="overlay-window-buttons" aria-hidden="true"><span className="overlay-pill overlay-green-close">CLOSE</span><span className="overlay-pill overlay-yellow">OKAY</span></div>
-        </section>
       </div>
       {warning && <div className="overlay-warning">{warning}</div>}
     </main>
