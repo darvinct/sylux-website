@@ -31,7 +31,9 @@ export default function OverlayPage() {
     let timer: ReturnType<typeof setTimeout> | undefined;
 
     if (preview === "1" || preview === "anonymous") {
-      popup.display({ ...example, is_anonymous: preview === "anonymous" });
+      // Keep visual previews on screen for design review; live OBS still uses 12s.
+      setItem({ ...example, is_anonymous: preview === "anonymous" });
+      setVisible(true);
       return () => { alive = false; popup.clear(); };
     }
     if (!key) {
