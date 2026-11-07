@@ -10,6 +10,7 @@ create table if not exists public.radio_requests (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   username text not null check (char_length(username) between 1 and 64),
+  display_name text not null default 'SYLUX Listener' check (char_length(display_name) between 1 and 64),
   song_title text not null check (char_length(song_title) between 1 and 120),
   artist text not null check (char_length(artist) between 1 and 120),
   dedication_to text check (dedication_to is null or char_length(dedication_to) <= 64),
@@ -24,6 +25,24 @@ create table if not exists public.radio_requests (
 -- Existing installations keep request history intact and get the new field.
 alter table public.radio_requests
   add column if not exists is_anonymous boolean not null default false;
+alter table public.radio_requests
+  add column if not exists display_name text not null default 'SYLUX Listener';
+
+-- Preserve existing requests while backfilling a separate display-name field
+-- from Discord OAuth identity data; never copy a handle/username to this field.
+update public.radio_requests as r
+  set display_name = left(coalesce(
+    nullif(btrim(i.identity_data->>'global_name'), ''),
+    nullif(btrim(i.identity_data->>'display_name'), ''),
+    nullif(btrim(i.identity_data->>'name'), ''),
+    'SYLUX Listener'), 64)
+  from auth.identities as i
+  where i.user_id = r.user_id and i.provider = 'discord'
+    and r.display_name is distinct from left(coalesce(
+      nullif(btrim(i.identity_data->>'global_name'), ''),
+      nullif(btrim(i.identity_data->>'display_name'), ''),
+      nullif(btrim(i.identity_data->>'name'), ''),
+      'SYLUX Listener'), 64);
 
 create index if not exists radio_requests_fifo_idx on public.radio_requests (status, created_at, id);
 create index if not exists radio_requests_member_idx on public.radio_requests (user_id);
@@ -51,17 +70,18 @@ begin
     raise exception 'Not authorized' using errcode = '42501';
   end if;
   -- Identity and FIFO timestamps are server-owned, never supplied by a member.
-  -- Discord OAuth: 'name' is the display name; 'full_name' can be the handle.
-  -- Never fall back to a Discord username when a display name is missing.
+  -- Use Discord OAuth display names only; never use full_name/username handles.
+  -- Keep username filled for backward compatibility, but render display_name.
   select left(coalesce(nullif(btrim(identity_data->>'global_name'), ''),
-    nullif(btrim(identity_data->>'name'), ''),
     nullif(btrim(identity_data->>'display_name'), ''),
-    'SYLUX Listener'), 64) into new.username
+    nullif(btrim(identity_data->>'name'), ''),
+    'SYLUX Listener'), 64) into new.display_name
     from auth.identities where user_id = new.user_id and provider = 'discord'
     order by id limit 1;
   if not found then
     raise exception 'Discord sign-in required' using errcode = '42501';
   end if;
+  new.username = new.display_name;
   new.status = 'pending';
   new.created_at = clock_timestamp();
   new.updated_at = new.created_at;
