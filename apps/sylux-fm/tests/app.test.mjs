@@ -74,13 +74,13 @@ test('OBS accepts standby and complete requests; rejects malformed payloads', ()
   }
 });
 
-function fixture() {
+function fixture(onVisible = () => {}) {
   let now = 0, sequence = 0;
   const timers = new Map();
   const shown = [], visibility = [];
   const popup = createPopup(value => shown.push(value), value => visibility.push(value),
     (callback, delay) => { const id = ++sequence; timers.set(id, { at: now + delay, callback }); return id; },
-    id => timers.delete(id));
+    id => timers.delete(id), onVisible);
   function advance(ms) {
     const end = now + ms;
     while (true) {
@@ -116,6 +116,25 @@ test('OBS cancels entrance on standby, cleanup or failure; a new request replace
   f.popup.clear(); f.advance(20_000);
   assert.equal(f.visibility.at(-1), false);
   assert.equal(f.timers.size, 0);
+});
+
+test('OBS notification rings once per visible request, not on repeated API polls', () => {
+  const played = [];
+  const f = fixture(current => played.push(current.id));
+  f.popup.display(item);
+  f.advance(89);
+  assert.deepEqual(played, []);
+  f.advance(1);
+  assert.deepEqual(played, ['one']);
+  f.popup.display(item); f.advance(8_000);
+  assert.deepEqual(played, ['one']);
+  f.popup.display({ ...item, id: 'two' }); f.advance(90);
+  assert.deepEqual(played, ['one', 'two']);
+  f.popup.display(null);
+  f.popup.display({ ...item, id: 'three' });
+  f.popup.clear();
+  f.advance(200);
+  assert.deepEqual(played, ['one', 'two']);
 });
 
 test('OBS treats a new updated_at as a new broadcast', () => {
