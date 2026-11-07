@@ -7,6 +7,7 @@ export function createPopup(
   visibility: (visible: boolean) => void,
   schedule: (callback: () => void, delay: number) => ReturnType<typeof setTimeout> = setTimeout,
   cancel: (timer: ReturnType<typeof setTimeout>) => void = clearTimeout,
+  notify?: (item: OverlayRequest) => void,
 ) {
   let lastVersion: string | null = null;
   let enter: ReturnType<typeof setTimeout> | undefined;
@@ -25,6 +26,9 @@ export function createPopup(
       clear();
       lastVersion = version;
       show(item);
+      // The sound follows new popup versions, never repeated API polling.
+      // An optional notification failure must not stop the on-air popup.
+      try { notify?.(item); } catch { /* audio is optional */ }
       enter = schedule(() => visibility(true), 90);
       leave = schedule(() => visibility(false), POPUP_DURATION_MS);
     },
