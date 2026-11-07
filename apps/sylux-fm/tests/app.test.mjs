@@ -9,7 +9,7 @@ import { isPublicSupabaseKey } from '../src/lib/overlay-service.ts';
 import { overlayErrorMessage } from '../src/lib/overlay-errors.ts';
 import { publicSenderName } from '../src/lib/requests.ts';
 
-const item = { id: 'one', username: 'Listener', is_anonymous: false, song_title: 'Song', artist: 'Artist',
+const item = { id: 'one', display_name: 'Listener', is_anonymous: false, song_title: 'Song', artist: 'Artist',
   dedication_to: null, message: '<script>alert(1)</script>', updated_at: '2026-11-02T00:00:00Z' };
 
 test('OBS server configuration identifies public keys without granting trust to JWT claims', () => {
@@ -68,7 +68,8 @@ test('OBS accepts standby and complete requests; rejects malformed payloads', ()
   assert.deepEqual(parseOverlayPayload({ active: item }), item);
   for (const payload of [null, {}, { active: [] }, { active: 'hello' },
     { active: { ...item, message: null } }, { active: { ...item, is_anonymous: "true" } },
-    { active: { ...item, dedication_to: {} } }]) {
+    { active: { ...item, dedication_to: {} } },
+    { active: { ...item, display_name: null, username: 'Old Handle' } }]) {
     assert.throws(() => parseOverlayPayload(payload));
   }
 });
@@ -127,8 +128,8 @@ test('OBS treats a new updated_at as a new broadcast', () => {
 
 
 test('anonymous display never discloses the real sender name', () => {
-  assert.equal(publicSenderName({ username: 'Hidden identity', is_anonymous: true }), 'Anonymous');
-  assert.equal(publicSenderName({ username: 'Actual Display Name', is_anonymous: false }), 'Actual Display Name');
-  assert.deepEqual(parseOverlayPayload({ active: { ...item, is_anonymous: true, username: 'Anonymous' } }),
-    { ...item, is_anonymous: true, username: 'Anonymous' });
+  assert.equal(publicSenderName({ display_name: 'Hidden identity', is_anonymous: true }), 'Anonymous');
+  assert.equal(publicSenderName({ display_name: 'Actual Display Name', is_anonymous: false }), 'Actual Display Name');
+  assert.deepEqual(parseOverlayPayload({ active: { ...item, is_anonymous: true, display_name: 'Anonymous' } }),
+    { ...item, is_anonymous: true, display_name: 'Anonymous' });
 });

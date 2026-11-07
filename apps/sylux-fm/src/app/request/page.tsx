@@ -62,7 +62,7 @@ export default function RequestPage() {
     return () => clearInterval(timer);
   }, [reload]);
 
-  const displayName = String(user?.user_metadata?.global_name || user?.user_metadata?.name || user?.user_metadata?.display_name || "SYLUX Listener");
+  const displayName = String(user?.user_metadata?.global_name || user?.user_metadata?.display_name || user?.user_metadata?.name || "SYLUX Listener");
 
   async function login() {
     if (!db) return;

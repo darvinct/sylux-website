@@ -39,7 +39,8 @@ select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000001'
 insert into public.radio_requests(user_id,song_title,artist,message,is_anonymous) values
  (auth.uid(),'First','Artist','Message',false), (auth.uid(),'Second','Artist','Message',true);
 select public.test_assert((select count(*)=2 from public.radio_requests),'two requests accepted');
-select public.test_assert((select bool_and(username='Listener A') from public.radio_requests),'Discord display name set by server, not handle');
+select public.test_assert((select bool_and(display_name='Listener A') from public.radio_requests),'Discord display name set by server, not handle');
+select public.test_assert((select bool_and(username=display_name) from public.radio_requests),'legacy username field retained for compatibility');
 select public.test_assert((select is_anonymous from public.radio_requests where song_title='Second'),'anonymous submission saved');
 select public.test_assert((select not is_anonymous from public.radio_requests where song_title='First'),'named submission saved');
 insert into public.radio_requests(user_id,song_title,artist,message)
@@ -47,6 +48,8 @@ insert into public.radio_requests(user_id,song_title,artist,message)
 select public.test_assert((select count(*)=3 from public.radio_requests),'third request accepted without quota');
 select public.test_denied($q$insert into public.radio_requests(user_id,song_title,artist,message,created_at)
  values(auth.uid(),'Forged','Artist','Message','2000-01-01')$q$,'42501');
+select public.test_denied($q$insert into public.radio_requests(user_id,song_title,artist,message,display_name)
+ values(auth.uid(),'Forged display','Artist','Message','handle_a')$q$,'42501');
 select public.test_denied($q$insert into public.radio_requests(user_id,song_title,artist,message,username)
  values(auth.uid(),'Forged','Artist','Message','Host')$q$,'42501');
 select public.test_denied($q$insert into public.radio_requests(user_id,song_title,artist,message)

@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     const admin = createClient(settings.url, settings.key, { auth: { autoRefreshToken: false, persistSession: false } });
     const { data, error, status } = await admin
       .from("radio_requests")
-      .select("id,username,is_anonymous,song_title,artist,dedication_to,message,updated_at")
+      .select("id,display_name,is_anonymous,song_title,artist,dedication_to,message,updated_at")
       .eq("status", "now_playing")
       .maybeSingle();
 
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
         { status: 500, headers: { "Cache-Control": "no-store" } });
     }
     // Never send an anonymous listener\u0027s real display name to OBS/browser clients.
-    const active = data ? { ...data, username: publicSenderName(data) } : null;
+    const active = data ? { ...data, display_name: publicSenderName(data) } : null;
     return NextResponse.json({ active }, { headers: { "Cache-Control": "no-store, max-age=0" } });
   } catch {
     console.error("OBS database connection unavailable");

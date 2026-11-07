@@ -49,7 +49,7 @@ def session(uid):
 
 def row(index, status):
     return {"id": f"10000000-0000-0000-0000-{index:012d}", "user_id": member,
-            "username": "Test Display", "is_anonymous": False, "song_title": f"Song {index}", "artist": "Artist",
+            "username": "Handle for legacy", "display_name": "Test Display", "is_anonymous": False, "song_title": f"Song {index}", "artist": "Artist",
             "message": "<script>alert('text only')</script>", "dedication_to": "Community",
             "status": status, "created_at": f"2026-01-01T00:00:0{index}Z",
             "updated_at": f"2026-01-01T00:00:0{index}Z"}
@@ -263,9 +263,10 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
                     expect(page.locator(".overlay-warning")).to_contain_text("Kunci OBS tidak cocok")
                     page.goto(origin+"/overlay?preview=1")
                     expect(page.locator(".overlay-card")).to_have_class("overlay-card overlay-visible")
-                    expect(page.get_by_text("A LIL NOTE")).to_be_visible()
+                    expect(page.get_by_text("SYLUX FM", exact=True)).to_be_visible()
                     expect(page.locator(".overlay-window")).to_have_count(1)
                     expect(page.get_by_text("SONG REQUEST")).to_be_visible()
+                    expect(page.locator(".overlay-content h1")).to_have_text("Mellie")
                     expect(page.locator(".overlay-song-title")).to_have_text("Those Eyes")
                     expect(page.locator(".overlay-to")).to_be_visible()
                     assert float(page.locator(".overlay-message").evaluate("(el) => getComputedStyle(el).fontSize").removesuffix("px")) >= 33
@@ -288,6 +289,8 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
                     expect(page.locator(".overlay-message")).to_contain_text("<script>")
                     response = context.request.get(origin+"/api/overlay", headers={"x-overlay-key": secret})
                     assert "user_id" not in response.json()["active"]
+                    assert "username" not in response.json()["active"]
+                    assert response.json()["active"]["display_name"] == "Test Display"
                     expect(page.locator(".overlay-card")).to_have_class("overlay-card ", timeout=15000)
                     page.wait_for_timeout(3300)
                     expect(page.locator(".overlay-card")).to_have_class("overlay-card ")
