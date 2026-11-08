@@ -62,7 +62,7 @@ export default function RequestPage() {
     return () => clearInterval(timer);
   }, [reload]);
 
-  const displayName = String(user?.user_metadata?.global_name || user?.user_metadata?.display_name || user?.user_metadata?.name || "SYLUX Listener");
+  const displayName = String(user?.user_metadata?.global_name || user?.user_metadata?.display_name || user?.user_metadata?.name || "LUXCAST Listener");
 
   async function login() {
     if (!db) return;
@@ -110,20 +110,20 @@ export default function RequestPage() {
   return (
     <main className="site-shell">
       <header className="site-header">
-        <div className="brand"><span className="brand-icon"><RadioTower size={18}/></span> SYLUX<span className="accent"> AIRWAVES</span></div>
+        <div className="brand"><span className="brand-icon"><RadioTower size={18}/></span><span className="brand-wordmark">LUXCAST<span className="accent">: AFTERHOURS</span></span></div>
         <div className="header-links"><span className="live-pill"><i/> WHERE WORDS MEET MELODIES</span><Link href="/admin" className="subtle-link">Operator <ArrowUpRight size={14}/></Link></div>
       </header>
 
       <section className="hero">
-        <div className="sy-airwaves-banner" aria-hidden="true">
-          <img src="/airwaves-hero.svg" width={2048} height={503} alt="" />
+        <div className="luxcast-banner" aria-hidden="true">
+          <img src="/luxcast-hero.svg" width={2048} height={503} alt="" />
         </div>
-        <h1 className="sy-airwaves-a11y-title">Turn Your Feelings Into a Song</h1>
-        <div className="sy-airwaves-mobile-title" aria-hidden="true">
+        <h1 className="luxcast-a11y-title">Turn Your Feelings Into a Song</h1>
+        <div className="luxcast-mobile-title" aria-hidden="true">
           <div className="eyebrow"><span className="tiny-line"/> WHERE WORDS MEET MELODIES</div>
           <p>Turn Your Feelings <em>Into a Song</em></p>
         </div>
-        <p>Let your feelings find the airwaves. Pilih lagu favoritmu, tulis pesan untuk seseorang, dan biarkan ceritamu mengudara bersama SYLUX AIRWAVES.</p>
+        <p>Let your feelings fill the night. Pilih lagu favoritmu, tulis pesan untuk seseorang, dan biarkan ceritamu mengudara bersama LUXCAST: AFTERHOURS.</p>
       </section>
 
       <div className="content-grid">
@@ -179,8 +179,8 @@ export default function RequestPage() {
         <aside className="sidebar">
           <div className="panel secondary-panel">
             <div className="eyebrow">NOW TUNING IN</div>
-            <div className="station-art"><RadioTower size={52} strokeWidth={1}/><div className="frequency">AIR<span>WAVES</span></div><div className="frequency-caption">WHERE WORDS MEET MELODIES</div></div>
-            <div className="sidebar-footer"><span><i className="status-dot"/> ON AIR</span><span>LET YOUR FEELINGS FIND THE AIRWAVES</span></div>
+            <div className="station-art"><RadioTower size={52} strokeWidth={1}/><div className="frequency">LUX<span>CAST</span></div><div className="frequency-caption">AFTERHOURS · WHERE WORDS MEET MELODIES</div></div>
+            <div className="sidebar-footer"><span><i className="status-dot"/> ON AIR</span><span>LET YOUR FEELINGS FILL THE NIGHT</span></div>
           </div>
           <div className="panel info-panel">
             <div className="eyebrow">HOW IT WORKS</div>
@@ -195,7 +195,7 @@ export default function RequestPage() {
           </div>}
         </aside>
       </div>
-      <footer className="site-footer"><span>© SYLUX AIRWAVES · WHERE WORDS MEET MELODIES</span><span>Made for the community.</span></footer>
+      <footer className="site-footer"><span>© LUXCAST: AFTERHOURS · WHERE WORDS MEET MELODIES</span><span>Made for the community.</span></footer>
     </main>
   );
 }

@@ -210,7 +210,7 @@ html:has(.overlay-stage),body:has(.overlay-stage){background:transparent!importa
 }
 
 
-/* SYLUX AIRWAVES | Midnight Lavender + Soft Pink branding.
+/* LUXCAST: AFTERHOURS | Midnight Lavender + Soft Pink branding.
    Public portal and control room only; OBS remains transparent. */
 body:not(:has(.overlay-stage)){
   color:#fff4fc;
@@ -229,6 +229,7 @@ body:not(:has(.overlay-stage)){
   color:#f2beea;box-shadow:0 7px 21px rgba(207,143,213,.13);
 }
 .brand .accent{color:#f0b3e6;font-weight:850;margin-left:0;letter-spacing:.25px}
+.brand-wordmark{display:inline-block;min-width:0;white-space:nowrap}
 .live-pill{color:#e4c6e9;letter-spacing:1.1px}
 .live-pill i{background:#a8e5df;box-shadow:0 0 12px #7bcbba}
 .subtle-link{color:#e1cfe9}
@@ -327,7 +328,7 @@ body:not(:has(.overlay-stage)){
 }
 @media(max-width:480px){
   .site-shell{padding:0 16px}
-  .site-header{padding:19px 0}
+  .site-header{padding:19px 0;flex-wrap:wrap;row-gap:8px}
   .brand{font-size:clamp(12px,3.5vw,15px);letter-spacing:-.5px}
   .brand-icon{width:29px;height:29px;min-width:29px;margin-right:2px;border-radius:11px}
   .header-links{gap:4px;flex-shrink:0}
@@ -339,31 +340,31 @@ body:not(:has(.overlay-stage)){
 }
 
 
-/* SYLUX AIRWAVES hero graphic based on the supplied wide purple/pink artwork. */
-.hero:has(.sy-airwaves-banner){max-width:1190px;margin:40px auto 57px}
-.sy-airwaves-banner{width:100%;margin:0 auto;overflow:hidden}
-.sy-airwaves-banner img{width:100%;height:auto;display:block}
-.sy-airwaves-a11y-title{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
-.sy-airwaves-mobile-title{display:none}
-.hero:has(.sy-airwaves-banner)>p{margin:5px auto 0;max-width:650px}
+/* LUXCAST: AFTERHOURS hero graphic based on the supplied wide purple/pink artwork. */
+.hero:has(.luxcast-banner){max-width:1190px;margin:40px auto 57px}
+.luxcast-banner{width:100%;margin:0 auto;overflow:hidden}
+.luxcast-banner img{width:100%;height:auto;display:block}
+.luxcast-a11y-title{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.luxcast-mobile-title{display:none}
+.hero:has(.luxcast-banner)>p{margin:5px auto 0;max-width:650px}
 @media(max-width:700px){
-  .hero:has(.sy-airwaves-banner){margin:45px auto 42px}
-  .sy-airwaves-banner{display:none}
-  .sy-airwaves-mobile-title{
+  .hero:has(.luxcast-banner){margin:45px auto 42px}
+  .luxcast-banner{display:none}
+  .luxcast-mobile-title{
     display:block;background:radial-gradient(ellipse at 50% 45%,#352142 0%,#291a35 63%,#1e1429 100%);
     border-top:1px solid rgba(190,140,208,.52);
     padding:52px 13px 38px;margin-bottom:22px;text-align:center;
   }
-  .sy-airwaves-mobile-title .eyebrow{
+  .luxcast-mobile-title .eyebrow{
     font-size:10px;letter-spacing:1.7px;color:#fff3ff;
     margin:0 auto 19px;font-weight:800;
   }
-  .sy-airwaves-mobile-title .tiny-line{background:#dba0de;vertical-align:middle}
-  .sy-airwaves-mobile-title p{
+  .luxcast-mobile-title .tiny-line{background:#dba0de;vertical-align:middle}
+  .luxcast-mobile-title p{
     margin:0;color:#fffaff;line-height:1.12;
     font-size:clamp(27px,6.5vw,46px);font-weight:800;letter-spacing:-1.1px;
   }
-  .sy-airwaves-mobile-title em{
+  .luxcast-mobile-title em{
     font-family:Georgia,"Times New Roman",serif;font-size:1.08em;
     font-weight:400;color:#edaaed;white-space:nowrap;
   }
