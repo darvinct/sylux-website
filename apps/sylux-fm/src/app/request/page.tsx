@@ -110,14 +110,14 @@ export default function RequestPage() {
   return (
     <main className="site-shell">
       <header className="site-header">
-        <div className="brand"><span className="brand-icon"><RadioTower size={18}/></span> LUXCAST<span className="accent">: AFTERHOURS</span></div>
-        <div className="header-links"><span className="live-pill"><i/> YOUR SONG, YOUR STORY</span><Link href="/admin" className="subtle-link">Operator <ArrowUpRight size={14}/></Link></div>
+        <div className="brand"><span className="brand-icon"><RadioTower size={18}/></span> SYLUX<span className="accent"> AIRWAVES</span></div>
+        <div className="header-links"><span className="live-pill"><i/> WHERE WORDS MEET MELODIES</span><Link href="/admin" className="subtle-link">Operator <ArrowUpRight size={14}/></Link></div>
       </header>
 
       <section className="hero">
-        <div className="eyebrow"><span className="tiny-line"/> A LITTLE NOTE, A LOT OF FEELING</div>
-        <h1>Let your feelings <em>find the airwaves.</em></h1>
-        <p>Setiap lagu punya ceritanya sendiri. Pilih lagu favoritmu, tulis pesan untuk seseorang, dan biarkan ceritamu mengudara bersama LUXCAST: AFTERHOURS.</p>
+        <div className="eyebrow"><span className="tiny-line"/> WHERE WORDS MEET MELODIES</div>
+        <h1>Turn Your Feelings <em>Into a Song</em></h1>
+        <p>Let your feelings find the airwaves. Pilih lagu favoritmu, tulis pesan untuk seseorang, dan biarkan ceritamu mengudara bersama SYLUX AIRWAVES.</p>
       </section>
 
       <div className="content-grid">
@@ -173,8 +173,8 @@ export default function RequestPage() {
         <aside className="sidebar">
           <div className="panel secondary-panel">
             <div className="eyebrow">NOW TUNING IN</div>
-            <div className="station-art"><RadioTower size={52} strokeWidth={1}/><div className="frequency">AIR<span>WAVES</span></div><div className="frequency-caption">YOUR SONG · YOUR STORY</div></div>
-            <div className="sidebar-footer"><span><i className="status-dot"/> ON AIR</span><span>WHERE STORIES FIND A FREQUENCY</span></div>
+            <div className="station-art"><RadioTower size={52} strokeWidth={1}/><div className="frequency">AIR<span>WAVES</span></div><div className="frequency-caption">WHERE WORDS MEET MELODIES</div></div>
+            <div className="sidebar-footer"><span><i className="status-dot"/> ON AIR</span><span>LET YOUR FEELINGS FIND THE AIRWAVES</span></div>
           </div>
           <div className="panel info-panel">
             <div className="eyebrow">HOW IT WORKS</div>
@@ -189,7 +189,7 @@ export default function RequestPage() {
           </div>}
         </aside>
       </div>
-      <footer className="site-footer"><span>© LUXCAST: AFTERHOURS · YOUR SONG, YOUR STORY</span><span>Made for the community.</span></footer>
+      <footer className="site-footer"><span>© SYLUX AIRWAVES · WHERE WORDS MEET MELODIES</span><span>Made for the community.</span></footer>
     </main>
   );
 }
