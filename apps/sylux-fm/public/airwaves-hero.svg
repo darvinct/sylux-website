@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 503" role="img" aria-labelledby="title desc">
+<title id="title">Turn Your Feelings Into a Song</title>
+<desc id="desc">WHERE WORDS MEET MELODIES. Turn Your Feelings Into a Song.</desc>
+<defs><radialGradient id="bg" cx="50%" cy="45%" r="72%"><stop offset="0" stop-color="#352142"/><stop offset=".66" stop-color="#291a35"/><stop offset="1" stop-color="#1e1429"/></radialGradient><linearGradient id="pink" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#dba0de"/><stop offset="1" stop-color="#f1aef3"/></linearGradient></defs>
+<rect width="2048" height="503" fill="url(#bg)"/>
+<path d="M0 44H2048" stroke="#956ba9" stroke-width="2" stroke-opacity=".6"/>
+<path d="M664 224h72" stroke="#d8a1e0" stroke-width="3"/>
+<text x="773" y="234" font-family="Inter,Arial,Helvetica,sans-serif" font-size="27" font-weight="800" letter-spacing="8.3" fill="#fff7ff" textLength="623" lengthAdjust="spacingAndGlyphs">WHERE WORDS MEET MELODIES</text>
+<text x="111" y="408" font-family="Inter,Arial,Helvetica,sans-serif" font-size="131" font-weight="800" letter-spacing="-5" fill="#fffaff" textLength="1112" lengthAdjust="spacingAndGlyphs">Turn Your Feelings</text>
+<text x="1237" y="407" font-family="Georgia,'Times New Roman',serif" font-size="143" font-style="italic" font-weight="400" fill="url(#pink)" textLength="718" lengthAdjust="spacingAndGlyphs">Into a Song</text>
+</svg>

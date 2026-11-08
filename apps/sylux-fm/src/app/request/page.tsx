@@ -115,8 +115,14 @@ export default function RequestPage() {
       </header>
 
       <section className="hero">
-        <div className="eyebrow"><span className="tiny-line"/> WHERE WORDS MEET MELODIES</div>
-        <h1>Turn Your Feelings <em>Into a Song</em></h1>
+        <div className="sy-airwaves-banner" aria-hidden="true">
+          <img src="/airwaves-hero.svg" width={2048} height={503} alt="" />
+        </div>
+        <h1 className="sy-airwaves-a11y-title">Turn Your Feelings Into a Song</h1>
+        <div className="sy-airwaves-mobile-title" aria-hidden="true">
+          <div className="eyebrow"><span className="tiny-line"/> WHERE WORDS MEET MELODIES</div>
+          <p>Turn Your Feelings <em>Into a Song</em></p>
+        </div>
         <p>Let your feelings find the airwaves. Pilih lagu favoritmu, tulis pesan untuk seseorang, dan biarkan ceritamu mengudara bersama SYLUX AIRWAVES.</p>
       </section>
 

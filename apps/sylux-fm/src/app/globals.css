@@ -337,3 +337,34 @@ body:not(:has(.overlay-stage)){
   .hero p{font-size:14px}
   .overlay-station-mark{font-size:9px;letter-spacing:1px;padding:4px 9px;margin-bottom:9px}
 }
+
+
+/* SYLUX AIRWAVES hero graphic based on the supplied wide purple/pink artwork. */
+.hero:has(.sy-airwaves-banner){max-width:1190px;margin:40px auto 57px}
+.sy-airwaves-banner{width:100%;margin:0 auto;overflow:hidden}
+.sy-airwaves-banner img{width:100%;height:auto;display:block}
+.sy-airwaves-a11y-title{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.sy-airwaves-mobile-title{display:none}
+.hero:has(.sy-airwaves-banner)>p{margin:5px auto 0;max-width:650px}
+@media(max-width:700px){
+  .hero:has(.sy-airwaves-banner){margin:45px auto 42px}
+  .sy-airwaves-banner{display:none}
+  .sy-airwaves-mobile-title{
+    display:block;background:radial-gradient(ellipse at 50% 45%,#352142 0%,#291a35 63%,#1e1429 100%);
+    border-top:1px solid rgba(190,140,208,.52);
+    padding:52px 13px 38px;margin-bottom:22px;text-align:center;
+  }
+  .sy-airwaves-mobile-title .eyebrow{
+    font-size:10px;letter-spacing:1.7px;color:#fff3ff;
+    margin:0 auto 19px;font-weight:800;
+  }
+  .sy-airwaves-mobile-title .tiny-line{background:#dba0de;vertical-align:middle}
+  .sy-airwaves-mobile-title p{
+    margin:0;color:#fffaff;line-height:1.12;
+    font-size:clamp(27px,6.5vw,46px);font-weight:800;letter-spacing:-1.1px;
+  }
+  .sy-airwaves-mobile-title em{
+    font-family:Georgia,"Times New Roman",serif;font-size:1.08em;
+    font-weight:400;color:#edaaed;white-space:nowrap;
+  }
+}
