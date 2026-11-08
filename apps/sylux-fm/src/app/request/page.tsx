@@ -110,20 +110,20 @@ export default function RequestPage() {
   return (
     <main className="site-shell">
       <header className="site-header">
-        <div className="brand"><span className="brand-icon"><RadioTower size={18}/></span> SYLUX<span className="accent">FM</span></div>
-        <div className="header-links"><span className="live-pill"><i/> FREQUENCIES OF THE NIGHT</span><Link href="/admin" className="subtle-link">Operator <ArrowUpRight size={14}/></Link></div>
+        <div className="brand"><span className="brand-icon"><RadioTower size={18}/></span> SYLUX<span className="accent">AIRWAVES</span></div>
+        <div className="header-links"><span className="live-pill"><i/> YOUR SONG, YOUR STORY</span><Link href="/admin" className="subtle-link">Operator <ArrowUpRight size={14}/></Link></div>
       </header>
 
       <section className="hero">
-        <div className="eyebrow"><span className="tiny-line"/> THE NIGHT IS YOURS TO SHARE</div>
-        <h1>Every song has <em>a story.</em></h1>
-        <p>Request lagu favoritmu, titipkan pesan untuk seseorang, dan dengarkan kisahmu mengudara di SYLUX FM.</p>
+        <div className="eyebrow"><span className="tiny-line"/> A LITTLE NOTE, A LOT OF FEELING</div>
+        <h1>Let your feelings <em>find the airwaves.</em></h1>
+        <p>Setiap lagu punya ceritanya sendiri. Pilih lagu favoritmu, tulis pesan untuk seseorang, dan biarkan ceritamu mengudara bersama SYLUX AIRWAVES.</p>
       </section>
 
       <div className="content-grid">
         <section className="panel form-panel">
           <div className="panel-heading">
-            <div><div className="eyebrow">01 / SUBMISSION PORTAL</div><h2>Request & Dedication</h2></div>
+            <div><div className="eyebrow">01 / SEND YOUR STORY</div><h2>A Song & A Little Note</h2></div>
             <div className="round-icon"><Disc3 size={22}/></div>
           </div>
           {user ? (
@@ -173,8 +173,8 @@ export default function RequestPage() {
         <aside className="sidebar">
           <div className="panel secondary-panel">
             <div className="eyebrow">NOW TUNING IN</div>
-            <div className="station-art"><RadioTower size={52} strokeWidth={1}/><div className="frequency">98.7<span> FM</span></div><div className="frequency-caption">THE SYLUX FREQUENCY</div></div>
-            <div className="sidebar-footer"><span><i className="status-dot"/> ON AIR</span><span>YOUR VOICE, OUR FREQUENCY</span></div>
+            <div className="station-art"><RadioTower size={52} strokeWidth={1}/><div className="frequency">AIR<span>WAVES</span></div><div className="frequency-caption">YOUR SONG · YOUR STORY</div></div>
+            <div className="sidebar-footer"><span><i className="status-dot"/> ON AIR</span><span>WHERE STORIES FIND A FREQUENCY</span></div>
           </div>
           <div className="panel info-panel">
             <div className="eyebrow">HOW IT WORKS</div>
@@ -189,7 +189,7 @@ export default function RequestPage() {
           </div>}
         </aside>
       </div>
-      <footer className="site-footer"><span>© SYLUX FM · TUNE IN, STAY AWHILE</span><span>Made for the community.</span></footer>
+      <footer className="site-footer"><span>© SYLUX AIRWAVES · YOUR SONG, YOUR STORY</span><span>Made for the community.</span></footer>
     </main>
   );
 }

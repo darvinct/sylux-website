@@ -208,3 +208,132 @@ html:has(.overlay-stage),body:has(.overlay-stage){background:transparent!importa
  .overlay-pill{min-width:83px;font-size:11px;letter-spacing:1px;padding:6px 10px;border-width:2px}
  .overlay-sparkle{display:none}
 }
+
+
+/* SYLUX AIRWAVES | Midnight Lavender + Soft Pink branding.
+   Public portal and control room only; OBS remains transparent. */
+body:not(:has(.overlay-stage)){
+  color:#fff4fc;
+  background:
+    radial-gradient(ellipse 58% 32% at 50% 2%,rgba(144,93,179,.29),transparent 78%),
+    radial-gradient(ellipse 48% 48% at 100% 28%,rgba(118,82,174,.13),transparent 82%),
+    radial-gradient(ellipse 40% 36% at 4% 64%,rgba(120,164,200,.09),transparent 85%),
+    linear-gradient(180deg,#171325 0%,#1b172b 46%,#151222 100%);
+}
+.site-header{border-color:#58426c;padding:26px 0}
+.brand{font-size:22px;letter-spacing:-.65px;color:#fff6ff;font-weight:850;white-space:nowrap}
+.brand-icon{
+  width:41px;height:41px;margin-right:7px;
+  border:1px solid #a57cbd;border-radius:15px;
+  background:linear-gradient(145deg,#654877,#38274f);
+  color:#f2beea;box-shadow:0 7px 21px rgba(207,143,213,.13);
+}
+.brand .accent{color:#f0b3e6;font-weight:850;margin-left:0;letter-spacing:.25px}
+.live-pill{color:#e4c6e9;letter-spacing:1.1px}
+.live-pill i{background:#a8e5df;box-shadow:0 0 12px #7bcbba}
+.subtle-link{color:#e1cfe9}
+.subtle-link:hover,.text-button:hover{color:#f5bdec}
+.hero{max-width:920px;margin:80px auto 61px}
+.eyebrow{color:#d3afe3;letter-spacing:2.1px}
+.tiny-line{background:#e7addd}
+.hero h1,.admin-intro h1{
+  font-size:clamp(40px,5.25vw,70px);line-height:1.15;
+  letter-spacing:-2.9px;font-weight:800;color:#fff5fc;
+}
+.hero h1 em,.admin-intro h1 em{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-weight:400;color:#f3b6ed;
+}
+.hero p,.admin-intro p{max-width:660px;font-size:16px;line-height:1.85;color:#cfbedb}
+.panel{
+  background:linear-gradient(154deg,rgba(49,37,68,.96),rgba(31,26,48,.97) 78%);
+  border:1px solid #5b456e;border-radius:21px;
+  box-shadow:0 18px 50px rgba(10,8,21,.27),inset 0 1px 0 rgba(249,214,255,.05);
+}
+.panel-heading h2{color:#fff3fc}
+.round-icon{border-color:#7b608e;background:#50395f;color:#eec1ee}
+.secondary-panel{
+  background:
+    radial-gradient(circle at 50% 40%,rgba(236,161,231,.20),transparent 49%),
+    linear-gradient(151deg,#4a335b,#29213e 77%);
+  border-color:#8a659c;
+}
+.station-art{color:#ecb7ec}
+.station-art>svg{filter:drop-shadow(0 0 11px rgba(228,166,232,.32))}
+.frequency{font-size:clamp(43px,4.3vw,61px);letter-spacing:-1.5px;color:#fff3fc}
+.frequency span{color:#eeb8e5;font-size:clamp(14px,1.25vw,21px);letter-spacing:.4px;margin-left:7px;font-weight:800}
+.frequency-caption{color:#d7bfe6;font-weight:800;letter-spacing:2px}
+.sidebar-footer{border-top-color:#755c86;color:#dfc9e8}
+.info-item{border-color:#584567}
+.info-item p{color:#e5d5ed}
+.info-item span{color:#c5a3dc}
+.info-foot{color:#c4afd3}
+.form-panel label{color:#f1e1f5}
+.form-panel label>span{color:#f0b5e7}
+.form-panel label>small{color:#c6b2d0}
+.form-panel input,.form-panel textarea,.obs-url{
+  background:#20192f;border-color:#675278;color:#fff6ff;border-radius:11px;
+}
+.form-panel input:focus,.form-panel textarea:focus{
+  border-color:#edb9e7;box-shadow:0 0 0 3px rgba(231,168,232,.13);
+}
+.form-panel input::placeholder,.form-panel textarea::placeholder{color:#a994b7}
+.primary-button{
+  background:linear-gradient(108deg,#e8aee9 0%,#c5b3ef 57%,#afe2ef 100%);
+  color:#302241;border-radius:12px;
+  font-size:12px;box-shadow:0 7px 23px rgba(215,156,225,.18);
+}
+.primary-button:hover{opacity:1;filter:brightness(1.07)}
+.secondary-button{background:#40304f;border-color:#806091;color:#f1dff9}
+.user-bar{background:#261d37;border-color:#654d7a}
+.user-bar strong{color:#fff4fc}
+.user-bar small,.quota small{color:#cdb1d7}
+.quota strong{color:#f7eafa}
+.quota>span,.form-bottom{color:#d6b8e3}
+.form-panel .identity-option{background:#261e35;border-color:#6c557e}
+.form-panel .identity-option.identity-selected{background:#463053;border-color:#e1a6e9}
+.identity-option small{color:#d1c0df}
+.identity-choice p{color:#beafca}
+.my-request{border-bottom-color:#564168}
+.my-request>span:nth-child(2){color:#c0acd1}
+.my-request strong{color:#f8e9fa}
+.login-panel>svg{color:#e5b9e8}
+.login-panel h3,.gate-panel h2{color:#fff0fd}
+.login-panel p,.gate-panel p{color:#d4c0df}
+.status-tag{background:#3d2d50;border-color:#795d8e;color:#e7cfed}
+.stat-panel strong{color:#fff4fa}
+.stat-panel span,.stat-panel small{color:#ccb5d7}
+.active-request{background:#21192e}
+.active-request p,.active-request blockquote{color:#e4d3ea}
+.queue-entry,.approved-entry{border-color:#564268}
+.queue-entry h3,.approved-entry strong{color:#f8e9fb}
+.dedication-to{color:#f1c3ec}
+.request-message{color:#fff0fb}
+.queue-meta,.count-label{color:#d3b6de}
+.helper-note{background:#30233f;color:#cdb5d9}
+.site-footer{color:#ae9abf}
+/* The OBS popup retains its reference-inspired pink chrome. */
+.overlay-station-mark{
+  margin:0 0 16px;padding:7px 15px;
+  font-size:13px;font-weight:900;letter-spacing:2.3px;
+  color:#956fba;background:#f6eafa;border:2px solid #e8d9f2;border-radius:999px;
+}
+@media(max-width:820px){
+  .site-header{gap:12px}
+  .brand{font-size:19px}
+  .brand-icon{width:35px;height:35px}
+  .hero{margin:64px auto 45px}
+  .hero h1{letter-spacing:-1.7px}
+}
+@media(max-width:480px){
+  .site-shell{padding:0 16px}
+  .site-header{padding:19px 0}
+  .brand{font-size:15px;letter-spacing:-.4px}
+  .brand-icon{width:30px;height:30px;margin-right:2px;border-radius:11px}
+  .header-links{gap:4px}
+  .subtle-link{font-size:11px}
+  .hero{margin:54px auto 42px}
+  .hero h1{font-size:43px}
+  .hero p{font-size:14px}
+  .overlay-station-mark{font-size:9px;letter-spacing:1px;padding:4px 9px;margin-bottom:9px}
+}
