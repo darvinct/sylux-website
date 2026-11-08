@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SYLUX FM — Frequencies of the Night",
-  description: "Community radio request & dedication queue"
+  title: "SYLUX AIRWAVES — Your Song, Your Story",
+  description: "Your song, your story. Request lagu, kirim pesan dedikasi, dan biarkan ceritamu mengudara di SYLUX AIRWAVES."
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
