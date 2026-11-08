@@ -210,7 +210,7 @@ html:has(.overlay-stage),body:has(.overlay-stage){background:transparent!importa
 }
 
 
-/* SYLUX AIRWAVES | Midnight Lavender + Soft Pink branding.
+/* LUXCAST: AFTERHOURS | Midnight Lavender + Soft Pink branding.
    Public portal and control room only; OBS remains transparent. */
 body:not(:has(.overlay-stage)){
   color:#fff4fc;
@@ -339,7 +339,7 @@ body:not(:has(.overlay-stage)){
 }
 
 
-/* SYLUX AIRWAVES hero graphic based on the supplied wide purple/pink artwork. */
+/* LUXCAST: AFTERHOURS hero graphic based on the supplied wide purple/pink artwork. */
 .hero:has(.sy-airwaves-banner){max-width:1190px;margin:40px auto 57px}
 .sy-airwaves-banner{width:100%;margin:0 auto;overflow:hidden}
 .sy-airwaves-banner img{width:100%;height:auto;display:block}
