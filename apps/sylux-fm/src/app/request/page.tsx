@@ -111,7 +111,7 @@ export default function RequestPage() {
     <main className="site-shell">
       <header className="site-header">
         <div className="brand"><span className="brand-icon"><RadioTower size={18}/></span><span className="brand-wordmark">LUXCAST<span className="accent">: AFTERHOURS</span></span></div>
-        <div className="header-links"><span className="live-pill"><i/> WHERE WORDS MEET MELODIES</span><Link href="/admin" className="subtle-link">Operator <ArrowUpRight size={14}/></Link></div>
+        <div className="header-links"><span className="live-pill"><i/> SYLUX BOARDCAST</span><Link href="/admin" className="subtle-link">Operator <ArrowUpRight size={14}/></Link></div>
       </header>
 
       <section className="hero">
@@ -179,7 +179,7 @@ export default function RequestPage() {
         <aside className="sidebar">
           <div className="panel secondary-panel">
             <div className="eyebrow">NOW TUNING IN</div>
-            <div className="station-art"><RadioTower size={52} strokeWidth={1}/><div className="frequency">LUX<span>CAST</span></div><div className="frequency-caption">AFTERHOURS · WHERE WORDS MEET MELODIES</div></div>
+            <div className="station-art"><RadioTower size={52} strokeWidth={1}/><div className="frequency">LUX<span>CAST</span></div><div className="frequency-caption">AFTERHOURS: SYLUX BOARDCAST</div></div>
             <div className="sidebar-footer"><span><i className="status-dot"/> ON AIR</span><span>LET YOUR FEELINGS FILL THE NIGHT</span></div>
           </div>
           <div className="panel info-panel">

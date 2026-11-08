@@ -198,6 +198,8 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
                     page.goto(origin+"/request")
                     expect(page).to_have_title("LUXCAST: AFTERHOURS — Where Words Meet Melodies")
                     expect(page.locator(".brand")).to_contain_text("LUXCAST: AFTERHOURS")
+                    expect(page.locator(".live-pill")).to_contain_text("SYLUX BOARDCAST")
+                    expect(page.locator(".frequency-caption")).to_have_text("AFTERHOURS: SYLUX BOARDCAST")
                     expect(page.get_by_role("heading", name="Turn Your Feelings Into a Song")).to_be_visible()
                     expect(page.get_by_role("button", name="Continue with Discord")).to_be_enabled()
                     page.goto(origin+"/admin")
