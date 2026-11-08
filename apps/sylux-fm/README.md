@@ -1,6 +1,6 @@
-# SYLUX AIRWAVES — Your Song, Your Story
+# LUXCAST: AFTERHOURS — Your Song, Your Story
 
-Branding publik **SYLUX AIRWAVES** memakai tagline **Your song, your story.** Domain `sylux-fm.vercel.app`, path aplikasi `apps/sylux-fm`, nama proyek Vercel, schema Supabase, dan seluruh integrasi teknis tetap tidak berubah.
+Branding publik **LUXCAST: AFTERHOURS** memakai tagline **Your song, your story.** Domain `sylux-fm.vercel.app`, path aplikasi `apps/sylux-fm`, nama proyek Vercel, schema Supabase, dan seluruh integrasi teknis tetap tidak berubah.
 
 Aplikasi Next.js terpisah di `apps/sylux-fm`, dengan desain minimalis, login Discord, moderasi, antrean FIFO, dan popup OBS. Host membaca pesan dan memutar lagu secara manual. Aplikasi tidak mengunggah atau memutar **lagu**; hanya memutar bunyi notifikasi pendek “Tuturu” yang disediakan pengguna ketika popup OBS muncul.
 
@@ -48,7 +48,7 @@ node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
 
 ## Deployment Vercel terpisah
 
-Buat **proyek Vercel baru khusus SYLUX FM** yang memakai repositori yang sama:
+Buat **proyek Vercel baru khusus LUXCAST: AFTERHOURS** yang memakai repositori yang sama:
 
 | Pengaturan | Nilai |
 | --- | --- |
