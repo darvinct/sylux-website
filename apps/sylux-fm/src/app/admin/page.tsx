@@ -140,10 +140,10 @@ export default function AdminPage() {
   return (
     <main className="site-shell">
       <header className="site-header">
-        <div className="brand"><span className="brand-icon"><RadioTower size={18}/></span> LUXCAST<span className="accent">: AFTERHOURS</span></div>
+        <div className="brand"><span className="brand-icon"><RadioTower size={18}/></span> SYLUX<span className="accent"> AIRWAVES</span></div>
         <div className="header-links"><span className="live-pill"><i/> CONTROL ROOM</span><Link className="subtle-link" href="/request">Member portal <ArrowUpRight size={14}/></Link></div>
       </header>
-      <section className="admin-intro"><div className="eyebrow">LUXCAST: AFTERHOURS / OPERATIONS</div><h1>Control <em>Room.</em></h1><p>Kelola permintaan lagu, moderasi pesan, dan atur popup OBS.</p></section>
+      <section className="admin-intro"><div className="eyebrow">SYLUX AIRWAVES / OPERATIONS</div><h1>Control <em>Room.</em></h1><p>Kelola permintaan lagu, moderasi pesan, dan atur popup OBS.</p></section>
       {!user ? <div className="panel gate-panel"><h2>Operator sign in</h2><p>Only whitelisted Discord accounts can access the queue.</p><button className="primary-button" disabled={!db} onClick={login}>Continue with Discord <ArrowUpRight size={16}/></button></div> :
         !allowed ? <div className="panel gate-panel"><h2>Access restricted</h2><p>Akun ini belum didaftarkan sebagai operator. Tambahkan auth user UUID kamu ke tabel radio_operators di Supabase.</p><button className="secondary-button" onClick={logout}><LogOut size={15}/> Sign out</button><button className="secondary-button" onClick={()=>void reload()}><RefreshCw size={15}/> Check access</button></div> :
         <>
@@ -175,7 +175,7 @@ export default function AdminPage() {
         </>
       }
       {error && <div role="alert" className="notice error">{error}</div>}
-      <footer className="site-footer"><span>LUXCAST: AFTERHOURS / STAFF ONLY</span><button className="text-button" onClick={()=>void reload()}><RefreshCw size={14}/> Refresh</button></footer>
+      <footer className="site-footer"><span>SYLUX AIRWAVES / STAFF ONLY</span><button className="text-button" onClick={()=>void reload()}><RefreshCw size={14}/> Refresh</button></footer>
     </main>
   );
 }

@@ -35,7 +35,7 @@ export default function OverlayPage() {
       audio.currentTime = 0;
       void audio.play().catch(() => {
         // Regular browsers can block autoplay; OBS Browser Source allows source audio.
-        console.warn("LUXCAST: AFTERHOURS: notification audio blocked by browser autoplay policy.");
+        console.warn("SYLUX AIRWAVES: notification audio blocked by browser autoplay policy.");
       });
     };
     const popup = createPopup(setItem, setVisible, undefined, undefined, playNotification);
@@ -86,13 +86,13 @@ export default function OverlayPage() {
       <audio ref={soundRef} src="/sounds/tuturu-notification.ogg" preload="auto" aria-hidden="true" />
       <div className={"overlay-card " + (visible ? "overlay-visible" : "")} aria-live="polite">
         <div className="overlay-sparkle overlay-sparkle-one" aria-hidden="true">✦</div>
-        <section className="overlay-window overlay-note" aria-label="LUXCAST: AFTERHOURS dedication popup">
+        <section className="overlay-window overlay-note" aria-label="SYLUX AIRWAVES dedication popup">
           <div className="overlay-window-header overlay-pink">
             <div className="overlay-window-title"><span className="overlay-capsule"/><span className="overlay-small-dot"/> A LIL NOTE</div>
             <div className="overlay-window-dots" aria-hidden="true"><i/><i/><i/></div>
           </div>
           <div className="overlay-content">
-            <p className="overlay-station-mark">✦ LUXCAST: AFTERHOURS ✦</p>
+            <p className="overlay-station-mark">✦ SYLUX AIRWAVES ✦</p>
             <p className="overlay-kicker">A MESSAGE FROM</p>
             <h1>{item ? publicSenderName(item) : "SYLUX Listener"}</h1>
             {item?.dedication_to && <p className="overlay-to">For: <strong>{item.dedication_to}</strong></p>}
