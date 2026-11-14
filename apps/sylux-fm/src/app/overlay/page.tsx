@@ -43,7 +43,7 @@ export default function OverlayPage() {
     let timer: ReturnType<typeof setTimeout> | undefined;
 
     if (preview === "1" || preview === "anonymous") {
-      // Keep visual previews on screen for design review; live OBS uses 40s.
+      // Keep visual previews on screen for design review; live OBS uses 30s.
       setItem({ ...example, is_anonymous: preview === "anonymous" });
       setVisible(true);
       playNotification();
