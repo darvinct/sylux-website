@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Music2 } from "lucide-react";
+import { Music2, Headphones, Mail, Sparkles, VenetianMask, AudioLines } from "lucide-react";
 import type { OverlayRequest } from "@/lib/requests";
 import { publicSenderName } from "@/lib/requests";
 import { createPopup } from "@/lib/popup";
@@ -84,34 +84,27 @@ export default function OverlayPage() {
   return (
     <main className="overlay-stage">
       <audio ref={soundRef} src="/sounds/tuturu-notification.ogg" preload="auto" aria-hidden="true" />
-      <div className={"overlay-card " + (visible ? "overlay-visible" : "")} aria-live="polite">
-        <div className="overlay-sparkle overlay-sparkle-one" aria-hidden="true">✦</div>
-        <section className="overlay-window overlay-note" aria-label="LUXCAST: AFTERHOURS dedication popup">
-          <div className="overlay-window-header overlay-pink">
-            <div className="overlay-window-title"><span className="overlay-capsule"/><span className="overlay-small-dot"/> LISTENER MESSAGE</div>
-            <div className="overlay-window-dots" aria-hidden="true"><i/><i/><i/></div>
+      <div className={"overlay-card luxcast-reference " + (visible ? "overlay-visible" : "")} aria-live="polite">
+        <div className="luxcast-topline"><Music2 aria-hidden="true"/><strong>LUXCAST: <em>AFTERHOURS</em></strong><span className="luxcast-onair"><i/> ON AIR</span></div>
+        <div className="luxcast-maincard">
+          <span className="luxcast-spark luxcast-spark-left" aria-hidden="true">✦</span>
+          <div className="luxcast-avatar" aria-hidden="true"><Sparkles/></div>
+          <div className="luxcast-person">
+            <span className="luxcast-listener-tag">LISTENER</span>
+            <h1>{item ? publicSenderName(item) : "LUXCAST Listener"} {item?.is_anonymous && <VenetianMask aria-label="Anonymous"/>}</h1>
           </div>
-          <div className="overlay-content">
-            <p className="overlay-station-mark">♫ LUXCAST: AFTERHOURS <span>● ON AIR</span></p>
-            <p className="overlay-kicker">A MESSAGE FROM</p>
-            <h1>{item ? publicSenderName(item) : "LUXCAST Listener"}</h1>
-            {item?.dedication_to && <p className="overlay-to">For: <strong>{item.dedication_to}</strong></p>}
-            <p className={"overlay-message " + sizeClass}>{item?.message}</p>
-            <div className="overlay-song-inline">
-              <div className="overlay-song-inline-icon"><Music2 size={29} strokeWidth={2.5}/></div>
-              <div className="overlay-song-inline-text">
-                <span className="overlay-song-inline-label">DEDICATED SONG</span>
-                <strong className="overlay-song-title">{item?.song_title}</strong>
-                <span className="overlay-artist">{item?.artist}</span>
-              </div>
-            </div>
-          </div>
-          <div className="overlay-window-buttons" aria-hidden="true">
-            <span className="overlay-pill overlay-close">CLOSE</span>
-            <span className="overlay-pill overlay-okay">OKAY</span>
-          </div>
-        </section>
-        <div className="overlay-sparkle overlay-sparkle-two" aria-hidden="true">✦</div>
+          <AudioLines className="luxcast-equalizer" aria-hidden="true"/>
+          <Headphones className="luxcast-headphones" aria-hidden="true"/>
+          <p className={"luxcast-message " + sizeClass}>{item?.message}</p>
+          {item?.dedication_to && <p className="luxcast-dedication">To: <strong>{item.dedication_to}</strong></p>}
+          <span className="luxcast-spark luxcast-spark-right" aria-hidden="true">✦</span>
+        </div>
+        <div className="luxcast-songbar">
+          <span className="luxcast-envelope" aria-hidden="true"><Mail/></span>
+          <div className="luxcast-songicon"><Music2 aria-hidden="true"/></div>
+          <div className="luxcast-songinfo"><span>Dedicated Song</span><strong>{item?.song_title} — {item?.artist}</strong></div>
+          <AudioLines className="luxcast-songwaves" aria-hidden="true"/>
+        </div>
       </div>
       {warning && <div className="overlay-warning">{warning}</div>}
     </main>
