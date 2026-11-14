@@ -1,6 +1,6 @@
 import type { OverlayRequest } from "./requests.ts";
 
-export const POPUP_DURATION_MS = 40_000;
+export const POPUP_DURATION_MS = 30_000;
 export const OVERLAY_POLL_MS = 2_500;
 
 export function overlayVersion(item: OverlayRequest): string {
