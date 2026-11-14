@@ -79,7 +79,7 @@ export default function OverlayPage() {
   }, []);
 
   const length = item?.message.length ?? 0;
-  const sizeClass = length > 310 ? "message-extra-long" : length > 155 ? "message-long" : "";
+  const sizeClass = length > 380 ? "message-extra-long" : length > 180 ? "message-long" : "";
 
   return (
     <main className="overlay-stage">
@@ -88,11 +88,11 @@ export default function OverlayPage() {
         <div className="overlay-sparkle overlay-sparkle-one" aria-hidden="true">✦</div>
         <section className="overlay-window overlay-note" aria-label="LUXCAST: AFTERHOURS dedication popup">
           <div className="overlay-window-header overlay-pink">
-            <div className="overlay-window-title"><span className="overlay-capsule"/><span className="overlay-small-dot"/> A LIL NOTE</div>
+            <div className="overlay-window-title"><span className="overlay-capsule"/><span className="overlay-small-dot"/> LISTENER MESSAGE</div>
             <div className="overlay-window-dots" aria-hidden="true"><i/><i/><i/></div>
           </div>
           <div className="overlay-content">
-            <p className="overlay-station-mark">✦ LUXCAST: AFTERHOURS ✦</p>
+            <p className="overlay-station-mark">♫ LUXCAST: AFTERHOURS <span>● ON AIR</span></p>
             <p className="overlay-kicker">A MESSAGE FROM</p>
             <h1>{item ? publicSenderName(item) : "LUXCAST Listener"}</h1>
             {item?.dedication_to && <p className="overlay-to">For: <strong>{item.dedication_to}</strong></p>}
@@ -100,7 +100,7 @@ export default function OverlayPage() {
             <div className="overlay-song-inline">
               <div className="overlay-song-inline-icon"><Music2 size={29} strokeWidth={2.5}/></div>
               <div className="overlay-song-inline-text">
-                <span className="overlay-song-inline-label">SONG REQUEST</span>
+                <span className="overlay-song-inline-label">DEDICATED SONG</span>
                 <strong className="overlay-song-title">{item?.song_title}</strong>
                 <span className="overlay-artist">{item?.artist}</span>
               </div>
