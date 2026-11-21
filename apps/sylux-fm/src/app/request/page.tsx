@@ -1,9 +1,24 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import localFont from "next/font/local";
 import Link from "next/link";
 import { ArrowUpRight, Clock3, RadioTower, Send } from "lucide-react";
 import styles from "./request.module.css";
+
+const headingFont = localFont({
+  src: "./fonts/bricolage-grotesque.woff2",
+  weight: "400 800",
+  variable: "--font-bricolage",
+  display: "swap"
+});
+
+const bodyFont = localFont({
+  src: "./fonts/dm-sans.woff2",
+  weight: "400 750",
+  variable: "--font-dm-sans",
+  display: "swap"
+});
 
 const initialForm = {
   display_name: "",
@@ -45,7 +60,7 @@ export default function RequestPage() {
   }
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} ${headingFont.variable} ${bodyFont.variable}`}>
       <div className={styles.shell}>
         <header className={styles.header}>
           <div className={styles.brand}>

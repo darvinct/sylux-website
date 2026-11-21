@@ -5,12 +5,13 @@
   --line: #584567;
   --edge: #8a659c;
   --accent: #f3b6ed;
-  --serif: Georgia, "Times New Roman", serif;
+  --heading-font: var(--font-bricolage), system-ui, sans-serif;
   --ease-out: cubic-bezier(0.2, 0.75, 0.25, 1);
   min-height: 100svh;
   color-scheme: dark;
   color: var(--ink);
   background: var(--ground);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
 }
 
 .shell {
@@ -35,9 +36,10 @@
 
 .brand {
   gap: 11px;
-  font-family: var(--serif);
-  font-size: clamp(16px, 2vw, 26px);
-  letter-spacing: -0.05em;
+  font-family: var(--heading-font);
+  font-size: clamp(15px, 1.9vw, 24px);
+  font-weight: 750;
+  letter-spacing: -0.045em;
   white-space: nowrap;
 }
 
@@ -47,7 +49,7 @@
 }
 
 .brandAccent {
-  font-style: italic;
+  font-weight: 650;
 }
 
 .headerDetails {
@@ -110,22 +112,22 @@
 
 .intro h1,
 .request h2 {
-  font-family: var(--serif);
-  font-weight: 400;
+  font-family: var(--heading-font);
+  font-weight: 750;
   text-wrap: balance;
 }
 
 .intro h1 {
   margin: 15px 0 19px;
-  font-size: clamp(52px, 6.35vw, 100px);
-  letter-spacing: -0.07em;
-  line-height: 0.96;
+  font-size: clamp(48px, 5.9vw, 88px);
+  letter-spacing: -0.055em;
+  line-height: 1;
 }
 
 .intro h1 em {
   display: block;
   color: var(--accent);
-  font-weight: inherit;
+  font-style: normal;
 }
 
 .description {
@@ -182,9 +184,9 @@
 
 .stationMark {
   color: var(--ink);
-  font-family: var(--serif);
+  font-family: var(--heading-font);
   font-size: 25px;
-  font-weight: 400;
+  font-weight: 750;
   letter-spacing: -0.05em;
 }
 
@@ -251,9 +253,9 @@
 
 .request h2 {
   margin: 9px 0 23px;
-  font-size: clamp(36px, 4.4vw, 68px);
-  letter-spacing: -0.055em;
-  line-height: 1;
+  font-size: clamp(32px, 3.85vw, 60px);
+  letter-spacing: -0.04em;
+  line-height: 1.05;
 }
 
 .form {
@@ -505,8 +507,7 @@
   }
 
   .intro h1 {
-    max-width: 13ch;
-    font-size: clamp(46px, 9.3vw, 70px);
+    font-size: clamp(36px, 7.4vw, 60px);
     margin-block: 11px 14px;
   }
 
@@ -566,7 +567,12 @@
     padding-block: 25px 33px;
   }
 
+  .intro h1 {
+    font-size: clamp(34px, 9.75vw, 40px);
+  }
+
   .request h2 {
+    font-size: clamp(26px, 7.1vw, 32px);
     margin-bottom: 18px;
   }
 
@@ -574,9 +580,7 @@
     padding: 9px 8px;
     gap: 7px;
   }
-}
 
-@media (max-width: 340px) {
   .fieldRow {
     grid-template-columns: minmax(0, 1fr);
     gap: 18px;
