@@ -11,7 +11,7 @@ Perubahan hanya untuk `apps/sylux-fm`. Website utama dan konfigurasi Vercel di r
 - Tidak ada kuota jumlah request per akun. Trigger tetap memvalidasi identitas Discord dan menetapkan username/status/timestamp dari server; klien operator tidak dapat mengaktifkan ulang Rejected.
 - Fungsi dengan hak elevated memakai `search_path` kosong dan nama tabel lengkap. Akses tabel/fungsi dibatasi secara eksplisit. Service role hanya digunakan server pada endpoint OBS yang mengeluarkan field popup aktif.
 - Otorisasi OBS memeriksa panjang byte dan `timingSafeEqual`; kunci minimal 32 karakter. API tidak di-cache. `Referrer-Policy: no-referrer` mencegah URL kunci terkirim sebagai referrer.
-- Poll OBS berjalan berurutan. Cleanup membatalkan fetch dan kedua timer popup. Error/standby menyembunyikan popup. Poll identik tidak mengulang popup; popup hilang setelah 12 detik. Tidak ada audio atau perpindahan lagu otomatis.
+- Poll OBS berjalan berurutan. Cleanup membatalkan fetch dan kedua timer popup. Error/standby menyembunyikan popup. Poll identik tidak mengulang popup; popup hilang setelah 40 detik. Tidak ada audio atau perpindahan lagu otomatis.
 - Pergantian akun menghapus antrean di UI dan mengabaikan fetch akun sebelumnya. Nama/judul panjang dibungkus tanpa merusak desain minimalis.
 
 ## Verifikasi pada 2 November 2026

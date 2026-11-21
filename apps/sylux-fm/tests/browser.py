@@ -317,7 +317,7 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
                     expect(page.locator(".overlay-card")).to_have_class("overlay-card ", timeout=5000)
                     context.close()
                     browser.close()
-                    print("PASS: transparent OBS, live API popup, 12-second fade, no replay, replacement, Finish and key/cache headers", flush=True)
+                    print("PASS: transparent OBS, live API popup, 40-second fade, no replay, replacement, Finish and key/cache headers", flush=True)
         except BaseException:
             log.flush()
             log.seek(0)

@@ -93,14 +93,16 @@ function fixture(onVisible = () => {}) {
   return { popup, shown, visibility, timers, advance };
 }
 
-test('OBS displays once, fades after 30 seconds, and ignores repeated polling', () => {
-  assert.equal(POPUP_DURATION_MS, 30_000);
+test('OBS displays once, fades after 40 seconds, and ignores repeated polling', () => {
+  assert.equal(POPUP_DURATION_MS, 40_000);
   const f = fixture();
   f.popup.display(item); f.advance(90);
   assert.equal(f.visibility.at(-1), true);
   f.advance(2000); f.popup.display(item);
   assert.equal(f.shown.length, 1);
-  f.advance(POPUP_DURATION_MS - 2090);
+  f.advance(POPUP_DURATION_MS - 2091);
+  assert.equal(f.visibility.at(-1), true);
+  f.advance(1);
   assert.equal(f.visibility.at(-1), false);
   f.popup.display(item); f.advance(1000);
   assert.equal(f.visibility.at(-1), false);
