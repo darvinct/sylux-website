@@ -302,7 +302,7 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
                     assert "user_id" not in response.json()["active"]
                     assert "username" not in response.json()["active"]
                     assert response.json()["active"]["display_name"] == "Test Display"
-                    expect(page.locator(".overlay-card")).to_have_class("overlay-card ", timeout=45000)
+                    expect(page.locator(".overlay-card")).to_have_class("overlay-card ", timeout=55000)
                     page.wait_for_timeout(3300)
                     expect(page.locator(".overlay-card")).to_have_class("overlay-card ")
                     with lock:
@@ -317,7 +317,7 @@ with tempfile.TemporaryDirectory(prefix="sylux-browser-") as temp:
                     expect(page.locator(".overlay-card")).to_have_class("overlay-card ", timeout=5000)
                     context.close()
                     browser.close()
-                    print("PASS: transparent OBS, live API popup, 40-second fade, no replay, replacement, Finish and key/cache headers", flush=True)
+                    print("PASS: transparent OBS, live API popup, 50-second fade, no replay, replacement, Finish and key/cache headers", flush=True)
         except BaseException:
             log.flush()
             log.seek(0)

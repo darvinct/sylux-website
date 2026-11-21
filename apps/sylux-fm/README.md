@@ -38,7 +38,7 @@ Jangan mengambil keputusan role dari display name, email, atau metadata user. Lo
 - `/admin` hanya untuk operator whitelist. Approve/Reject memoderasi Pending. Display Next memilih Approved paling awal berdasarkan waktu pengiriman dan ID; request sebelumnya menjadi Completed. Antrean kosong tidak mengakhiri request aktif. Finish mengakhiri request aktif.
 - Antrean dashboard dan status request member diperbarui setiap lima detik. Pemutaran **lagu** tetap manual oleh host; chime notifikasi otomatis berbunyi sekali pada popup baru.
 - Preview visual popup satu jendela pink (pesan dan judul lagu menyatu): `/overlay?preview=1` atau `/overlay?preview=anonymous`, tanpa data asli atau kunci.
-- OBS Browser Source: `https://DOMAIN-FM/overlay?key=SECRET`, resolusi 1920×1080. Background transparan; popup tampil sekali selama 40 detik per request aktif dan membunyikan `public/sounds/tuturu-notification.ogg` **hanya ketika popup baru tampil**. Di OBS, aktifkan opsi **Control audio via OBS** untuk mengatur volume/mute sumber suara; audio dapat diblokir ketika preview dibuka di browser biasa tanpa interaksi. API diperiksa tiap 2,5 detik setelah respons sebelumnya selesai. Finish menyembunyikan popup pada poll berikutnya.
+- OBS Browser Source: `https://DOMAIN-FM/overlay?key=SECRET`, resolusi 1920×1080. Background transparan; popup tampil sekali selama 50 detik per request aktif dan membunyikan `public/sounds/tuturu-notification.ogg` **hanya ketika popup baru tampil**. Di OBS, aktifkan opsi **Control audio via OBS** untuk mengatur volume/mute sumber suara; audio dapat diblokir ketika preview dibuka di browser biasa tanpa interaksi. API diperiksa tiap 2,5 detik setelah respons sebelumnya selesai. Finish menyembunyikan popup pada poll berikutnya.
 
 Gunakan kunci acak minimal 32 karakter. Contoh pembuatan lokal:
 
@@ -81,7 +81,7 @@ psql "$SYLUX_TEST_DATABASE_URL" -X -f tests/database.sql
 
 Jangan arahkan uji fixture ke Supabase atau production. Tes menolak database yang sudah memiliki `auth.users` atau `radio_requests`, lalu rollback seluruh fixture.
 
-Di staging, verifikasi login/logout Discord, penolakan nonoperator, request ketiga dan tiga submit paralel yang semuanya diterima, moderasi, FIFO, Finish, pergantian akun, kunci OBS salah/benar, popup 40 detik tanpa pengulangan, dan transparansi di OBS sebenarnya.
+Di staging, verifikasi login/logout Discord, penolakan nonoperator, request ketiga dan tiga submit paralel yang semuanya diterima, moderasi, FIFO, Finish, pergantian akun, kunci OBS salah/benar, popup 50 detik tanpa pengulangan, dan transparansi di OBS sebenarnya.
 
 Status verifikasi: **TypeScript, build produksi, 6 uji unit, uji PostgreSQL, dan uji paralel lulus**. Audit dependensi produksi melaporkan **0 kerentanan** setelah override PostCSS ke 8.5.32. Uji browser memakai fixture lokal, bukan akun Discord/Supabase asli. Deployment Vercel belum dilakukan. Lihat [SECURITY.md](SECURITY.md).
 
@@ -133,4 +133,4 @@ Pesan OBS kini membedakan kunci sumber yang salah, konfigurasi server belum siap
 - Database: jalankan ulang `supabase/schema.sql` sebelum rilis aplikasi untuk menambahkan `radio_requests.is_anonymous` (default `false`) dan grant INSERT kolom tersebut. Tidak ada data lama yang dihapus.
 - Data `auth.identities.identity_data.name` pada integrasi Discord ini berisi display name; `full_name` berisi handle. Trigger lebih mengutamakan `global_name` / `name` / `display_name`, tidak memakai username sebagai fallback.
 - Overlay OBS menghapus identitas dari respons API untuk request anonim; operator tetap melihat sumber asli di Control Room.
-- Tombol CLOSE / OKAY pada visual OBS adalah dekorasi agar sesuai referensi; popup tetap otomatis hilang setelah 40 detik.
+- Tombol CLOSE / OKAY pada visual OBS adalah dekorasi agar sesuai referensi; popup tetap otomatis hilang setelah 50 detik.
