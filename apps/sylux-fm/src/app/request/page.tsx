@@ -52,7 +52,7 @@ export default function RequestPage() {
       <div className="content-grid">
         <section className="panel form-panel">
           <div className="panel-heading">
-            <div><div className="eyebrow">01 / SEND YOUR STORY</div><h2>A Song & A Little Note</h2></div>
+            <div><div className="eyebrow">01 / SEND YOUR STORY</div><h2>Let your story be heard</h2></div>
             <div className="round-icon"><Disc3 size={22}/></div>
           </div>
           <form onSubmit={submit}>
